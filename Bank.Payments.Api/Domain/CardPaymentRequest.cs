@@ -10,6 +10,23 @@ namespace Bank.Payments.Api.Domain
 {
     public class CardPaymentRequest
     {
+        public CardPaymentRequest()
+        {
+                
+        }
+
+        public CardPaymentRequest(Card card,BankAccount bankAccount)
+        {
+            CardHolderName = card.CardHolderName;
+            MonthExpiryDate = card.MonthExpiryDate;
+            YearExpiryDate = card.YearExpiryDate;
+            CardNumber = card.CardNumber;
+
+            MerchantAccountNumber = bankAccount.AccountNumber;
+            MerchantSortCode = bankAccount.SortCode;
+        }
+
+      
 
         public string RequestId { get; set; }
         /// <summary>
@@ -53,6 +70,28 @@ namespace Bank.Payments.Api.Domain
         /// <summary>
         /// Merchant Bank Account
         /// </summary>
-        public string MerchantBankAccount { get; set; }
+        public string MerchantAccountNumber { get; set; }
+
+        public Card GetCard()
+        {
+            return new Card()
+            {
+                CardHolderName = CardHolderName,
+                MonthExpiryDate = MonthExpiryDate,
+                YearExpiryDate = YearExpiryDate,
+                CardNumber = CardNumber
+
+            };
+        }
+
+        public BankAccount GetBankAccount()
+        {
+            return new BankAccount()
+            {
+                AccountNumber = MerchantAccountNumber,
+                SortCode = MerchantSortCode
+            };
+        }
+
     }
 }
