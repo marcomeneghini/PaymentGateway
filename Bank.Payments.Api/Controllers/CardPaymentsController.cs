@@ -31,12 +31,27 @@ namespace Bank.Payments.Api.Controllers
         [HttpPost]
         public IActionResult CreatePayment(CardPaymentRequestModel request)
         {
-            var response =_cardPaymentService.DoPayment(_mapper.Map<CardPaymentRequest>(request));
-            if (response.TransactionStatus== TransactionStatus.Succeeded)
+            try
             {
-                return Ok(_mapper.Map<CardPaymentResponseModel>(response));
+                var response = _cardPaymentService.DoPayment(_mapper.Map<CardPaymentRequest>(request));
+                if (response.TransactionStatus == TransactionStatus.Succeeded)
+                {
+                    return Ok(_mapper.Map<CardPaymentResponseModel>(response));
+                }
+
+                return BadRequest(_mapper.Map<CardPaymentResponseModel>(response));
             }
-            return BadRequest(_mapper.Map<CardPaymentResponseModel>(response));
+            catch (RequestAlreadyProcessedException e)
+            {
+                // this error is thrown to ensure idempotency
+                // multiple request same request id error
+                return Conflict(new { message = $"request {e.RequestId} already present with status {e.Status.ToString()}"});
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+           
         }
     }
 }

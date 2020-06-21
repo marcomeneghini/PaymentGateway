@@ -19,7 +19,8 @@ namespace Bank.Payments.Api.Test
            
             var fakeCardRepository = new FakeCardRepository();
             var fakeBankAccountRepository = new FakeBankAccountRepository();
-            var service = new CardPaymentService(fakeCardRepository, fakeBankAccountRepository);
+            var inMemPaymentRepository = new InMemoryPaymentRepository();
+            var service = new CardPaymentService(fakeCardRepository, fakeBankAccountRepository, inMemPaymentRepository);
             CardPaymentResponse response = service.DoPayment(new CardPaymentRequest(card, bankAccount));
 
             Assert.Equal(resulTransactionStatus, response.TransactionStatus);
@@ -32,10 +33,27 @@ namespace Bank.Payments.Api.Test
 
             var fakeCardRepository = new FakeCardRepository();
             var fakeBankAccountRepository = new FakeBankAccountRepository();
-            var service = new CardPaymentService(fakeCardRepository, fakeBankAccountRepository);
+            var inMemPaymentRepository = new InMemoryPaymentRepository();
+            var service = new CardPaymentService(fakeCardRepository, fakeBankAccountRepository, inMemPaymentRepository);
             CardPaymentResponse response = service.DoPayment(new CardPaymentRequest(card, bankAccount));
 
             Assert.Equal(resulTransactionStatus, response.TransactionStatus);
+        }
+
+        [Fact]
+        public void CardPayment_DoublePayment()
+        {
+            // arrange
+            var fakeCardRepository = new FakeCardRepository();
+            var fakeBankAccountRepository = new FakeBankAccountRepository();
+            var inMemPaymentRepository = new InMemoryPaymentRepository();
+            // act
+            var service = new CardPaymentService(fakeCardRepository, fakeBankAccountRepository, inMemPaymentRepository);
+            CardPaymentResponse response = service.DoPayment(new CardPaymentRequest(requestId1, FakeCardRepository.GenerateCard_JohnDoe(), FakeBankAccountRepository.GenerateBankAccount_Amazon()));
+            service = new CardPaymentService(new FakeCardRepository(), new FakeBankAccountRepository(), inMemPaymentRepository);
+            // act-assert
+            Assert.Throws<RequestAlreadyProcessedException>(() => service.DoPayment(new CardPaymentRequest(requestId1, FakeCardRepository.GenerateCard_JohnDoe(), FakeBankAccountRepository.GenerateBankAccount_Amazon())));
+           
         }
 
 

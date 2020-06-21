@@ -20,6 +20,7 @@ namespace Bank.Payments.Api
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<IPaymentRepository,InMemoryPaymentRepository>();
             services.AddScoped<ICardPaymentService, CardPaymentService>();
             services.AddScoped<IBankAccountRepository, FakeBankAccountRepository>();
             services.AddScoped<ICardRepository, FakeCardRepository>();

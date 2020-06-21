@@ -10,4 +10,11 @@ namespace Bank.Payments.Api.Domain
         Declined,
         Succeeded 
     }
+
+    public enum PaymentStatusEnum
+    {
+        Scheduled,
+        Completed,
+        Error
+    }
 }

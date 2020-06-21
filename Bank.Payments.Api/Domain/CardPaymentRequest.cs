@@ -26,7 +26,12 @@ namespace Bank.Payments.Api.Domain
             MerchantSortCode = bankAccount.SortCode;
         }
 
-      
+        public CardPaymentRequest(string requestId,Card card, BankAccount bankAccount):this(card,bankAccount)
+        {
+            RequestId = requestId;
+        }
+
+
 
         public string RequestId { get; set; }
         /// <summary>
