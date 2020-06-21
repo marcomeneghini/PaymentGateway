@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30204.135
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentGateway.Api", "PaymentGateway.Api\PaymentGateway.Api.csproj", "{1DA3A565-2ED6-4065-B4C6-73CF6F5E704B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaymentGateway.Api", "PaymentGateway.Api\PaymentGateway.Api.csproj", "{1DA3A565-2ED6-4065-B4C6-73CF6F5E704B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Gateway", "Gateway", "{D639C2FB-5E2A-4379-9EE3-F28516220D37}"
 EndProject
@@ -13,17 +13,23 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Bank", "Bank", "{ABC3CC82-7
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client", "Client", "{908B83FC-8051-4E60-8B62-9657336841C8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Company.IdentityServer", "Company.IdentityServer\Company.IdentityServer.csproj", "{4102F2B7-AE89-463F-BA8B-8F588C4AB415}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Company.IdentityServer", "Company.IdentityServer\Company.IdentityServer.csproj", "{4102F2B7-AE89-463F-BA8B-8F588C4AB415}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentGateway.Processor.Api", "PaymentGateway.Processor.Api\PaymentGateway.Processor.Api.csproj", "{597FF5A3-A6E9-4172-A02B-6B4609DFF310}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaymentGateway.Processor.Api", "PaymentGateway.Processor.Api\PaymentGateway.Processor.Api.csproj", "{597FF5A3-A6E9-4172-A02B-6B4609DFF310}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentGateway.Notification.Api", "PaymentGateway.Notification.Api\PaymentGateway.Notification.Api.csproj", "{B9728D26-885F-404B-BDD4-5B163D27B4D6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaymentGateway.Notification.Api", "PaymentGateway.Notification.Api\PaymentGateway.Notification.Api.csproj", "{B9728D26-885F-404B-BDD4-5B163D27B4D6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bank.Payments.Api", "Bank.Payments.Api\Bank.Payments.Api.csproj", "{CCC9AA7A-C413-4124-B88E-C55A05A30EC6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bank.Payments.Api", "Bank.Payments.Api\Bank.Payments.Api.csproj", "{CCC9AA7A-C413-4124-B88E-C55A05A30EC6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client.Payments.Api", "Client.Payments.Api\Client.Payments.Api.csproj", "{F7A8E866-5B9C-4B0C-B323-A2FD3A70C848}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client.Payments.Api", "Client.Payments.Api\Client.Payments.Api.csproj", "{F7A8E866-5B9C-4B0C-B323-A2FD3A70C848}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bank.Payments.Api.Test", "Bank.Payments.Api.Test\Bank.Payments.Api.Test.csproj", "{E7EB685C-142D-4D5F-BE65-0C45E29D1513}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bank.Payments.Api.Test", "Bank.Payments.Api.Test\Bank.Payments.Api.Test.csproj", "{E7EB685C-142D-4D5F-BE65-0C45E29D1513}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents", "Documents", "{86E98E00-69E4-429E-BF0C-13822AC2D74B}"
+	ProjectSection(SolutionItems) = preProject
+		Notes.txt = Notes.txt
+		TodoList.txt = TodoList.txt
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

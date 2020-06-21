@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Bank.Payments.Api.Attributes;
 using Bank.Payments.Api.Domain;
 using Bank.Payments.Api.Models;
 using Bank.Payments.Api.Services;
@@ -15,6 +16,7 @@ namespace Bank.Payments.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [ValidateModel]
     public class CardPaymentsController : ControllerBase
     {
         private readonly ICardPaymentService _cardPaymentService;

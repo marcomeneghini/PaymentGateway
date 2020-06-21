@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
 using System.Reflection.Metadata;
@@ -10,7 +11,7 @@ namespace Bank.Payments.Api.Models
 {
     public class CardPaymentRequestModel
     {
-
+        [Required]
         public string RequestId { get; set; }
         /// <summary>
         /// the card number of the customer

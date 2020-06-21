@@ -1,0 +1,3 @@
+BANK - Validate request Model
+BANK - Change Validation error Response (422 status code)
+BANK - Make API Idempotent (return  409 Conflict)
