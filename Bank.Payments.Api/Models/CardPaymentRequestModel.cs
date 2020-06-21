@@ -53,6 +53,6 @@ namespace Bank.Payments.Api.Models
         /// <summary>
         /// Merchant Bank Account
         /// </summary>
-        public string MerchanAccountNumber { get; set; }
+        public string MerchantAccountNumber { get; set; }
     }
 }

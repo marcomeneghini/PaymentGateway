@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace Bank.Payments.Api.Models
 {
-    public enum TransactionStatus : int
+    public enum TransactionStatus 
     {
-        Declined = 0,
-        Succeeded = 1
+        Declined,
+        Succeeded
     }
 }
