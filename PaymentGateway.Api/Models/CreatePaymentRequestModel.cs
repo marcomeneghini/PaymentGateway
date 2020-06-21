@@ -7,6 +7,9 @@ namespace PaymentGateway.Api.Models
 {
     public class CreatePaymentRequestModel
     {
+
+        public Guid MerchantId { get; set; }
+
         public string RequestId { get; set; }
         /// <summary>
         /// the card number of the customer

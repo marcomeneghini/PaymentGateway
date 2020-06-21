@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -26,8 +27,9 @@ namespace PaymentGateway.Api
             services.AddScoped<ICipherService, AesCipherService>();
 
             services.AddControllers();
-            services.AddDbContext<PaymentGatewayDbContext>(opt => opt.UseInMemoryDatabase("PaymentGatewayApiDatabase"));
+            services.AddDbContext<PaymentGatewayDbContext>(opt => opt.UseInMemoryDatabase(Guid.NewGuid().ToString()),ServiceLifetime.Scoped, ServiceLifetime.Scoped);
             services.AddHealthChecks();
+            services.AddAutoMapper(typeof(Startup));
         }
 
        
@@ -37,8 +39,9 @@ namespace PaymentGateway.Api
             {
                 app.UseDeveloperExceptionPage();
             }
-            var context = app.ApplicationServices.GetService<PaymentGatewayDbContext>();
-            AddTestData(context);
+
+            //var context = app.ApplicationServices.GetService<PaymentGatewayDbContext>();
+            //AddTestData(context);
 
             app.UseRouting();
 
@@ -49,16 +52,16 @@ namespace PaymentGateway.Api
             });
         }
 
-        private static void AddTestData(PaymentGatewayDbContext context)
-        {
+        //private static void AddTestData(PaymentGatewayDbContext context)
+        //{
            
 
-            context.Merchants.Add(EfInMemoryMerchantRepository.CreateMerchant_Amazon());
-            context.Merchants.Add(EfInMemoryMerchantRepository.CreateMerchant_Apple());
+        //    context.Merchants.Add(EfInMemoryMerchantRepository.CreateMerchant_Amazon());
+        //    context.Merchants.Add(EfInMemoryMerchantRepository.CreateMerchant_Apple());
 
           
 
-            context.SaveChanges();
-        }
+        //    context.SaveChanges();
+        //}
     }
 }

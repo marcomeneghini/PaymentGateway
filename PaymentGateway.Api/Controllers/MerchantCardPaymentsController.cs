@@ -34,7 +34,7 @@ namespace PaymentGateway.Api.Controllers
                 var response = await _paymentService.CreatePayment(_mapper.Map<CreatePaymentRequest>(request));
 
 
-                return Ok(_mapper.Map<CreatePaymentRequestModel>(response));
+                return Ok(_mapper.Map<CreatePaymentResponseModel>(response));
             }
             catch (RequestAlreadyProcessedException e)
             {
