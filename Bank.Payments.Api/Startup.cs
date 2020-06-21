@@ -20,12 +20,16 @@ namespace Bank.Payments.Api
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            // this lives for the entire duration of the service
             services.AddSingleton<IPaymentRepository,InMemoryPaymentRepository>();
+            // these live for the entire duration of an Http call
             services.AddScoped<ICardPaymentService, CardPaymentService>();
             services.AddScoped<IBankAccountRepository, FakeBankAccountRepository>();
             services.AddScoped<ICardRepository, FakeCardRepository>();
+
             services.AddAutoMapper(typeof(Startup));
             services.AddControllers();
+            services.AddHealthChecks();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -40,6 +44,7 @@ namespace Bank.Payments.Api
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHealthChecks("/health");
                 endpoints.MapDefaultControllerRoute();
             });
         }

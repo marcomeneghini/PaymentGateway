@@ -42,7 +42,7 @@ namespace Bank.Payments.Api.Services
             // perform the transaction
             try
             {
-                // perform the transaction
+                // TODO:perform the transaction
 
                 // transaction ok
                 currentPaymentStatus.Status = PaymentStatusEnum.Completed;
@@ -60,20 +60,6 @@ namespace Bank.Payments.Api.Services
         }
 
 
-        private CardPaymentRequest Create_Card1_PaymentRequest()
-        {
-            return new CardPaymentRequest()
-            {
-                Amount = 10,
-                CVV = "000",
-                CardHolderName = "Holder Card1 FullName",
-                CardNumber = "1234 1234 1234 1234",
-                Currency = "GBP",
-                MerchantAccountNumber = "12345678",
-                MerchantSortCode = "112233",
-                MonthExpiryDate = 1,
-                YearExpiryDate = 2021
-            };
-        }
+       
     }
 }

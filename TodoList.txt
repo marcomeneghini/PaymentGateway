@@ -1,3 +1,5 @@
 BANK - Validate request Model
 BANK - Change Validation error Response (422 status code)
 BANK - Make API Idempotent (return  409 Conflict)
+BANK - Add Healthcheck 
+BANK - Run in container
