@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Bank.Payments.Api.Models
 {
-    public class CardPaymentResponse
+    public class CardPaymentResponseModel
     {
         public string RequestId { get; set; }
 

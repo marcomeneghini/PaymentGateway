@@ -2,6 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using Bank.Payments.Api.Domain;
+using Bank.Payments.Api.Infrastructure;
+using Bank.Payments.Api.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -16,6 +20,10 @@ namespace Bank.Payments.Api
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<ICardPaymentService, CardPaymentService>();
+            services.AddScoped<IBankAccountRepository, FakeBankAccountRepository>();
+            services.AddScoped<ICardRepository, FakeCardRepository>();
+            services.AddAutoMapper(typeof(Startup));
             services.AddControllers();
         }
 
