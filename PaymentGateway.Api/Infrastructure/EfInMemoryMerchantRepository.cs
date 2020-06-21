@@ -44,6 +44,10 @@ namespace PaymentGateway.Api.Infrastructure
 
         public async Task<Merchant> GetMerchantById(Guid merchantId)
         {
+            //var merchants = await _dbContext.Merchants.ToListAsync();
+
+            //var merchants2 =  _dbContext.GetMerchants();
+            //return  merchants2.FirstOrDefault(x => x.Id == merchantId);
             return await _dbContext.Merchants.FirstOrDefaultAsync(x => x.Id == merchantId);
         }
     }
