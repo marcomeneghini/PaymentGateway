@@ -46,7 +46,7 @@ namespace PaymentGateway.SharedLib.EventBroker
         private void InitChannel(string exchangeName, string queueName)
         {
             _channel?.Dispose();
-
+            _connection.TryConnect();
             _channel = _connection.CreateModel();
 
             _channel.ExchangeDeclare(exchange: exchangeName, type: ExchangeType.Topic);
