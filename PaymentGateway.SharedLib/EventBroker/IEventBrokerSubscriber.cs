@@ -12,18 +12,6 @@ namespace PaymentGateway.SharedLib.EventBroker
         event EventHandler<EncryptedMessageEventArgs> OnMessage;
         void Unsubscribe();
 
-        //void Subscribe<T, TH>()
-        //    where T : EncryptedMessage
-        //    where TH : IIntegrationEventHandler<T>;
-
-        //void SubscribeDynamic<TH>(string eventName)
-        //    where TH : IDynamicIntegrationEventHandler;
-
-        //void UnsubscribeDynamic<TH>(string eventName)
-        //    where TH : IDynamicIntegrationEventHandler;
-
-        //void Unsubscribe<T, TH>()
-        //    where TH : IIntegrationEventHandler<T>
-        //    where T : EncryptedMessage;
+       
     }
 }

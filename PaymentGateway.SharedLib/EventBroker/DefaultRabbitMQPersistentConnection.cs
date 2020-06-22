@@ -53,7 +53,7 @@ namespace PaymentGateway.SharedLib.EventBroker
 
             try
             {
-                _connection.Dispose();
+                _connection?.Dispose();
             }
             catch (IOException ex)
             {

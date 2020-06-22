@@ -17,6 +17,7 @@ using PaymentGateway.Processor.Api.Infrastructure;
 using PaymentGateway.Processor.Api.Messaging;
 using PaymentGateway.Processor.Api.Proxies;
 using PaymentGateway.SharedLib.Encryption;
+using PaymentGateway.SharedLib.EventBroker;
 using PaymentGateway.SharedLib.Messages;
 using RabbitMQ.Client;
 
@@ -36,8 +37,9 @@ namespace PaymentGateway.Processor.Api
         {
             services.AddHttpClient();
             services.AddSingleton<IPaymentStatusRepository, InMemoryPaymentStatusRepository>();
-            services.AddSingleton<IConnectionFactory>(ctx =>
+            services.AddSingleton<IRabbitMQPersistentConnection>(sp =>
             {
+                var logger = sp.GetRequiredService<ILogger<DefaultRabbitMQPersistentConnection>>();
 
                 var factory = new ConnectionFactory()
                 {
@@ -55,8 +57,13 @@ namespace PaymentGateway.Processor.Api
                     factory.Password = Configuration["EventBrokerPassword"];
                 }
 
-                return factory;
+                var retryCount = 5;
+                if (!string.IsNullOrEmpty(Configuration["EventBrokerRetryCount"]))
+                {
+                    retryCount = int.Parse(Configuration["EventBrokerRetryCount"]);
+                }
 
+                return new DefaultRabbitMQPersistentConnection(factory, logger, retryCount);
             });
             services.AddHttpClient<IBankPaymentProxy, MyBankPaymentProxy>(client =>
                 {
@@ -72,7 +79,10 @@ namespace PaymentGateway.Processor.Api
                         new MediaTypeWithQualityHeaderValue("application/json"));
                 }
             );
-            services.AddScoped<ICipherService, AesCipherService>();
+            var channel = Channel.CreateBounded<EncryptedMessage>(100);
+            services.AddSingleton(channel);
+            services.AddSingleton<IEventBrokerSubscriber, RabbitMQEventBrokerSubscriber>();
+            services.AddSingleton<ICipherService, AesCipherService>();
             services.AddSingleton<IChannelProducer>(ctx => {
                 var channel = ctx.GetRequiredService<Channel<EncryptedMessage>>();
                 var logger = ctx.GetRequiredService<ILogger<ChannelProducer>>();
