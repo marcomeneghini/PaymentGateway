@@ -85,9 +85,7 @@ namespace PaymentGateway.Api
                 app.UseDeveloperExceptionPage();
             }
 
-            //var context = app.ApplicationServices.GetService<PaymentGatewayDbContext>();
-            //AddTestData(context);
-
+          
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>

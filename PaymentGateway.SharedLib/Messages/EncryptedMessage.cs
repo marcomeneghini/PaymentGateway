@@ -50,7 +50,7 @@ namespace PaymentGateway.SharedLib.Messages
             TopicName = topicName;
         }
 
-        public object GetMessage(ICipherService cipherService)
+        public T GetMessage<T>(ICipherService cipherService)
         {
             if (string.IsNullOrEmpty(ContentTypeName))
                 throw new MessageDecryptionException(MessageDecryptionErrorReason.NoContentTypeName);
@@ -59,7 +59,7 @@ namespace PaymentGateway.SharedLib.Messages
             // decrypt
             var decryptedBody = cipherService.Decrypt(Body);
             Type messageType = Type.GetType(ContentTypeName);
-            var jobj = JsonConvert.DeserializeObject(decryptedBody, messageType);
+            dynamic jobj = JsonConvert.DeserializeObject(decryptedBody, messageType);
             return jobj;
         }
     }

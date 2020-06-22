@@ -45,11 +45,19 @@ namespace Bank.Payments.Api.Controllers
             {
                 // this error is thrown to ensure idempotency
                 // multiple request same request id error
-                return Conflict(new { message = $"request {e.RequestId} already present with status {e.Status.ToString()}"});
+                CardPaymentResponseModel conflictResponseModel = new CardPaymentResponseModel();
+                conflictResponseModel.Message = $"request {e.RequestId} already present with status {e.Status.ToString()}";
+                conflictResponseModel.RequestId = e.RequestId;
+                conflictResponseModel.TransactionStatus = (Models.TransactionStatus) e.Status;
+                return Conflict(conflictResponseModel);
             }
             catch (Exception e)
             {
-                return BadRequest(e.Message);
+                CardPaymentResponseModel badRResponseModel = new CardPaymentResponseModel();
+                badRResponseModel.Message = e.Message;
+                badRResponseModel.RequestId = request.RequestId;
+                badRResponseModel.TransactionStatus = Models.TransactionStatus.Declined;
+                return BadRequest(badRResponseModel);
             }
            
         }

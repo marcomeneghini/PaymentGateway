@@ -1,0 +1,17 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace PaymentGateway.Processor.Api.Domain
+{
+    public class PaymentStatus
+    {
+        [Key]
+        public Guid PaymentId { get; set; }
+        public string RequestId { get; set; }
+
+        public PaymentStatusEnum Status { get; set; }
+    }
+}
