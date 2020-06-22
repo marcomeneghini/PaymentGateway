@@ -16,6 +16,9 @@ PG_API - UnitTesting PaymentService
 SHRD - EncryptedMessage
 SHRD - IEventBrokerPublisher PublishEncryptedMessage
 SHRD - RabbitMqEventBrokerPublisher:IEventBrokerPublisher
+DOCKER - Compose , Add RabbitMQ
+PG_API - Publish message "PaymentRequestMessage" to "PaymentRequests" Exchange
+
 SHRD - IEventBrokerSubscriber Subscribe(topicname)
 SHRD - IEventBrokerSubscriber MessageArrived()
 SHRD_UT - EncryptedMessage test
