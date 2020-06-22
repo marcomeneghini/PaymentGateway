@@ -41,7 +41,7 @@ namespace PaymentGateway.Api.Controllers
                 // this error is thrown to ensure idempotency
                 // multiple request same request id error
                 return Conflict(new
-                    {message = $"request {e.RequestId} already present with status {e.Status.ToString()}"});
+                    { message = $"request {e.RequestId} already present with status {e.Status.ToString()}"});
             }
             catch (Exception e)
             {

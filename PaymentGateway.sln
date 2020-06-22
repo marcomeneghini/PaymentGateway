@@ -33,11 +33,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents", "Documents", "{
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{AF56FFED-F10A-4DDB-9A19-2E00CE0D1C81}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentGateway.SharedLib", "PaymentGateway.SharedLib\PaymentGateway.SharedLib.csproj", "{751A7E9A-ABD8-42E8-BDD3-2373DCA1FC82}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaymentGateway.SharedLib", "PaymentGateway.SharedLib\PaymentGateway.SharedLib.csproj", "{751A7E9A-ABD8-42E8-BDD3-2373DCA1FC82}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{45746657-E255-4CD8-B69C-3A7D4C762A1A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentGateway.Api.UnitTest", "PaymentGateway.Api.UnitTest\PaymentGateway.Api.UnitTest.csproj", "{CCD31D49-C1E3-4DFE-8D6A-7E25E6DEB885}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaymentGateway.Api.UnitTest", "PaymentGateway.Api.UnitTest\PaymentGateway.Api.UnitTest.csproj", "{CCD31D49-C1E3-4DFE-8D6A-7E25E6DEB885}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentGateway.SharedLib.UnitTest", "..\PaymentGateway.SharedLib.UnitTest\PaymentGateway.SharedLib.UnitTest.csproj", "{9B2BAF3D-C1E9-451A-B824-4DC1AD836FCE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -85,6 +87,10 @@ Global
 		{CCD31D49-C1E3-4DFE-8D6A-7E25E6DEB885}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CCD31D49-C1E3-4DFE-8D6A-7E25E6DEB885}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CCD31D49-C1E3-4DFE-8D6A-7E25E6DEB885}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B2BAF3D-C1E9-451A-B824-4DC1AD836FCE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B2BAF3D-C1E9-451A-B824-4DC1AD836FCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B2BAF3D-C1E9-451A-B824-4DC1AD836FCE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B2BAF3D-C1E9-451A-B824-4DC1AD836FCE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -99,6 +105,7 @@ Global
 		{E7EB685C-142D-4D5F-BE65-0C45E29D1513} = {45746657-E255-4CD8-B69C-3A7D4C762A1A}
 		{751A7E9A-ABD8-42E8-BDD3-2373DCA1FC82} = {D639C2FB-5E2A-4379-9EE3-F28516220D37}
 		{CCD31D49-C1E3-4DFE-8D6A-7E25E6DEB885} = {45746657-E255-4CD8-B69C-3A7D4C762A1A}
+		{9B2BAF3D-C1E9-451A-B824-4DC1AD836FCE} = {45746657-E255-4CD8-B69C-3A7D4C762A1A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7DF4DFF7-D702-42E5-8200-E316FD246094}

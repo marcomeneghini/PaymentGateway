@@ -13,5 +13,11 @@ PG_API - Add Healthcheck
 PG_API - CreatePayment Retrieve the merchant, if does not exists or IsValid=false, InvalidMerchantException
 PG_API - UnitTesting PaymentService
 
-SHRD - INotification SendMessage, StartListen, StopListen, Evt<MessageArrived>
+SHRD - EncryptedMessage
+SHRD - IEventBrokerPublisher PublishEncryptedMessage
+SHRD - RabbitMqEventBrokerPublisher:IEventBrokerPublisher
+SHRD - IEventBrokerSubscriber Subscribe(topicname)
+SHRD - IEventBrokerSubscriber MessageArrived()
+SHRD_UT - EncryptedMessage test
+
 
