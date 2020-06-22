@@ -58,7 +58,7 @@ namespace PaymentGateway.Api.Services
                     // set the payment status
                 paymentStatus.Status = PaymentStatusEnum.Completed;
                 await  _paymentRepository.UpdatePaymentStatus(paymentStatus);
-                //TODO: set the correct response
+                // create the response
                 return new CreatePaymentResponse(){RequestId = request.RequestId,PaymentRequestId = paymentStatus.PaymentId};
             }
             catch (Exception e)

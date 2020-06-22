@@ -36,6 +36,10 @@ namespace PaymentGateway.Api.Controllers
 
                 return Ok(_mapper.Map<CreatePaymentResponseModel>(response));
             }
+            catch (InvalidMerchantException e)
+            {
+                return BadRequest(new { message = $"Invalid merchant {e.MerchantId} Reason:{e.InvalidMerchantReason.ToString()}" });
+            }
             catch (RequestAlreadyProcessedException e)
             {
                 // this error is thrown to ensure idempotency

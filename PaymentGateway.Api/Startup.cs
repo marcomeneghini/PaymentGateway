@@ -32,15 +32,15 @@ namespace PaymentGateway.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped<IMerchantRepository, EfInMemoryMerchantRepository>();
-            services.AddScoped<IPaymentRepository, EfInMemoryPaymentRepository>();
+            services.AddSingleton<IMerchantRepository, InMemoryMerchantRepository>();
+            services.AddSingleton<IPaymentRepository, InMemoryPaymentRepository>();
             services.AddScoped<IPaymentService, PaymentService>();
             services.AddScoped<ICipherService, AesCipherService>();
 
            
 
             services.AddControllers();
-            services.AddDbContext<PaymentGatewayDbContext>(opt => opt.UseInMemoryDatabase(Guid.NewGuid().ToString()),ServiceLifetime.Scoped, ServiceLifetime.Scoped);
+            //services.AddDbContext<PaymentGatewayDbContext>(opt => opt.UseInMemoryDatabase(Guid.NewGuid().ToString()),ServiceLifetime.Scoped,ServiceLifetime.Scoped);
             services.AddHealthChecks();
             services.AddAutoMapper(typeof(Startup));
 

@@ -21,7 +21,7 @@ namespace Bank.Payments.Api.Test
             var fakeBankAccountRepository = new FakeBankAccountRepository();
             var inMemPaymentRepository = new InMemoryPaymentRepository();
             var service = new CardPaymentService(fakeCardRepository, fakeBankAccountRepository, inMemPaymentRepository);
-            CardPaymentResponse response = service.DoPayment(new CardPaymentRequest(card, bankAccount));
+            CardPaymentResponse response = service.DoPayment(new CardPaymentRequest(requestId1,card, bankAccount));
 
             Assert.Equal(resulTransactionStatus, response.TransactionStatus);
         }
@@ -35,7 +35,7 @@ namespace Bank.Payments.Api.Test
             var fakeBankAccountRepository = new FakeBankAccountRepository();
             var inMemPaymentRepository = new InMemoryPaymentRepository();
             var service = new CardPaymentService(fakeCardRepository, fakeBankAccountRepository, inMemPaymentRepository);
-            CardPaymentResponse response = service.DoPayment(new CardPaymentRequest(card, bankAccount));
+            CardPaymentResponse response = service.DoPayment(new CardPaymentRequest(requestId1,card, bankAccount));
 
             Assert.Equal(resulTransactionStatus, response.TransactionStatus);
         }
