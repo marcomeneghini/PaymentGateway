@@ -7,5 +7,8 @@ namespace PaymentGateway.Api.Domain
 {
     public class CreatePaymentResponse
     {
+        public string RequestId { get; set; }
+
+        public Guid PaymentRequestId { get; set; }
     }
 }

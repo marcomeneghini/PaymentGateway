@@ -1,58 +1,81 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Sockets;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using PaymentGateway.SharedLib.Exceptions;
 using PaymentGateway.SharedLib.Messages;
 using RabbitMQ.Client;
+using RabbitMQ.Client.Exceptions;
+using Polly;
+using Polly.Retry;
 
 namespace PaymentGateway.SharedLib.EventBroker
 {
-    public class RabbitMqEventBrokerPublisher:IEventBrokerPublisher
+    public class RabbitMQEventBrokerPublisher:IEventBrokerPublisher
     {
-        private readonly string _username;
-        private readonly string _password;
-        private readonly string _hostname;
+        private readonly ILogger<RabbitMQEventBrokerPublisher> _logger;
+        private readonly IRabbitMQPersistentConnection _persistentConnection;
+        private readonly int _retrycount;
+        const string BROKER_NAME = "paymentgateway_event_bus";
 
-        public RabbitMqEventBrokerPublisher(string username, string password, string hostname)
+        public RabbitMQEventBrokerPublisher(
+            IRabbitMQPersistentConnection persistentConnection,
+            ILogger<RabbitMQEventBrokerPublisher> logger,
+            int retrycount)
         {
-            _username = username;
-            _password = password;
-            _hostname = hostname;
+            _logger = logger;
+            _persistentConnection = persistentConnection ?? throw new ArgumentNullException(nameof(persistentConnection));
+            _retrycount = retrycount;
         }
         public void PublishEncryptedMessage(EncryptedMessage encryptedMessage)
         {
-            try
+            if (!_persistentConnection.IsConnected)
             {
-                var connectionFactory = new RabbitMQ.Client.ConnectionFactory()
+                _persistentConnection.TryConnect();
+            }
+
+            var policy = RetryPolicy.Handle<BrokerUnreachableException>()
+                .Or<SocketException>()
+                .WaitAndRetry(_retrycount, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)), (ex, time) =>
                 {
-                    UserName = _username,
-                    Password = _password,
-                    HostName = _hostname
-                };
-                var connection = connectionFactory.CreateConnection();
+                    _logger.LogWarning(ex, "Could not publish event: {EventId} after {Timeout}s ({ExceptionMessage})", encryptedMessage.Id, $"{time.TotalSeconds:n1}", ex.Message);
+                });
 
-                var model = connection.CreateModel();
+            var eventName = encryptedMessage.TopicName;
 
-                // Create Exchange, this is Idempotent so i don't bother to check the existence
-                model.ExchangeDeclare(encryptedMessage.TopicName, ExchangeType.Direct);
+            _logger.LogTrace("Creating RabbitMQ channel to publish event: {EventId} ({EventName})", encryptedMessage.Id, eventName);
 
-                //publish 
-                var properties = model.CreateBasicProperties();
-                properties.Persistent = false;
-
-                var serializedMessage = JsonConvert.SerializeObject(encryptedMessage);
-
-                byte[] messagebuffer = Encoding.Default.GetBytes(serializedMessage);
-
-                model.BasicPublish(encryptedMessage.TopicName, "directexchange_key", properties, messagebuffer);
-            }
-            catch (Exception e)
+            using (var channel = _persistentConnection.CreateModel())
             {
-                throw new EventBrokerException(e.Message);
+
+                _logger.LogTrace("Declaring RabbitMQ exchange to publish event: {EventId}", encryptedMessage.Id);
+
+                channel.ExchangeDeclare(exchange: BROKER_NAME, type: "direct");
+
+                var message = JsonConvert.SerializeObject(encryptedMessage);
+                var body = Encoding.UTF8.GetBytes(message);
+
+                policy.Execute(() =>
+                {
+                    var properties = channel.CreateBasicProperties();
+                    properties.DeliveryMode = 2; // persistent
+
+                    _logger.LogTrace("Publishing event to RabbitMQ: {EventId}", encryptedMessage.Id);
+
+                    channel.BasicPublish(
+                        exchange: BROKER_NAME,
+                        routingKey: eventName,
+                        mandatory: true,
+                        basicProperties: properties,
+                        body: body);
+                });
             }
+
+
         }
 
     }

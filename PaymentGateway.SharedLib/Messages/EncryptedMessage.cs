@@ -9,6 +9,7 @@ namespace PaymentGateway.SharedLib.Messages
 {
     public class EncryptedMessage
     {
+        public Guid Id { get; private set; }
         /// <summary>
         /// name of the topic in the event broker
         /// where to publish the message
@@ -40,9 +41,10 @@ namespace PaymentGateway.SharedLib.Messages
             IMessage message,
             ICipherService cipherService)
         {
+            Id = Guid.NewGuid();
             ContentTypeName = message.GetType().FullName;
 
-            var serializedMessage = message.Serialize();
+            var serializedMessage = JsonConvert.SerializeObject(message);
             Body = cipherService.Encrypt(serializedMessage);
             SourceServiceName = sourceServiceName;
             TopicName = topicName;

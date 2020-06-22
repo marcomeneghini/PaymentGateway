@@ -6,6 +6,6 @@ namespace PaymentGateway.SharedLib.Messages
 {
     public  interface IMessage
     {
-        string Serialize();
+        
     }
 }

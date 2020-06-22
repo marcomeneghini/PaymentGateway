@@ -19,6 +19,9 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
+      - EventBrokerConnection=rabbitmq
+      - EventBrokerUserName=guest
+      - EventBrokerPassword=guest
     ports:
       - "80"
       - "443"

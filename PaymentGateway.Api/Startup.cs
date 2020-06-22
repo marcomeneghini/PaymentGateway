@@ -7,18 +7,29 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using PaymentGateway.Api.Domain;
 using PaymentGateway.Api.Infrastructure;
 using PaymentGateway.Api.Services;
 using PaymentGateway.SharedLib.Encryption;
+using PaymentGateway.SharedLib.EventBroker;
+using RabbitMQ.Client;
 
 namespace PaymentGateway.Api
 {
     public class Startup
     {
-      
+
+        public IConfiguration Configuration { get; }
+
+        public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
+
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<IMerchantRepository, EfInMemoryMerchantRepository>();
@@ -26,10 +37,44 @@ namespace PaymentGateway.Api
             services.AddScoped<IPaymentService, PaymentService>();
             services.AddScoped<ICipherService, AesCipherService>();
 
+           
+
             services.AddControllers();
             services.AddDbContext<PaymentGatewayDbContext>(opt => opt.UseInMemoryDatabase(Guid.NewGuid().ToString()),ServiceLifetime.Scoped, ServiceLifetime.Scoped);
             services.AddHealthChecks();
             services.AddAutoMapper(typeof(Startup));
+
+            //---------------------------------------
+            services.AddSingleton<IRabbitMQPersistentConnection>(sp =>
+            {
+                var logger = sp.GetRequiredService<ILogger<DefaultRabbitMQPersistentConnection>>();
+
+                var factory = new ConnectionFactory()
+                {
+                    HostName = Configuration["EventBrokerConnection"],
+                    DispatchConsumersAsync = true
+                };
+
+                if (!string.IsNullOrEmpty(Configuration["EventBrokerUserName"]))
+                {
+                    factory.UserName = Configuration["EventBrokerUserName"];
+                }
+
+                if (!string.IsNullOrEmpty(Configuration["EventBrokerPassword"]))
+                {
+                    factory.Password = Configuration["EventBrokerPassword"];
+                }
+
+                var retryCount = 5;
+                if (!string.IsNullOrEmpty(Configuration["EventBrokerRetryCount"]))
+                {
+                    retryCount = int.Parse(Configuration["EventBrokerRetryCount"]);
+                }
+
+                return new DefaultRabbitMQPersistentConnection(factory, logger, retryCount);
+            });
+
+            RegisterEventPusPublisher(services);
         }
 
        
@@ -52,16 +97,53 @@ namespace PaymentGateway.Api
             });
         }
 
-        //private static void AddTestData(PaymentGatewayDbContext context)
+
+        private void RegisterEventPusPublisher(IServiceCollection services)
+        {
+            services.AddSingleton<IEventBrokerPublisher, RabbitMQEventBrokerPublisher>(sp =>
+                {
+                    var rabbitMQPersistentConnection = sp.GetRequiredService<IRabbitMQPersistentConnection>();
+                  
+                    var logger = sp.GetRequiredService<ILogger<RabbitMQEventBrokerPublisher>>();
+                   
+                    var retryCount = 5;
+                    if (!string.IsNullOrEmpty(Configuration["EventBusRetryCount"]))
+                    {
+                        retryCount = int.Parse(Configuration["EventBusRetryCount"]);
+                    }
+
+                    return new RabbitMQEventBrokerPublisher(rabbitMQPersistentConnection, logger, retryCount);
+                });
+        }
+
+        //private void RegisterEventBus(IServiceCollection services)
         //{
-           
+        //    var subscriptionClientName = Configuration["SubscriptionClientName"];
 
-        //    context.Merchants.Add(EfInMemoryMerchantRepository.CreateMerchant_Amazon());
-        //    context.Merchants.Add(EfInMemoryMerchantRepository.CreateMerchant_Apple());
 
-          
+        //    services.AddSingleton<IEventBus, EventBusRabbitMQ>(sp =>
+        //    {
+        //        var rabbitMQPersistentConnection = sp.GetRequiredService<IRabbitMQPersistentConnection>();
+        //        var iLifetimeScope = sp.GetRequiredService<ILifetimeScope>();
+        //        var logger = sp.GetRequiredService<ILogger<EventBusRabbitMQ>>();
+        //        var eventBusSubcriptionsManager = sp.GetRequiredService<IEventBusSubscriptionsManager>();
 
-        //    context.SaveChanges();
+        //        var retryCount = 5;
+        //        if (!string.IsNullOrEmpty(Configuration["EventBusRetryCount"]))
+        //        {
+        //            retryCount = int.Parse(Configuration["EventBusRetryCount"]);
+        //        }
+
+        //        return new EventBusRabbitMQ(rabbitMQPersistentConnection, logger, iLifetimeScope, eventBusSubcriptionsManager, subscriptionClientName, retryCount);
+        //    });
+
+
+        //    services.AddSingleton<IEventBusSubscriptionsManager, InMemoryEventBusSubscriptionsManager>();
+
+        //    services.AddTransient<ProductPriceChangedIntegrationEventHandler>();
+        //    services.AddTransient<OrderStartedIntegrationEventHandler>();
         //}
+
+
     }
 }

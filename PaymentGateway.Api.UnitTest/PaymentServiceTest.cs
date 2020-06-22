@@ -9,6 +9,8 @@ using Xunit;
 using Moq;
 using PaymentGateway.Api.Domain;
 using PaymentGateway.Api.Domain.Exceptions;
+using PaymentGateway.SharedLib.Encryption;
+using PaymentGateway.SharedLib.EventBroker;
 
 namespace PaymentGateway.Api.UnitTest
 {
@@ -22,13 +24,15 @@ namespace PaymentGateway.Api.UnitTest
             Guid fakePaymentGuid = Guid.NewGuid();
             string fakePaymentRequestId = "asdasdad";
             var mockMerchantRepository = new Mock<IMerchantRepository>();
+            var mockCipherService = new Mock<ICipherService>();
             var mockPaymentRepository = new Mock<IPaymentRepository>();
+            var mockEventBrokerPublisher = new Mock<IEventBrokerPublisher>();
             var fakePaymentStatus = CreateFakePaymentStatus(fakePaymentGuid, fakePaymentRequestId);
             mockPaymentRepository.Setup(x => x.GetPaymentStatus(fakePaymentRequestId))
                 .ReturnsAsync(fakePaymentStatus);
             var request = CreateFakeCreatePaymentRequest_ForDuplicateTest(fakePaymentStatus);
             // act
-            var service = new PaymentService(mockMerchantRepository.Object, mockPaymentRepository.Object);
+            var service = new PaymentService(mockMerchantRepository.Object, mockPaymentRepository.Object,  mockEventBrokerPublisher.Object, mockCipherService.Object);
             // act-assert
             var exception = await Assert.ThrowsAsync<RequestAlreadyProcessedException>(() =>  service.CreatePayment(request));
             Assert.Equal(fakePaymentRequestId, exception.RequestId);
@@ -42,9 +46,11 @@ namespace PaymentGateway.Api.UnitTest
             // arrange 
             var mockMerchantRepository = new Mock<IMerchantRepository>();
             var mockPaymentRepository = new Mock<IPaymentRepository>();
+            var mockCipherService = new Mock<ICipherService>();
+            var mockEventBrokerPublisher = new Mock<IEventBrokerPublisher>();
             var request = CreateFakeCreatePaymentRequest_ForInvalidMerchant(Guid.NewGuid());
             // act
-            var service = new PaymentService(mockMerchantRepository.Object, mockPaymentRepository.Object);
+            var service = new PaymentService(mockMerchantRepository.Object, mockPaymentRepository.Object, mockEventBrokerPublisher.Object, mockCipherService.Object);
             // act-assert
             var exception = await Assert.ThrowsAsync<InvalidMerchantException>(() => service.CreatePayment(request));
             Assert.Equal(InvalidMerchantReason.NotPresent, exception.InvalidMerchantReason);
@@ -56,12 +62,14 @@ namespace PaymentGateway.Api.UnitTest
             // arrange 
             var mockMerchantRepository = new Mock<IMerchantRepository>();
             var mockPaymentRepository = new Mock<IPaymentRepository>();
+            var mockCipherService = new Mock<ICipherService>();
+            var mockEventBrokerPublisher = new Mock<IEventBrokerPublisher>();
             Guid merchantId = Guid.NewGuid();
             var request = CreateFakeCreatePaymentRequest_ForInvalidMerchant(merchantId);
             var merchant = createFakeInvalidMerchant(merchantId);
             mockMerchantRepository.Setup(x => x.GetMerchantById(merchantId)).ReturnsAsync(merchant);
             // act
-            var service = new PaymentService(mockMerchantRepository.Object, mockPaymentRepository.Object);
+            var service = new PaymentService(mockMerchantRepository.Object, mockPaymentRepository.Object, mockEventBrokerPublisher.Object, mockCipherService.Object);
             // act-assert
             var exception = await Assert.ThrowsAsync<InvalidMerchantException>(() => service.CreatePayment(request));
             Assert.Equal(InvalidMerchantReason.Invalid, exception.InvalidMerchantReason);
