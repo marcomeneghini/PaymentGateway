@@ -11,4 +11,7 @@ PG_API - Create MerchantCardPaymentsController  (This API will be available to t
 PG_API - CreatePayment POST must be idempotent (see BANK)
 PG_API - Add Healthcheck
 PG_API - CreatePayment Retrieve the merchant, if does not exists or IsValid=false, InvalidMerchantException
-PG_API - 
+PG_API - UnitTesting PaymentService
+
+SHRD - INotification SendMessage, StartListen, StopListen, Evt<MessageArrived>
+

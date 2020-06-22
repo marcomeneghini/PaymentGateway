@@ -49,7 +49,7 @@ namespace PaymentGateway.Api.Services
             {
                 paymentStatus.Status = PaymentStatusEnum.Error;
                 await _paymentRepository.UpdatePaymentStatus(paymentStatus);
-                return null;
+                throw;
             }
           
         }
