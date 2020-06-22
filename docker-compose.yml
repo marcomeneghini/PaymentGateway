@@ -21,3 +21,10 @@ services:
     depends_on:     
       - rabbitmq
 
+
+  paymentgateway.processor.api:
+    image: ${DOCKER_REGISTRY-}paymentgatewayprocessorapi
+    build:
+      context: .
+      dockerfile: PaymentGateway.Processor.Api/Dockerfile
+
