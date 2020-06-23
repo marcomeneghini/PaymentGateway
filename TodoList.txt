@@ -3,29 +3,28 @@ BANK - Change Validation error Response (422 status code)
 BANK - Make API Idempotent (return  409 Conflict)
 BANK - Add Healthcheck 
 BANK - Run in container
-
 SharedLib  - Add Encryption Service
-
 PG_API - Encrypt payload (IDataProtecionProvider??)
 PG_API - Create MerchantCardPaymentsController  (This API will be available to the Merchant)
 PG_API - CreatePayment POST must be idempotent (see BANK)
 PG_API - Add Healthcheck
 PG_API - CreatePayment Retrieve the merchant, if does not exists or IsValid=false, InvalidMerchantException
 PG_API - UnitTesting PaymentService
-
 SHRD - EncryptedMessage
 SHRD - IEventBrokerPublisher PublishEncryptedMessage
 SHRD - RabbitMqEventBrokerPublisher:IEventBrokerPublisher
 DOCKER - Compose , Add RabbitMQ
 PG_API - Publish message "PaymentRequestMessage" to "PaymentRequests" Exchange
-
 SHRD - IEventBrokerSubscriber Subscribe(topicname)
 SHRD - IEventBrokerSubscriber MessageArrived()
 PG_PROC - Listen Queue PaymentRequests
 PG_PROC - finalize service
 
+------MVP 1 COMPLETE!(some Extras included already) -----------
+
 SHRD_UT - EncryptedMessage test
-ADD UNITTESTA
+PG_PROC - add CreatedAt and LAstUpdate to PaymentStatus
+GENERAL - ADD MORE UNITTESTS
 
 -----------------------
 EXTRAS
@@ -39,7 +38,7 @@ ADD Application logging = SERILOG
 ADD Application metrics 
 ADD Authentication 
 ADD Build script / CI 
-ADD Performance testing 
+ADD Performance testing = Gatling
 ADD Data storage 
 ------------------------
 EXTRA EXTRA:
