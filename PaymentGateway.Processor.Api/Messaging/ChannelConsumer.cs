@@ -1,14 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using PaymentGateway.Processor.Api.Domain;
 using PaymentGateway.SharedLib.Encryption;
 using PaymentGateway.SharedLib.Messages;
+using Polly;
+using Polly.Retry;
 
 namespace PaymentGateway.Processor.Api.Messaging
 {
@@ -20,6 +24,7 @@ namespace PaymentGateway.Processor.Api.Messaging
         private readonly IPaymentStatusRepository _paymentStatusRepository;
         private readonly IBankPaymentProxy _bankPaymentProxy;
         private readonly ICipherService _cipherService;
+        private readonly IMapper _mapper;
 
         private static readonly Random Random = new Random();
 
@@ -28,13 +33,15 @@ namespace PaymentGateway.Processor.Api.Messaging
             ILogger<ChannelConsumer> logger,
             IPaymentStatusRepository paymentStatusRepository,
             IBankPaymentProxy bankPaymentProxy,
-            ICipherService cipherService )
+            ICipherService cipherService,
+            IMapper mapper)
         {
             _reader = reader;
             _logger = logger;
             _paymentStatusRepository = paymentStatusRepository;
             _bankPaymentProxy = bankPaymentProxy;
             _cipherService = cipherService;
+            _mapper = mapper;
         }
 
         public async Task BeginConsumeAsync(CancellationToken cancellationToken = default)
@@ -49,46 +56,39 @@ namespace PaymentGateway.Processor.Api.Messaging
 
                     // decrypt the message
                     var decryptedMessage = message.GetMessage<PaymentRequestMessage>(_cipherService);
-                    
-                    // save the payment status
-                    //var paymentStatus = new PaymentStatus();
-                    //paymentStatus.Status = PaymentStatusEnum.Scheduled;
-                    //paymentStatus.RequestId = decryptedMessage.RequestId;
-                    //paymentStatus.PaymentId = decryptedMessage.PaymentRequestId;
-                    //await _paymentStatusRepository.AddPaymentStatus(paymentStatus);
+                  
                     var paymentStatus= await _paymentStatusRepository.GetPaymentStatus(decryptedMessage.PaymentRequestId);
-                    if (paymentStatus==null)
+
+                    CardPaymentResponse bankPaymentResponse = null;
+                    try
                     {
-                        // TODO:Exception, something wrong with the persistent store
-                        throw new Exception("paymentStatus==null , something wrong with the persistent store");
+                        var request = _mapper.Map<CardPaymentRequest>(decryptedMessage);
+
+
+                        var policy = Policy.Handle<SocketException>()
+                            .Or<BankNotAvailableException>()
+                            .WaitAndRetry(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)), (ex, time) =>
+                                {
+                                    _logger.LogWarning(ex, "Bank Payment Service now available after {TimeOut}s ({ExceptionMessage})", $"{time.TotalSeconds:n1}", ex.Message);
+                                }
+                            );
+                        policy.Execute(() =>
+                        {
+                            // perform the call 
+                            bankPaymentResponse =  _bankPaymentProxy.CreatePaymentAsync(request).Result;
+                        });
                     }
-                    // perform the call 
-                    var bankPaymentResponse =await _bankPaymentProxy.CreatePaymentAsync(new CardPaymentRequest
-                    {
-                        Amount = decryptedMessage.Amount,
-                        CVV =  decryptedMessage.CVV,
-                        CardNumber = decryptedMessage.CardNumber,
-                        CardHolderName = decryptedMessage.CardHolderName,
-                        MonthExpiryDate = decryptedMessage.MonthExpiryDate,
-                        YearExpiryDate = decryptedMessage.YearExpiryDate,
-                        Currency = decryptedMessage.Currency,
-                        MerchantSortCode = decryptedMessage.MerchantSortCode,
-                        MerchantAccountNumber = decryptedMessage.MerchantAccountNumber,
-                        RequestId = decryptedMessage.RequestId
-                    });
-                    if (bankPaymentResponse==null)
-                    {
-                        throw new Exception("bankPaymentResponse==null , something wrong with the communication");
-                        // TODO: Exception, something wrong with the communication
-                    }
-                    if (bankPaymentResponse.TransactionStatus== TransactionStatus.Declined)
+                    catch (Exception)
                     {
                         paymentStatus.Status = PaymentStatusEnum.Error;
+                        await _paymentStatusRepository.UpdatePaymentStatus(paymentStatus);
+                        throw;
                     }
-                    else
-                    {
-                        paymentStatus.Status = PaymentStatusEnum.Completed;
-                    }
+
+                    if (bankPaymentResponse == null)
+                        throw new BankNotAvailableException("Received Null from the server");
+                    
+                    paymentStatus.Status = bankPaymentResponse?.TransactionStatus== TransactionStatus.Declined ? PaymentStatusEnum.Error : PaymentStatusEnum.Completed;
 
                     await _paymentStatusRepository.UpdatePaymentStatus(paymentStatus);
                 }

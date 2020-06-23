@@ -98,9 +98,9 @@ namespace PaymentGateway.Processor.Api
                 var paymentRepository = ctx.GetRequiredService<IPaymentStatusRepository>();
                 var bankPaymentProxy = ctx.GetRequiredService<IBankPaymentProxy>();
                 var cipherService = ctx.GetRequiredService<ICipherService>();
+                var mapperService = ctx.GetRequiredService<IMapper>();
 
-
-                return new ChannelConsumer(channel.Reader, logger, paymentRepository, bankPaymentProxy, cipherService);
+                return new ChannelConsumer(channel.Reader, logger, paymentRepository, bankPaymentProxy, cipherService, mapperService);
             });
 
             services.AddHostedService<EventBrokerBackgroundWorker>();

@@ -22,8 +22,13 @@ PG_PROC - finalize service
 
 ------MVP 1 COMPLETE!(some Extras included already) -----------
 
-SHRD_UT - EncryptedMessage test
+BANK - Change Enum To String in the model for status
+PG_PROC - implement Polly on Bank Proxy
+PG_PROC - proxy and consumer throw correct exceptions
+-- DONE -
+PG_PROC - implement ExceptionMiddleware
 PG_PROC - add CreatedAt and LAstUpdate to PaymentStatus
+SHRD_UT - EncryptedMessage test
 GENERAL - ADD MORE UNITTESTS
 
 -----------------------

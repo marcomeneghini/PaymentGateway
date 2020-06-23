@@ -23,15 +23,31 @@ namespace PaymentGateway.Processor.Api.Infrastructure
 
         public async Task AddPaymentStatus(PaymentStatus paymentStatus)
         {
-            paymentStatuses.TryAdd(paymentStatus.PaymentId, paymentStatus);
+            try
+            {
+                paymentStatuses.TryAdd(paymentStatus.PaymentId, paymentStatus);
+            }
+            catch (Exception e)
+            {
+                throw new PaymentRepositoryException(e.Message);
+            }
+            
         }
 
         public async Task UpdatePaymentStatus(PaymentStatus paymentStatus)
         {
-            if (paymentStatuses.TryGetValue(paymentStatus.PaymentId, out var existingPaymentStatus))
+            try
             {
-                paymentStatuses.TryUpdate(paymentStatus.PaymentId, paymentStatus, existingPaymentStatus);
+                if (paymentStatuses.TryGetValue(paymentStatus.PaymentId, out var existingPaymentStatus))
+                {
+                    paymentStatuses.TryUpdate(paymentStatus.PaymentId, paymentStatus, existingPaymentStatus);
+                }
             }
+            catch (Exception e)
+            {
+                throw new PaymentRepositoryException(e.Message);
+            }
+
         }
     }
 }

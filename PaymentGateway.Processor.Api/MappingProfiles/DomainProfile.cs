@@ -6,6 +6,7 @@ using AutoMapper;
 using PaymentGateway.Processor.Api.Domain;
 using PaymentGateway.Processor.Api.Models;
 using PaymentGateway.Processor.Api.Proxies;
+using PaymentGateway.SharedLib.Messages;
 
 namespace PaymentGateway.Processor.Api.MappingProfiles
 {
@@ -18,6 +19,8 @@ namespace PaymentGateway.Processor.Api.MappingProfiles
             CreateMap<CardPaymentResponse, CardPaymentResponseDto>().ReverseMap();
 
             CreateMap<CardPaymentRequest, CardPaymentRequestDto>().ReverseMap();
+
+            CreateMap<PaymentRequestMessage, CardPaymentRequest>().ReverseMap();
         }
     }
 }
