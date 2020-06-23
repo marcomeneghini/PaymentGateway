@@ -26,8 +26,11 @@ BANK - Change Enum To String in the model for status
 PG_PROC - implement Polly on Bank Proxy
 PG_PROC - proxy and consumer throw correct exceptions
 -- DONE -
-PG_PROC - implement ExceptionMiddleware
+PG_PROC - implement ExceptionMiddleware (DEPRECATED - the work is don in the background worker)
 PG_PROC - add CreatedAt and LAstUpdate to PaymentStatus
+-- DONE
+PG_API - ADD SERILOG 
+-- 
 SHRD_UT - EncryptedMessage test
 GENERAL - ADD MORE UNITTESTS
 
@@ -39,7 +42,7 @@ Containerization
 Encryption 
 Bank Implementation
 -----------------------
-ADD Application logging = SERILOG
+ADD Application logging = SERILOG  - Started
 ADD Application metrics 
 ADD Authentication 
 ADD Build script / CI 

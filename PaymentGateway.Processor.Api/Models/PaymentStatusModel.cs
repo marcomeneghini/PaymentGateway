@@ -11,5 +11,9 @@ namespace PaymentGateway.Processor.Api.Models
         public string RequestId { get; set; }
 
         public PaymentStatusEnum Status { get; set; }
+
+        public DateTimeOffset CreatedAt { get; set; }
+
+        public DateTimeOffset UpdatedAt { get; set; }
     }
 }

@@ -5,14 +5,14 @@ using System.Threading.Tasks;
 
 namespace PaymentGateway.Processor.Api.Domain
 {
-    public class PaymentDetailsException:Exception
+    public class BankPaymentDetailsException:Exception
     {
-        public PaymentDetailsException():base()
+        public BankPaymentDetailsException():base()
         {
                 
         }
 
-        public PaymentDetailsException(string message):base(message)
+        public BankPaymentDetailsException(string message):base(message)
         {
             
         }

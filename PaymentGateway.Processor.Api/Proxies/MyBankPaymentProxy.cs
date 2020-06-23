@@ -47,7 +47,7 @@ namespace PaymentGateway.Processor.Api.Proxies
             }
             else if (response.StatusCode == HttpStatusCode.BadRequest)
             {
-                throw new PaymentDetailsException(responseDto.Message);
+                throw new BankPaymentDetailsException(responseDto.Message);
             }
 
             return _mapper.Map<CardPaymentResponse>(responseDto);

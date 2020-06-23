@@ -43,18 +43,18 @@ namespace PaymentGateway.Processor.Api.Messaging
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            //TODO: add an instance variable to this name "Processor.Api"
-            _eventBrokerSubscriber.Subscribe(EventBrokerConsts.PAYMENT_REQUEST_EXCHANGE_NAME, EventBrokerConsts.PAYMENT_REQUEST_ROUTINGKEY ,"Processor.Api");
-            await _consumer.BeginConsumeAsync(stoppingToken);
+            try
+            {
+                _eventBrokerSubscriber.Subscribe(EventBrokerConsts.PAYMENT_REQUEST_EXCHANGE_NAME, EventBrokerConsts.PAYMENT_REQUEST_ROUTINGKEY, "Processor.Api");
+                await _consumer.BeginConsumeAsync(stoppingToken);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+           
         }
 
-        //private void _eventBrokerSubscriber_OnMessage(object sender, EncryptedMessageEventArgs e)
-        //{
-        //    EncryptedMessage message = e.Message;
-        //    message.ProcessedAt=DateTimeOffset.Now;
-        //    _logger.LogInformation($"message type: {e.Message.ContentTypeName} pushedAt:{e.Message.PushedAt} processedAt:{message.ProcessedAt}");
-
-        //     _producer.PublishAsync(message);
-        //}
     }
 }

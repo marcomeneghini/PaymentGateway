@@ -46,59 +46,82 @@ namespace PaymentGateway.Processor.Api.Messaging
 
         public async Task BeginConsumeAsync(CancellationToken cancellationToken = default)
         {
-            _logger.LogInformation($"Consumer > starting");
+            _logger.LogInformation($"ChannelConsumer > starting");
 
             try
             {
                 await foreach (var message in _reader.ReadAllAsync(cancellationToken))
                 {
-                    _logger.LogInformation($"CONSUMER > Received message {message.Id} : {message.TopicName}");
-
-                    // decrypt the message
-                    var decryptedMessage = message.GetMessage<PaymentRequestMessage>(_cipherService);
-                  
-                    var paymentStatus= await _paymentStatusRepository.GetPaymentStatus(decryptedMessage.PaymentRequestId);
-
-                    CardPaymentResponse bankPaymentResponse = null;
                     try
                     {
+                        _logger.LogInformation($"ChannelConsumer > Received message {message.Id} : {message.TopicName}");
+
+                        // decrypt the message
+                        var decryptedMessage = message.GetMessage<PaymentRequestMessage>(_cipherService);
+                        PaymentStatus paymentStatus = null;
+                        try
+                        {
+                            paymentStatus = await _paymentStatusRepository.GetPaymentStatus(decryptedMessage.PaymentRequestId);
+                        }
+                        catch (PaymentRepositoryException e)
+                        {
+                            _logger.LogError($"PaymentRepositoryException:{e.Message}");
+                        }
+
+                        CardPaymentResponse bankPaymentResponse = null;
+                       
                         var request = _mapper.Map<CardPaymentRequest>(decryptedMessage);
 
 
                         var policy = Policy.Handle<SocketException>()
                             .Or<BankNotAvailableException>()
-                            .WaitAndRetry(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)), (ex, time) =>
+                            .WaitAndRetry(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)),
+                                (ex, time) =>
                                 {
-                                    _logger.LogWarning(ex, "Bank Payment Service now available after {TimeOut}s ({ExceptionMessage})", $"{time.TotalSeconds:n1}", ex.Message);
+                                    _logger.LogWarning(ex,
+                                        "Bank Payment Service now available after {TimeOut}s ({ExceptionMessage})",
+                                        $"{time.TotalSeconds:n1}", ex.Message);
                                 }
                             );
                         policy.Execute(() =>
                         {
                             // perform the call 
-                            bankPaymentResponse =  _bankPaymentProxy.CreatePaymentAsync(request).Result;
+                            try
+                            {
+                                bankPaymentResponse = _bankPaymentProxy.CreatePaymentAsync(request).Result;
+                            }
+                            catch (AggregateException e)
+                            {
+                                var flatExceptions = e.Flatten().InnerExceptions;
+
+                                foreach (var agrEx in flatExceptions)
+                                {
+                                    _logger.LogError($"{agrEx.GetType().Name}:{e.Message}");
+                                }
+                            }
                         });
-                    }
-                    catch (Exception)
-                    {
-                        paymentStatus.Status = PaymentStatusEnum.Error;
+                        
+                       
+                        if (bankPaymentResponse == null)
+                            _logger.LogError($"Received Null from the server. RequestId:{decryptedMessage.RequestId}");
+                       
+
+                        paymentStatus.Status = bankPaymentResponse?.TransactionStatus == TransactionStatus.Declined ? PaymentStatusEnum.Error : PaymentStatusEnum.Completed;
+
                         await _paymentStatusRepository.UpdatePaymentStatus(paymentStatus);
-                        throw;
                     }
-
-                    if (bankPaymentResponse == null)
-                        throw new BankNotAvailableException("Received Null from the server");
-                    
-                    paymentStatus.Status = bankPaymentResponse?.TransactionStatus== TransactionStatus.Declined ? PaymentStatusEnum.Error : PaymentStatusEnum.Completed;
-
-                    await _paymentStatusRepository.UpdatePaymentStatus(paymentStatus);
+                    catch (Exception e)
+                    {
+                        _logger.LogCritical($"Unexpected exception:{e.Message}");
+                    }
                 }
             }
             catch (OperationCanceledException ex)
             {
-                _logger.LogWarning($"Consumer > forced stop");
+                _logger.LogWarning($"ChannelConsumer > forced stop");
             }
 
-            _logger.LogInformation($"Consumer > shutting down");
+            _logger.LogInformation($"ChannelConsumer > shutting down");
         }
     }
 }
