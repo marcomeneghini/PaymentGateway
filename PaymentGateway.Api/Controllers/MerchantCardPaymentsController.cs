@@ -29,28 +29,28 @@ namespace PaymentGateway.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> CreatePayment(CreatePaymentRequestModel request)
         {
-            try
-            {
-                var response = await _paymentService.CreatePayment(_mapper.Map<CreatePaymentRequest>(request));
+            //try
+            //{
+            var response = await _paymentService.CreatePayment(_mapper.Map<CreatePaymentRequest>(request));
 
 
-                return Ok(_mapper.Map<CreatePaymentResponseModel>(response));
-            }
-            catch (InvalidMerchantException e)
-            {
-                return BadRequest(new { message = $"Invalid merchant {e.MerchantId} Reason:{e.InvalidMerchantReason.ToString()}" });
-            }
-            catch (RequestAlreadyProcessedException e)
-            {
-                // this error is thrown to ensure idempotency
-                // multiple request same request id error
-                return Conflict(new
-                    { message = $"request {e.RequestId} already present with status {e.Status.ToString()}"});
-            }
-            catch (Exception e)
-            {
-                return BadRequest(new {message= e.Message } );
-            }
+            return Ok(_mapper.Map<CreatePaymentResponseModel>(response));
+            //}
+            //catch (InvalidMerchantException e)
+            //{
+            //    return BadRequest(new { message = $"Invalid merchant {e.MerchantId} Reason:{e.InvalidMerchantReason.ToString()}" });
+            //}
+            //catch (RequestAlreadyProcessedException e)
+            //{
+            //    // this error is thrown to ensure idempotency
+            //    // multiple request same request id error
+            //    return Conflict(new
+            //        { message = $"request {e.RequestId} already present with status {e.Status.ToString()}"});
+            //}
+            //catch (Exception e)
+            //{
+            //    return BadRequest(new {message= e.Message } );
+            //}
 
         }
     }

@@ -13,25 +13,38 @@ namespace PaymentGateway.Api.Infrastructure
             new ConcurrentDictionary<string, PaymentStatus>();
         public async Task<PaymentStatus> GetPaymentStatus(string requestId)
         {
-            if (paymentStatuses.TryGetValue(requestId, out var paymentStatus))
+            return await Task.Run(() =>
             {
-                return paymentStatus;
-            }
+                if (paymentStatuses.TryGetValue(requestId, out var paymentStatus))
+                {
+                    return paymentStatus;
+                }
 
-            return null;
+                return null;
+            });
         }
 
         public async Task AddPaymentStatus(PaymentStatus paymentStatus)
         {
-            paymentStatuses.TryAdd(paymentStatus.RequestId, paymentStatus);
+             await Task.Run(() =>
+             {
+                 paymentStatuses.TryAdd(paymentStatus.RequestId, paymentStatus);
+                 return Task.CompletedTask;
+             });
+
         }
 
         public async Task UpdatePaymentStatus(PaymentStatus paymentStatus)
         {
-            if (paymentStatuses.TryGetValue(paymentStatus.RequestId, out var existingPaymentStatus))
+
+            await Task.Run(() =>
             {
-                paymentStatuses.TryUpdate(paymentStatus.RequestId, paymentStatus, existingPaymentStatus);
-            }
+                if (paymentStatuses.TryGetValue(paymentStatus.RequestId, out var existingPaymentStatus))
+                {
+                    paymentStatuses.TryUpdate(paymentStatus.RequestId, paymentStatus, existingPaymentStatus);
+                }
+                return Task.CompletedTask;
+            });
         }
     }
 }

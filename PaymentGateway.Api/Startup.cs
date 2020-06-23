@@ -13,10 +13,12 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using PaymentGateway.Api.Domain;
 using PaymentGateway.Api.Infrastructure;
+using PaymentGateway.Api.Middlewares;
 using PaymentGateway.Api.Services;
 using PaymentGateway.SharedLib.Encryption;
 using PaymentGateway.SharedLib.EventBroker;
 using RabbitMQ.Client;
+using Serilog;
 
 namespace PaymentGateway.Api
 {
@@ -78,14 +80,18 @@ namespace PaymentGateway.Api
         }
 
        
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerfactory)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
 
-          
+            loggerfactory.AddSerilog();
+
+            app.UseMiddleware(typeof(ExceptionMiddleware));
+            app.UseMiddleware(typeof(RequestIdLoggingMiddleware));
+
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>

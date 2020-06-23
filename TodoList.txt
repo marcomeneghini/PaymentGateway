@@ -30,7 +30,11 @@ PG_PROC - implement ExceptionMiddleware (DEPRECATED - the work is don in the bac
 PG_PROC - add CreatedAt and LAstUpdate to PaymentStatus
 -- DONE
 PG_API - ADD SERILOG 
--- 
+PG_API - ADD ErrorHandlind Middleware
+PG_API - ADD ErrorResponseModel
+-- DONE
+-- PG_PROC - DEbug PaymentStatus
+
 SHRD_UT - EncryptedMessage test
 GENERAL - ADD MORE UNITTESTS
 

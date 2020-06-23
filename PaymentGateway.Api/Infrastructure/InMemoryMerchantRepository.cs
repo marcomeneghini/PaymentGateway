@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.AccessControl;
 using System.Threading.Tasks;
 using PaymentGateway.Api.Domain;
 
@@ -22,12 +23,15 @@ namespace PaymentGateway.Api.Infrastructure
         }
         public async Task<Merchant> GetMerchantById(Guid merchantId)
         {
-            if (merchants.TryGetValue(merchantId, out var merchant))
+            return await Task.Run(() =>
             {
-                return merchant;
-            }
+                if (merchants.TryGetValue(merchantId, out var merchant))
+                {
+                    return merchant;
+                }
 
-            return null;
+                return null;
+            });
         }
 
         public static Merchant CreateMerchant_Amazon()

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace PaymentGateway.Api.Domain.Exceptions
@@ -10,10 +11,19 @@ namespace PaymentGateway.Api.Domain.Exceptions
         public Guid MerchantId { get; private set; }
         public InvalidMerchantReason InvalidMerchantReason { get; private set; }
 
-        public InvalidMerchantException(Guid merchantId,InvalidMerchantReason invalidMerchantReason)
+        public HttpStatusCode HttpStatusCode { get; private set; }
+        public InvalidMerchantException(Guid merchantId,InvalidMerchantReason invalidMerchantReason, HttpStatusCode statusCode= HttpStatusCode.BadRequest) 
+            :base($"merchantId:{merchantId}, reason:{invalidMerchantReason}")
         {
             MerchantId = merchantId;
             InvalidMerchantReason = invalidMerchantReason;
+            HttpStatusCode = statusCode;
+        }
+
+
+        public override string ToString()
+        {
+            return $"MerchantId:{MerchantId}, InvalidMerchantReason:{InvalidMerchantReason}";
         }
     }
 }
