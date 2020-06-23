@@ -25,5 +25,26 @@ PG_PROC - Listen Queue PaymentRequests
 PG_PROC - finalize service
 
 SHRD_UT - EncryptedMessage test
+ADD UNITTESTA
+
+-----------------------
+EXTRAS
+-----------------------
+DONE:
+Containerization 
+Encryption 
+Bank Implementation
+-----------------------
+ADD Application logging = SERILOG
+ADD Application metrics 
+ADD Authentication 
+ADD Build script / CI 
+ADD Performance testing 
+ADD Data storage 
+------------------------
+EXTRA EXTRA:
+ADD BFF CLIENT GATEWAY 
+-----------------------
+
 
 
