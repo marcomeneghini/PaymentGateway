@@ -28,6 +28,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{86E98E00-69E4-429E-BF0C-13822AC2D74B}"
 	ProjectSection(SolutionItems) = preProject
 		ReadMe.md = ReadMe.md
+		TodoList.MD = TodoList.MD
 	EndProjectSection
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{AF56FFED-F10A-4DDB-9A19-2E00CE0D1C81}"
