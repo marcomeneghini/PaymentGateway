@@ -43,11 +43,13 @@ PG_PROC - AddTransactionId
 PG_PROC - Test ChannelConsumer
 PG_PROC - Test ChannelProducer
 -- DONE
+
+PG_API  - IMPROVE LOGS
+--DONE
 ------ OUTSTANDING -------------
 
 
 
-PG_API  - IMPROVE LOGS
 PG_PROC - IMPROVE LOGS
 -----------------------
 EXTRAS
@@ -56,8 +58,9 @@ DONE:
 Containerization 
 Encryption 
 Bank Implementation
------------------------
 ADD Application logging = SERILOG  - Started
+
+------ OUTSTANDING -------------
 ADD Application metrics 
 ADD Authentication 
 ADD Build script / CI 

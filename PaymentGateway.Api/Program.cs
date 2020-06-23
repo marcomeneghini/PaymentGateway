@@ -15,15 +15,10 @@ namespace PaymentGateway.Api
         public static void Main(string[] args)
         {
             CreateWebHost(args).Run();
-           //CreateHostBuilder(args).Build().Run();
+           
         }
 
-        //public static IHostBuilder CreateHostBuilder(string[] args) =>
-        //    Host.CreateDefaultBuilder(args)
-        //        .ConfigureWebHostDefaults(webBuilder =>
-        //        {
-        //            webBuilder.UseStartup<Startup>();
-        //        });
+      
         public static IWebHost CreateWebHost(string[] args)
         {
             var webHost = BuildWebHost(args);
@@ -36,7 +31,7 @@ namespace PaymentGateway.Api
                 .Build();
 
             Log.Logger = new LoggerConfiguration()
-                .Enrich.FromLogContext()  // tell serilog to get values from LogContext
+                .Enrich.FromLogContext()  // tells serilog to get values from LogContext for common values
                 .ReadFrom.Configuration(configuration)
                 .Filter.ByExcluding(c => c.Properties.Any(p => p.Value.ToString().Contains("swagger")))
                 .Filter.ByExcluding(c => c.Properties.Any(p => p.Value.ToString().Contains("healthcheck")))
