@@ -27,8 +27,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bank.Payments.Api.Test", "B
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{86E98E00-69E4-429E-BF0C-13822AC2D74B}"
 	ProjectSection(SolutionItems) = preProject
-		Notes.txt = Notes.txt
-		TodoList.txt = TodoList.txt
+		ReadMe.md = ReadMe.md
 	EndProjectSection
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{AF56FFED-F10A-4DDB-9A19-2E00CE0D1C81}"
@@ -43,7 +42,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaymentGateway.SharedLib.Un
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{EF80E958-B25C-4C9D-8E43-13F1E913C2B4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentGateway.Processor.Api.UnitTest", "..\PaymentGateway.Processor.Api.UnitTest\PaymentGateway.Processor.Api.UnitTest.csproj", "{B589F320-535E-42A0-8B7E-3CB0E2E76102}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaymentGateway.Processor.Api.UnitTest", "..\PaymentGateway.Processor.Api.UnitTest\PaymentGateway.Processor.Api.UnitTest.csproj", "{B589F320-535E-42A0-8B7E-3CB0E2E76102}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
