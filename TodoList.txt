@@ -37,7 +37,11 @@ PG_API - ADD ErrorResponseModel
 -- DONE
 SHRD_UT - EncryptedMessage and Cipher functional tests
 -- DONE
+BANK	- AddTransactionId
+PG_PROC - AddTransactionId
+-- DONE
 
+------ OUTSTANDING -------------
 GENERAL - ADD MORE UNITTESTS
 
 -----------------------

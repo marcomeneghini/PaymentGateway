@@ -12,5 +12,7 @@ namespace Bank.Payments.Api.Models
         public string TransactionStatus { get; set; }
 
         public string Message { get; set; }
+
+        public string TransactionId { get; set; }
     }
 }

@@ -12,5 +12,7 @@ namespace PaymentGateway.Processor.Api.Proxies
         public string TransactionStatus { get; set; }
 
         public string Message { get; set; }
+
+        public string TransactionId { get; set; }
     }
 }

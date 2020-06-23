@@ -10,6 +10,9 @@ namespace Bank.Payments.Api.Domain
     {
         public string RequestId { get; set; }
 
-        public PaymentStatusEnum Status { get; set; }    
+        public PaymentStatusEnum Status { get; set; }
+
+        public string TransactionId { get; set; }
+
     }
 }

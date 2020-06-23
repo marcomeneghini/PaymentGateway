@@ -43,7 +43,7 @@ namespace Bank.Payments.Api.Services
             try
             {
                 // TODO:perform the transaction
-
+                currentPaymentStatus.TransactionId = Guid.NewGuid().ToString();
                 // transaction ok
                 currentPaymentStatus.Status = PaymentStatusEnum.Completed;
                 _paymentRepository.UpdatePaymentStatus(currentPaymentStatus);
@@ -55,7 +55,7 @@ namespace Bank.Payments.Api.Services
                 throw;
             }
             // return the status
-            return new CardPaymentResponse { TransactionStatus = TransactionStatus.Succeeded, RequestId = request.RequestId };
+            return new CardPaymentResponse { TransactionStatus = TransactionStatus.Succeeded, RequestId = request.RequestId,TransactionId = currentPaymentStatus.TransactionId};
 
         }
 

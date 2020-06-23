@@ -16,9 +16,10 @@ namespace PaymentGateway.Processor.Api.Domain
             CreatedAt=DateTimeOffset.Now;
         }
 
-        [Key]
+        [Key] 
         public Guid PaymentId { get; set; }
-
+        public string TransactionId { get; set; }
+        
         public string RequestId
         {
             get => _requestId;

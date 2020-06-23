@@ -110,8 +110,10 @@ namespace PaymentGateway.Processor.Api.Messaging
                         else
                         {
                             paymentStatus.Status = bankPaymentResponse?.TransactionStatus == TransactionStatus.Declined.ToString() ? PaymentStatusEnum.Error.ToString() : PaymentStatusEnum.Completed.ToString();
+                            paymentStatus.TransactionId = bankPaymentResponse.TransactionId;
                         }
                         
+
                         await _paymentStatusRepository.UpdatePaymentStatus(paymentStatus);
                     }
                     catch (Exception e)
