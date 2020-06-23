@@ -44,6 +44,7 @@ ADD Data storage
 ------------------------
 EXTRA EXTRA:
 ADD BFF CLIENT GATEWAY 
+ADD NOtification.Api (to notify the client)
 -----------------------
 
 
