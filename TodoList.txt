@@ -40,10 +40,15 @@ SHRD_UT - EncryptedMessage and Cipher functional tests
 BANK	- AddTransactionId
 PG_PROC - AddTransactionId
 -- DONE
-
+PG_PROC - Test ChannelConsumer
+PG_PROC - Test ChannelProducer
+-- DONE
 ------ OUTSTANDING -------------
-GENERAL - ADD MORE UNITTESTS
 
+
+
+PG_API  - IMPROVE LOGS
+PG_PROC - IMPROVE LOGS
 -----------------------
 EXTRAS
 -----------------------

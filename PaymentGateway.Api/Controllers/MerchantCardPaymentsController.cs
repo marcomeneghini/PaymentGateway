@@ -40,7 +40,6 @@ namespace PaymentGateway.Api.Controllers
 
              _logger.LogInformation($"CreatePayment OK");
             return Ok(_mapper.Map<CreatePaymentResponseModel>(response));
-
         }
     }
 }
