@@ -14,7 +14,7 @@ namespace PaymentGateway.Processor.Api.Infrastructure
             new ConcurrentDictionary<Guid, PaymentStatus>();
         public async Task<PaymentStatus> GetPaymentStatus(Guid paymentId)
         {
-            return await Task.Run(() =>
+            var paymentStatus= await Task.Run(() =>
             {
                 if (paymentStatuses.TryGetValue(paymentId, out var paymentStatus))
                 {
@@ -23,7 +23,8 @@ namespace PaymentGateway.Processor.Api.Infrastructure
 
                 return null;
             });
-
+           
+            return paymentStatus;
         }
 
         public async Task AddPaymentStatus(PaymentStatus paymentStatus)

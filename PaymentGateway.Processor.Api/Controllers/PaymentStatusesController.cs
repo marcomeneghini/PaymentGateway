@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using PaymentGateway.Processor.Api.Domain;
 using PaymentGateway.Processor.Api.Models;
 
@@ -16,27 +17,33 @@ namespace PaymentGateway.Processor.Api.Controllers
     {
         private readonly IPaymentStatusRepository _paymentStatusRepository;
         private readonly IMapper _mapper;
+        private readonly ILogger _logger;
 
-        public PaymentStatusesController(IPaymentStatusRepository paymentStatusRepository,IMapper mapper)
+        public PaymentStatusesController(IPaymentStatusRepository paymentStatusRepository,IMapper mapper, ILogger loggerr)
         {
             _paymentStatusRepository = paymentStatusRepository;
             _mapper = mapper;
+            _logger = loggerr;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetByPaymentId(Guid paymentId)
         {
-            try
+           
+            var paymentStatus = await _paymentStatusRepository.GetPaymentStatus(paymentId);
+            if (paymentStatus==null)
             {
-                var paymentStatus = await _paymentStatusRepository.GetPaymentStatus(paymentId);
-                if (paymentStatus == null)
-                    return NotFound();
-                return Ok(_mapper.Map<PaymentStatusModel>(paymentStatus));
+                var message = $"Payment not found. PaymentId:{paymentId}";
+                _logger.LogError(message);
+                return NotFound(new ErrorResponseModel()
+                {
+                    ReferenceCode = Guid.NewGuid().ToString(),
+                    ErrorType = "PaymentNotFoundException",
+                    Message = message
+                });
             }
-            catch (Exception e)
-            {
-                return BadRequest(new { message=e.Message});
-            }
+            return Ok(_mapper.Map<PaymentStatusModel>(paymentStatus));
+
         }
     }
 }

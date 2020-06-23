@@ -48,9 +48,7 @@ PG_API  - IMPROVE LOGS
 --DONE
 ------ OUTSTANDING -------------
 
-
-
-PG_PROC - IMPROVE LOGS
+PG_PROC - SERILOG - IMPROVE LOGS
 -----------------------
 EXTRAS
 -----------------------
@@ -58,7 +56,7 @@ DONE:
 Containerization 
 Encryption 
 Bank Implementation
-ADD Application logging = SERILOG  - Started
+Application logging = SERILOG  - PG_API
 
 ------ OUTSTANDING -------------
 ADD Application metrics 

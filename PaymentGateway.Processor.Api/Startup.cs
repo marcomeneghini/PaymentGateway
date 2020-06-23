@@ -15,11 +15,13 @@ using Microsoft.Extensions.Logging;
 using PaymentGateway.Processor.Api.Domain;
 using PaymentGateway.Processor.Api.Infrastructure;
 using PaymentGateway.Processor.Api.Messaging;
+using PaymentGateway.Processor.Api.Middlewares;
 using PaymentGateway.Processor.Api.Proxies;
 using PaymentGateway.SharedLib.Encryption;
 using PaymentGateway.SharedLib.EventBroker;
 using PaymentGateway.SharedLib.Messages;
 using RabbitMQ.Client;
+using Serilog;
 
 namespace PaymentGateway.Processor.Api
 {
@@ -112,13 +114,17 @@ namespace PaymentGateway.Processor.Api
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerfactory)
         {
+            app.UseMiddleware(typeof(ExceptionMiddleware));
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
+            loggerfactory.AddSerilog();
 
+           
+          
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>
