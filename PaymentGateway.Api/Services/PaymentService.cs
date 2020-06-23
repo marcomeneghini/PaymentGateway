@@ -33,7 +33,7 @@ namespace PaymentGateway.Api.Services
             // verify if the payment request exists already
             var paymentStatus = await _paymentRepository.GetPaymentStatus(request.RequestId);
             if (paymentStatus != null)
-                throw new RequestAlreadyProcessedException(paymentStatus.Status, paymentStatus.RequestId);
+                throw new RequestAlreadyProcessedException(paymentStatus.Status, paymentStatus.RequestId, paymentStatus.PaymentId);
             paymentStatus= new PaymentStatus()
                 { PaymentId = Guid.NewGuid(), RequestId = request.RequestId, Status = PaymentStatusEnum.Scheduled };
             await _paymentRepository.AddPaymentStatus(paymentStatus);

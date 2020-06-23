@@ -10,7 +10,7 @@ namespace PaymentGateway.Processor.Api.Models
         public Guid PaymentId { get; set; }
         public string RequestId { get; set; }
 
-        public PaymentStatusEnum Status { get; set; }
+        public string Status { get; set; }
 
         public DateTimeOffset CreatedAt { get; set; }
 

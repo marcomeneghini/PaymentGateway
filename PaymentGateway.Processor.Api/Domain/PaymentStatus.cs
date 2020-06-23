@@ -8,7 +8,7 @@ namespace PaymentGateway.Processor.Api.Domain
 {
     public class PaymentStatus
     {
-        private PaymentStatusEnum _status;
+        private string _status;
         private string _requestId;
 
         public PaymentStatus()
@@ -29,7 +29,7 @@ namespace PaymentGateway.Processor.Api.Domain
             }
         }
 
-        public PaymentStatusEnum Status
+        public string Status
         {
             get => _status;
             set

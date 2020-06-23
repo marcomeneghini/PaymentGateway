@@ -100,14 +100,18 @@ namespace PaymentGateway.Processor.Api.Messaging
                                 }
                             }
                         });
-                        
-                       
+
+
                         if (bankPaymentResponse == null)
+                        {
+                            paymentStatus.Status = PaymentStatusEnum.Error.ToString();
                             _logger.LogError($"Received Null from the server. RequestId:{decryptedMessage.RequestId}");
-                       
-
-                        paymentStatus.Status = bankPaymentResponse?.TransactionStatus == TransactionStatus.Declined ? PaymentStatusEnum.Error : PaymentStatusEnum.Completed;
-
+                        }
+                        else
+                        {
+                            paymentStatus.Status = bankPaymentResponse?.TransactionStatus == TransactionStatus.Declined.ToString() ? PaymentStatusEnum.Error.ToString() : PaymentStatusEnum.Completed.ToString();
+                        }
+                        
                         await _paymentStatusRepository.UpdatePaymentStatus(paymentStatus);
                     }
                     catch (Exception e)

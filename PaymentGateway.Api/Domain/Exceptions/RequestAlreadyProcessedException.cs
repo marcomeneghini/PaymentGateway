@@ -12,18 +12,21 @@ namespace PaymentGateway.Api.Domain.Exceptions
 
         public string RequestId { get; private set; }
 
+        public Guid PaymentId { get; private set; }
+
         public HttpStatusCode HttpStatusCode { get; private set; }
-        public RequestAlreadyProcessedException(PaymentStatusEnum status, string requestId, HttpStatusCode statusCode = HttpStatusCode.Conflict)
+        public RequestAlreadyProcessedException(PaymentStatusEnum status, string requestId,Guid paymentId, HttpStatusCode statusCode = HttpStatusCode.Conflict)
             : base($"status:{status}, requestId:{requestId}")
         {
             Status = status;
             RequestId = requestId;
             HttpStatusCode = statusCode;
+            PaymentId = paymentId;
         }
 
         public override string ToString()
         {
-            return $"PaymentStatus:{Status}, RequestId:{RequestId}";
+            return $"PaymentId:{PaymentId}, PaymentStatus:{Status}, RequestId:{RequestId}";
         }
     }
 }

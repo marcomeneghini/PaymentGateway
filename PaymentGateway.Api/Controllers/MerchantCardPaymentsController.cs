@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using PaymentGateway.Api.Domain;
 using PaymentGateway.Api.Domain.Exceptions;
@@ -20,37 +21,25 @@ namespace PaymentGateway.Api.Controllers
     {
         private readonly IPaymentService _paymentService;
         private readonly IMapper _mapper;
+        private readonly ILogger<MerchantCardPaymentsController> _logger;
 
-        public MerchantCardPaymentsController(IPaymentService paymentService,IMapper mapper)
+        public MerchantCardPaymentsController(
+            IPaymentService paymentService,
+            IMapper mapper,
+            ILogger<MerchantCardPaymentsController> logger)
         {
             _paymentService = paymentService;
             _mapper = mapper;
+            _logger = logger;
         }
         [HttpPost]
         public async Task<IActionResult> CreatePayment(CreatePaymentRequestModel request)
         {
-            //try
-            //{
-            var response = await _paymentService.CreatePayment(_mapper.Map<CreatePaymentRequest>(request));
+            _logger.LogInformation($"CreatePayment:{request}");
+             var response = await _paymentService.CreatePayment(_mapper.Map<CreatePaymentRequest>(request));
 
-
+             _logger.LogInformation($"CreatePayment OK");
             return Ok(_mapper.Map<CreatePaymentResponseModel>(response));
-            //}
-            //catch (InvalidMerchantException e)
-            //{
-            //    return BadRequest(new { message = $"Invalid merchant {e.MerchantId} Reason:{e.InvalidMerchantReason.ToString()}" });
-            //}
-            //catch (RequestAlreadyProcessedException e)
-            //{
-            //    // this error is thrown to ensure idempotency
-            //    // multiple request same request id error
-            //    return Conflict(new
-            //        { message = $"request {e.RequestId} already present with status {e.Status.ToString()}"});
-            //}
-            //catch (Exception e)
-            //{
-            //    return BadRequest(new {message= e.Message } );
-            //}
 
         }
     }

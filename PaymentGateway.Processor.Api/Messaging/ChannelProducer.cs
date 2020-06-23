@@ -39,7 +39,7 @@ namespace PaymentGateway.Processor.Api.Messaging
             // save the payment status
             var paymentStatus = new PaymentStatus
             {
-                Status = PaymentStatusEnum.Scheduled,
+                Status = PaymentStatusEnum.Scheduled.ToString(),
                 RequestId = decryptedMessage.RequestId,
                 PaymentId = decryptedMessage.PaymentRequestId
             };

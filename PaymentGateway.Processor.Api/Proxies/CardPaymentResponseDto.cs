@@ -9,7 +9,7 @@ namespace PaymentGateway.Processor.Api.Proxies
     {
         public string RequestId { get; set; }
 
-        public TransactionStatus TransactionStatus { get; set; }
+        public string TransactionStatus { get; set; }
 
         public string Message { get; set; }
     }

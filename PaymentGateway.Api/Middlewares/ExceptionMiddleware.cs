@@ -70,6 +70,7 @@ namespace PaymentGateway.Api.Middlewares
 
             var obj = new ErrorResponseModel()
             {
+                RequestId = exception.RequestId,
                 ReferenceCode = referenceCode,
                 ErrorType = nameof(RequestAlreadyProcessedException),
                 Message = exception.Message

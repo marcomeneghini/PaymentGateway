@@ -33,13 +33,13 @@ namespace Bank.Payments.Api.Services
 
             var cards = _cardRepository.GetAllCards();
             if (!cards.Contains(request.GetCard()))
-                return new CardPaymentResponse { TransactionStatus = TransactionStatus.Declined, Message = "Card not present", RequestId = request.RequestId };
+                return new CardPaymentResponse { TransactionStatus = TransactionStatus.Declined, Message = "Wrong card details", RequestId = request.RequestId };
             
             var  bankAccounts = _bankAccountRepository.GetAllBankAccounts();
             if (!bankAccounts.Contains(request.GetBankAccount()))
-                return new CardPaymentResponse { TransactionStatus = TransactionStatus.Declined, Message = "Bank account not present", RequestId = request.RequestId };
+                return new CardPaymentResponse { TransactionStatus = TransactionStatus.Declined, Message = "Wrong bank account details", RequestId = request.RequestId };
             
-            // perform the transaction
+            
             try
             {
                 // TODO:perform the transaction
