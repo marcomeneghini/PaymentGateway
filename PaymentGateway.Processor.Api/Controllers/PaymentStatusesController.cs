@@ -17,13 +17,13 @@ namespace PaymentGateway.Processor.Api.Controllers
     {
         private readonly IPaymentStatusRepository _paymentStatusRepository;
         private readonly IMapper _mapper;
-        private readonly ILogger _logger;
+        private readonly ILogger<PaymentStatusesController> _logger;
 
-        public PaymentStatusesController(IPaymentStatusRepository paymentStatusRepository,IMapper mapper, ILogger loggerr)
+        public PaymentStatusesController(IPaymentStatusRepository paymentStatusRepository,IMapper mapper, ILogger<PaymentStatusesController> logger)
         {
             _paymentStatusRepository = paymentStatusRepository;
             _mapper = mapper;
-            _logger = loggerr;
+            _logger = logger;
         }
 
         [HttpGet]

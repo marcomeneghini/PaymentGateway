@@ -43,12 +43,14 @@ PG_PROC - AddTransactionId
 PG_PROC - Test ChannelConsumer
 PG_PROC - Test ChannelProducer
 -- DONE
-
 PG_API  - IMPROVE LOGS
 --DONE
------- OUTSTANDING -------------
-
 PG_PROC - SERILOG - IMPROVE LOGS
+--DONE
+------MVP 2 COMPLETE! -----------
+
+I think it could be enough for a test, otherwise i'd start thinking to commercilize it :D
+
 -----------------------
 EXTRAS
 -----------------------
@@ -56,7 +58,9 @@ DONE:
 Containerization 
 Encryption 
 Bank Implementation
-Application logging = SERILOG  - PG_API
+Application logging = SERILOG  
+Exception Handling Middleware
+Unit Testing
 
 ------ OUTSTANDING -------------
 ADD Application metrics 
