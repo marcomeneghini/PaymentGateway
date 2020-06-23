@@ -38,6 +38,10 @@ namespace PaymentGateway.SharedLib.Messages
         /// </summary>
         public string SourceServiceName { get; set; }
 
+        /// <summary>
+        /// this constructor is necessary for the deserializing process
+        /// so ContentTypeName and Body can be set externally after object constructor 
+        /// </summary>
         public EncryptedMessage()
         {
                 
@@ -67,9 +71,17 @@ namespace PaymentGateway.SharedLib.Messages
                 throw new MessageDecryptionException(MessageDecryptionErrorReason.EmptyBody);
             // decrypt
             var decryptedBody = cipherService.Decrypt(Body);
-            Type messageType = Type.GetType(ContentTypeName);
-            dynamic jobj = JsonConvert.DeserializeObject(decryptedBody, messageType);
-            return jobj;
+            try
+            {
+                Type messageType = Type.GetType(ContentTypeName);
+                dynamic jobj = JsonConvert.DeserializeObject(decryptedBody, messageType);
+                return jobj;
+            }
+            catch (Exception e)
+            {
+                throw new MessageDecryptionException(MessageDecryptionErrorReason.WrongContentType);
+            }
+           
         }
     }
 }

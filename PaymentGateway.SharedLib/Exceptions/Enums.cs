@@ -8,6 +8,7 @@ namespace PaymentGateway.SharedLib.Exceptions
     {
         NoContentTypeName,
         EmptyBody,
-        WrongCipher
+        WrongCipher,
+        WrongContentType
     }
 }

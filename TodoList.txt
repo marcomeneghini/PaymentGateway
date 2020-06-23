@@ -35,8 +35,9 @@ PG_API - ADD ErrorResponseModel
 -- DONE
 -- PG_PROC - DEbug PaymentStatus
 -- DONE
+SHRD_UT - EncryptedMessage and Cipher functional tests
+-- DONE
 
-SHRD_UT - EncryptedMessage test
 GENERAL - ADD MORE UNITTESTS
 
 -----------------------

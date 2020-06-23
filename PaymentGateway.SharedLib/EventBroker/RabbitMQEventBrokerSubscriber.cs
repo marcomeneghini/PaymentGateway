@@ -62,6 +62,7 @@ namespace PaymentGateway.SharedLib.EventBroker
 
             _channel.CallbackException += _channel_CallbackException;
 
+            //TODO: VERIFY this code
             //_channel.CallbackException += (sender, ea) =>
             //{
             //    InitChannel(exchangeName, routingKey, queueName);
