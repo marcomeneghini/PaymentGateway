@@ -52,7 +52,7 @@ namespace PaymentGateway.Api.Services
                 var paymentRequestMessage = createPaymentRequestMessage(request, merchant);
                 paymentRequestMessage.PaymentRequestId = paymentStatus.PaymentId;
 
-                var encryptedMessage=new EncryptedMessage(EventBrokerConsts.PAYMENT_REQUEST_EXCHANGE_NAME, "PaymentGateway.Api", paymentRequestMessage, _cipherService);
+                var encryptedMessage=new EncryptedMessage(EventBrokerConsts.PAYMENT_REQUEST_EXCHANGE_NAME, EventBrokerConsts.PAYMENT_REQUEST_ROUTINGKEY, "PaymentGateway.Api", paymentRequestMessage, _cipherService);
                 _eventBrokerPublisher.PublishEncryptedMessage(encryptedMessage);
 
                     // set the payment status

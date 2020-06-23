@@ -24,6 +24,7 @@ namespace PaymentGateway.Processor.Api.Messaging
         public async Task PublishAsync(EncryptedMessage message, CancellationToken cancellationToken = default)
         {
             await _writer.WriteAsync(message, cancellationToken);
+            _writer.Complete();
             _logger.LogInformation($"Producer > published message {message.Id} '{message.TopicName}'");
         }
 

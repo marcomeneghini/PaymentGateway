@@ -81,6 +81,7 @@ namespace PaymentGateway.Processor.Api
             );
             var channel = Channel.CreateBounded<EncryptedMessage>(100);
             services.AddSingleton(channel);
+
             services.AddSingleton<IEventBrokerSubscriber, RabbitMQEventBrokerSubscriber>();
             services.AddSingleton<ICipherService, AesCipherService>();
             services.AddSingleton<IChannelProducer>(ctx => {

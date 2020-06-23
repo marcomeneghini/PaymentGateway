@@ -37,7 +37,7 @@ namespace PaymentGateway.Processor.Api.Messaging
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             //TODO: add an instance variable to this name "Processor.Api"
-            _eventBrokerSubscriber.Subscribe(EventBrokerConsts.PAYMENT_REQUEST_EXCHANGE_NAME, "Processor.Api");
+            _eventBrokerSubscriber.Subscribe(EventBrokerConsts.PAYMENT_REQUEST_EXCHANGE_NAME, EventBrokerConsts.PAYMENT_REQUEST_ROUTINGKEY ,"Processor.Api");
             await _consumer.BeginConsumeAsync(stoppingToken);
         }
 

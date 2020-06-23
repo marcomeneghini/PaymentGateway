@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection.Metadata;
 using System.Text;
 using Newtonsoft.Json;
 using PaymentGateway.SharedLib.Encryption;
@@ -9,12 +10,14 @@ namespace PaymentGateway.SharedLib.Messages
 {
     public class EncryptedMessage
     {
-        public Guid Id { get; private set; }
+        public Guid Id { get;  set; }
         /// <summary>
         /// name of the topic in the event broker
         /// where to publish the message
         /// </summary>
-        public string TopicName { get; private set; }
+        public string TopicName { get; set; }
+
+        public string RoutingKey { get; set; }
 
         /// <summary>
         /// date time the message  has been pushed to the event broker
@@ -26,17 +29,22 @@ namespace PaymentGateway.SharedLib.Messages
         /// </summary>
         public DateTimeOffset ProcessedAt { get; set; }
 
-        public string ContentTypeName { get; private set; }
+        public string ContentTypeName { get; set; }
 
-        public string Body { get; private set; }
+        public string Body { get;  set; }
 
         /// <summary>
         /// Source service name
         /// </summary>
-        public string SourceServiceName { get; private set; }
+        public string SourceServiceName { get; set; }
 
+        public EncryptedMessage()
+        {
+                
+        }
         public EncryptedMessage(
             string topicName,
+            string routingKey,
             string sourceServiceName,
             IMessage message,
             ICipherService cipherService)
@@ -48,6 +56,7 @@ namespace PaymentGateway.SharedLib.Messages
             Body = cipherService.Encrypt(serializedMessage);
             SourceServiceName = sourceServiceName;
             TopicName = topicName;
+            RoutingKey = routingKey;
         }
 
         public T GetMessage<T>(ICipherService cipherService)

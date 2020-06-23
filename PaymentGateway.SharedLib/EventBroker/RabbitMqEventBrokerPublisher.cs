@@ -45,7 +45,7 @@ namespace PaymentGateway.SharedLib.EventBroker
                     _logger.LogWarning(ex, "Could not publish event: {EventId} after {Timeout}s ({ExceptionMessage})", encryptedMessage.Id, $"{time.TotalSeconds:n1}", ex.Message);
                 });
 
-            var eventName = encryptedMessage.TopicName;
+            var eventName = encryptedMessage.ContentTypeName;
 
             _logger.LogTrace("Creating RabbitMQ channel to publish event: {EventId} ({EventName})", encryptedMessage.Id, eventName);
 
@@ -54,8 +54,8 @@ namespace PaymentGateway.SharedLib.EventBroker
 
                 _logger.LogTrace("Declaring RabbitMQ exchange to publish event: {EventId}", encryptedMessage.Id);
 
-                channel.ExchangeDeclare(exchange: BROKER_NAME, type: "direct");
-
+                //channel.ExchangeDeclare(exchange: encryptedMessage.TopicName, type: "direct",true);
+                channel.ExchangeDeclare(exchange: encryptedMessage.TopicName, type: ExchangeType.Direct, true);
                 var message = JsonConvert.SerializeObject(encryptedMessage);
                 var body = Encoding.UTF8.GetBytes(message);
 
@@ -67,8 +67,8 @@ namespace PaymentGateway.SharedLib.EventBroker
                     _logger.LogTrace("Publishing event to RabbitMQ: {EventId}", encryptedMessage.Id);
 
                     channel.BasicPublish(
-                        exchange: BROKER_NAME,
-                        routingKey: eventName,
+                        exchange: encryptedMessage.TopicName,
+                        routingKey: encryptedMessage.RoutingKey,
                         mandatory: true,
                         basicProperties: properties,
                         body: body);
