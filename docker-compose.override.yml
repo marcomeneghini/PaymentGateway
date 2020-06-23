@@ -36,6 +36,7 @@ services:
       - EventBrokerConnection=rabbitmq
       - EventBrokerUserName=guest
       - EventBrokerPassword=guest
+      - BankPaymentsAddress=http://bank.payments.api
     ports:
       - "7000:80"
       - "7001:443"

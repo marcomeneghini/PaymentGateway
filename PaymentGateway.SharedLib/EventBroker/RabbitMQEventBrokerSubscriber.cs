@@ -26,7 +26,7 @@ namespace PaymentGateway.SharedLib.EventBroker
             InitSubscribe();
         }
         
-        public event EventHandler<EncryptedMessageEventArgs> OnMessage;
+        public event AsyncEventHandler<EncryptedMessageEventArgs> OnMessage;
         public void Unsubscribe()
         {
             var consumer = new AsyncEventingBasicConsumer(_channel);
@@ -87,7 +87,7 @@ namespace PaymentGateway.SharedLib.EventBroker
         {
             var body = Encoding.UTF8.GetString(eventArgs.Body.ToArray());
             var message = JsonSerializer.Deserialize<EncryptedMessage>(body);
-            OnMessage?.Invoke(this, new EncryptedMessageEventArgs(message));
+            await OnMessage?.Invoke(this, new EncryptedMessageEventArgs(message));
 
         }
         #endregion

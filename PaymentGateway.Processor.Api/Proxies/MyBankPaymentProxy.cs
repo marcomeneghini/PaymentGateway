@@ -25,28 +25,28 @@ namespace PaymentGateway.Processor.Api.Proxies
 
         public async Task<CardPaymentResponse> CreatePaymentAsync(CardPaymentRequest request)
         {
-            
-            //client.DefaultRequestHeaders.Authorization =
-            //    new AuthenticationHeaderValue("Bearer", token);
-            var cardpaymentRequestModel = _mapper.Map<CardPaymentRequestDto>(request);
-            HttpResponseMessage response = await _httpClient.PostAsJsonAsync(
-                "CardPayments", cardpaymentRequestModel);
-            
-            var responseDto= await response.Content.ReadAsAsync<CardPaymentResponseDto>();
+            try
+            {
+                //client.DefaultRequestHeaders.Authorization =
+                //    new AuthenticationHeaderValue("Bearer", token);
+                var cardpaymentRequestModel = _mapper.Map<CardPaymentRequestDto>(request);
+                var response = await _httpClient.PostAsJsonAsync(
+                    "api/cardpayments", cardpaymentRequestModel);
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseDto = await response.Content.ReadAsAsync<CardPaymentResponseDto>();
+                    return _mapper.Map<CardPaymentResponse>(responseDto);
+                }
 
-            return _mapper.Map<CardPaymentResponse>(responseDto);
+                return null;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            
         }
 
-        private HttpClient createAndConfigureHttpClient(IHttpClientFactory httpClientFactory)
-        {
-            var client = httpClientFactory.CreateClient();
-            client.BaseAddress = new Uri(" http://amido-tech-test.herokuapp.com/");
-
-            client.DefaultRequestHeaders.Accept.Clear();
-
-            client.DefaultRequestHeaders.Accept.Add(
-                new MediaTypeWithQualityHeaderValue("application/json"));
-            return client;
-        }
     }
 }

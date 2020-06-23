@@ -67,11 +67,11 @@ namespace PaymentGateway.Processor.Api
             });
             services.AddHttpClient<IBankPaymentProxy, MyBankPaymentProxy>(client =>
                 {
-                    var bankConfiguration = new BankPaymentConfiguration();
-                    Configuration.GetSection(BankPaymentConfiguration.SectionName).Bind(bankConfiguration);
+                   //var bankConfiguration = new BankPaymentConfiguration();
+                    //Configuration.GetSection(BankPaymentConfiguration.SectionName).Bind(bankConfiguration);
 
-                   
-                    client.BaseAddress = new Uri(bankConfiguration.BaseAddress);
+                    client.BaseAddress = new Uri( Configuration["BankPaymentsAddress"]);
+                    //client.BaseAddress = new Uri(bankConfiguration.BaseAddress);
 
                     client.DefaultRequestHeaders.Accept.Clear();
 
@@ -85,13 +85,15 @@ namespace PaymentGateway.Processor.Api
             services.AddSingleton<IEventBrokerSubscriber, RabbitMQEventBrokerSubscriber>();
             services.AddSingleton<ICipherService, AesCipherService>();
             services.AddSingleton<IChannelProducer>(ctx => {
-                var channel = ctx.GetRequiredService<Channel<EncryptedMessage>>();
+                //channel = ctx.GetRequiredService<Channel<EncryptedMessage>>();
                 var logger = ctx.GetRequiredService<ILogger<ChannelProducer>>();
-                return new ChannelProducer(channel.Writer, logger);
+                var paymentRepository = ctx.GetRequiredService<IPaymentStatusRepository>();
+                var cipherService = ctx.GetRequiredService<ICipherService>();
+                return new ChannelProducer(channel.Writer, paymentRepository, cipherService ,logger);
             });
 
             services.AddSingleton<IChannelConsumer>(ctx => {
-                var channel = ctx.GetRequiredService<Channel<EncryptedMessage>>();
+                //var innerChannelChannel = ctx.GetRequiredService<Channel<EncryptedMessage>>();
                 var logger = ctx.GetRequiredService<ILogger<ChannelConsumer>>();
                 var paymentRepository = ctx.GetRequiredService<IPaymentStatusRepository>();
                 var bankPaymentProxy = ctx.GetRequiredService<IBankPaymentProxy>();

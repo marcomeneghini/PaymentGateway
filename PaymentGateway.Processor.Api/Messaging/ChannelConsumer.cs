@@ -51,12 +51,17 @@ namespace PaymentGateway.Processor.Api.Messaging
                     var decryptedMessage = message.GetMessage<PaymentRequestMessage>(_cipherService);
                     
                     // save the payment status
-                    var paymentStatus = new PaymentStatus();
-                    paymentStatus.Status = PaymentStatusEnum.Scheduled;
-                    paymentStatus.RequestId = decryptedMessage.RequestId;
-                    paymentStatus.PaymentId = decryptedMessage.PaymentRequestId;
-                    await _paymentStatusRepository.AddPaymentStatus(paymentStatus);
-
+                    //var paymentStatus = new PaymentStatus();
+                    //paymentStatus.Status = PaymentStatusEnum.Scheduled;
+                    //paymentStatus.RequestId = decryptedMessage.RequestId;
+                    //paymentStatus.PaymentId = decryptedMessage.PaymentRequestId;
+                    //await _paymentStatusRepository.AddPaymentStatus(paymentStatus);
+                    var paymentStatus= await _paymentStatusRepository.GetPaymentStatus(decryptedMessage.PaymentRequestId);
+                    if (paymentStatus==null)
+                    {
+                        // TODO:Exception, something wrong with the persistent store
+                        throw new Exception("paymentStatus==null , something wrong with the persistent store");
+                    }
                     // perform the call 
                     var bankPaymentResponse =await _bankPaymentProxy.CreatePaymentAsync(new CardPaymentRequest
                     {
@@ -71,7 +76,11 @@ namespace PaymentGateway.Processor.Api.Messaging
                         MerchantAccountNumber = decryptedMessage.MerchantAccountNumber,
                         RequestId = decryptedMessage.RequestId
                     });
-
+                    if (bankPaymentResponse==null)
+                    {
+                        throw new Exception("bankPaymentResponse==null , something wrong with the communication");
+                        // TODO: Exception, something wrong with the communication
+                    }
                     if (bankPaymentResponse.TransactionStatus== TransactionStatus.Declined)
                     {
                         paymentStatus.Status = PaymentStatusEnum.Error;

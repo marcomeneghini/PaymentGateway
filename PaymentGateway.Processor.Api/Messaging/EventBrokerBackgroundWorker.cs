@@ -25,14 +25,21 @@ namespace PaymentGateway.Processor.Api.Messaging
             ILogger<EventBrokerBackgroundWorker> logger)
         {
             _eventBrokerSubscriber = eventBrokerSubscriber ?? throw new ArgumentNullException(nameof(eventBrokerSubscriber));
-            _eventBrokerSubscriber.OnMessage += _eventBrokerSubscriber_OnMessage; ;
+            _eventBrokerSubscriber.OnMessage += _eventBrokerSubscriber_OnMessage1; 
            
             _producer = producer;
             _consumer = consumer;
             _logger = logger;
         }
 
-       
+        private async Task _eventBrokerSubscriber_OnMessage1(object sender, EncryptedMessageEventArgs e)
+        {
+            EncryptedMessage message = e.Message;
+            message.ProcessedAt = DateTimeOffset.Now;
+            _logger.LogInformation($"message type: {e.Message.ContentTypeName} pushedAt:{e.Message.PushedAt} processedAt:{message.ProcessedAt}");
+
+            await _producer.PublishAsync(message);
+        }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
@@ -41,13 +48,13 @@ namespace PaymentGateway.Processor.Api.Messaging
             await _consumer.BeginConsumeAsync(stoppingToken);
         }
 
-        private void _eventBrokerSubscriber_OnMessage(object sender, EncryptedMessageEventArgs e)
-        {
-            EncryptedMessage message = e.Message;
-            message.ProcessedAt=DateTimeOffset.Now;
-            _logger.LogInformation($"message type: {e.Message.ContentTypeName} pushedAt:{e.Message.PushedAt} processedAt:{message.ProcessedAt}");
+        //private void _eventBrokerSubscriber_OnMessage(object sender, EncryptedMessageEventArgs e)
+        //{
+        //    EncryptedMessage message = e.Message;
+        //    message.ProcessedAt=DateTimeOffset.Now;
+        //    _logger.LogInformation($"message type: {e.Message.ContentTypeName} pushedAt:{e.Message.PushedAt} processedAt:{message.ProcessedAt}");
 
-             _producer.PublishAsync(message);
-        }
+        //     _producer.PublishAsync(message);
+        //}
     }
 }
