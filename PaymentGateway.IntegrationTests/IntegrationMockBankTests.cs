@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -45,6 +46,7 @@ namespace PaymentGateway.IntegrationTests
                     MonthExpiryDate = johnDoeCard.MonthExpiryDate,
                     YearExpiryDate = johnDoeCard.YearExpiryDate,
                     CVV = johnDoeCard.CVV,
+                    Currency = "GBP",
                     Amount = 10
                 }
             };
@@ -80,7 +82,10 @@ namespace PaymentGateway.IntegrationTests
                     Console.WriteLine(e);
                 }
             }
+
             Assert.Equal(PaymentStatusEnum.Completed.ToString(),paymentStatus.Status);
+            // this to check the consistency of the distributed operation
+            Assert.Equal(merchantPaymentResponse.RequestId, paymentStatus.RequestId);
         }
 
         [Fact]
@@ -100,6 +105,7 @@ namespace PaymentGateway.IntegrationTests
                     MonthExpiryDate = janeDoeCard.MonthExpiryDate,
                     YearExpiryDate = janeDoeCard.YearExpiryDate,
                     CVV = janeDoeCard.CVV,
+                    Currency="GBP",
                     Amount = 10
                 }
             };
@@ -136,120 +142,11 @@ namespace PaymentGateway.IntegrationTests
                 }
             }
             Assert.Equal(PaymentStatusEnum.Completed.ToString(), paymentStatus.Status);
+            // this to check the consistency of the distributed operation
+            Assert.Equal(merchantPaymentResponse.RequestId, paymentStatus.RequestId);
         }
 
-        [Fact]
-        public async Task TestE2E_CreatePayment_John_InValidApple_Async()
-        {
-            var johnDoeCard = Helper.GenerateCard_JohnDoe();
-            // Arrange
-            var request = new
-            {
-                Url = "/api/merchantcardpayments",
-                Body = new
-                {
-                    MerchantId = appleInValidMerchantGuid.ToString(),
-                    RequestId = Guid.NewGuid().ToString(),
-                    CardNumber = johnDoeCard.CardNumber,
-                    CardHolderName = johnDoeCard.CardHolderName,
-                    MonthExpiryDate = johnDoeCard.MonthExpiryDate,
-                    YearExpiryDate = johnDoeCard.YearExpiryDate,
-                    CVV = johnDoeCard.CVV,
-                    Amount = 10
-                }
-            };
-
-            // Act
-            var merchantPaymentHttpResponse = await PgApiClient.PostAsync(request.Url, ContentHelper.GetStringContent(request.Body));
-            merchantPaymentHttpResponse.EnsureSuccessStatusCode();
-            var merchantPaymentResponseString = await merchantPaymentHttpResponse.Content.ReadAsStringAsync();
-            var merchantPaymentResponse = JsonConvert.DeserializeObject<CreatePaymentResponseModel>(merchantPaymentResponseString);
-
-            PaymentStatusModel paymentStatus = new PaymentStatusModel() { Status = "" };
-            // loop to get the value of the payment status from the PaymentGateway.Processor
-            for (int i = 0; i < 3; i++)
-            {
-                try
-                {
-                    // Arrange
-                    var paymetProcessorRequest = $"/api/PaymentStatuses?paymentId={merchantPaymentResponse.PaymentRequestId}";
-
-                    // Act
-                    var response = await PgProcApiClient.GetAsync(paymetProcessorRequest);
-
-                    if (response.IsSuccessStatusCode)
-                    {
-                        var stringResponse = await response.Content.ReadAsStringAsync();
-                        paymentStatus = JsonConvert.DeserializeObject<PaymentStatusModel>(stringResponse);
-                        break;
-                    }
-                    await Task.Delay(2000);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                }
-            }
-            Assert.Equal(PaymentStatusEnum.Error.ToString(), paymentStatus.Status);
-            Assert.Equal(request.Body.RequestId, paymentStatus.RequestId);
-            
-        }
-
-        [Fact]
-        public async Task TestE2E_CreatePayment_Jane_InValidApple_Async()
-        {
-            var janeDoeCard = Helper.GenerateCard_JaneDoe();
-            // Arrange
-            var request = new
-            {
-                Url = "/api/merchantcardpayments",
-                Body = new
-                {
-                    MerchantId = amazonValidMerchantGuid.ToString(),
-                    RequestId = Guid.NewGuid().ToString(),
-                    CardNumber = janeDoeCard.CardNumber,
-                    CardHolderName = janeDoeCard.CardHolderName,
-                    MonthExpiryDate = janeDoeCard.MonthExpiryDate,
-                    YearExpiryDate = janeDoeCard.YearExpiryDate,
-                    CVV = janeDoeCard.CVV,
-                    Amount = 10
-                }
-            };
-
-            // Act
-            var merchantPaymentHttpResponse = await PgApiClient.PostAsync(request.Url, ContentHelper.GetStringContent(request.Body));
-            merchantPaymentHttpResponse.EnsureSuccessStatusCode();
-            var merchantPaymentResponseString = await merchantPaymentHttpResponse.Content.ReadAsStringAsync();
-            var merchantPaymentResponse = JsonConvert.DeserializeObject<CreatePaymentResponseModel>(merchantPaymentResponseString);
-
-            PaymentStatusModel paymentStatus = new PaymentStatusModel() { Status = "" };
-            // loop to get the value of the payment status from the PaymentGateway.Processor
-            for (int i = 0; i < 3; i++)
-            {
-                try
-                {
-                    // Arrange
-                    var paymetProcessorRequest = $"/api/PaymentStatuses?paymentId={merchantPaymentResponse.PaymentRequestId}";
-
-                    // Act
-                    var response = await PgProcApiClient.GetAsync(paymetProcessorRequest);
-
-                    if (response.IsSuccessStatusCode)
-                    {
-                        var stringResponse = await response.Content.ReadAsStringAsync();
-                        paymentStatus = JsonConvert.DeserializeObject<PaymentStatusModel>(stringResponse);
-                        break;
-                    }
-                    await Task.Delay(2000);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                }
-            }
-            Assert.Equal(PaymentStatusEnum.Error.ToString(), paymentStatus.Status);
-        }
-
+        
 
         [Fact]
         public async Task TestE2E_CreatePayment_WrongCard_ValidAmazon_Async()
@@ -262,11 +159,11 @@ namespace PaymentGateway.IntegrationTests
                 {
                     MerchantId = amazonValidMerchantGuid.ToString(),
                     RequestId = Guid.NewGuid().ToString(),
-                    CardNumber = "---- 1234 1234 1234",
-                    CardHolderName = "John Doe",
-                    MonthExpiryDate = 1,
-                    YearExpiryDate = 2021,
-                    CVV = "555",
+                    CardNumber = "---- ---- ---- ---",
+                    CardHolderName = "Luke Doe",
+                    MonthExpiryDate = 10,
+                    YearExpiryDate = 10,
+                    CVV = "000",
                     Amount = 10
                 }
             };

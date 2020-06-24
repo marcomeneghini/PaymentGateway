@@ -14,8 +14,10 @@ namespace PaymentGateway.IntegrationTests
                     CardHolderName = cardPaymentRequest.CardHolderName,
                     MonthExpiryDate = cardPaymentRequest.MonthExpiryDate,
                     YearExpiryDate = cardPaymentRequest.YearExpiryDate,
-                    CardNumber = cardPaymentRequest.CardNumber
-                };
+                    CardNumber = cardPaymentRequest.CardNumber,
+                    CVV =  cardPaymentRequest.CVV
+
+            };
         }
 
         public static BankAccount GetBankAccount(this CardPaymentRequest cardPaymentRequest)

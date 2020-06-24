@@ -28,7 +28,8 @@ namespace PaymentGateway.IntegrationTests
                 .ReturnsAsync((CardPaymentRequest request) =>
                 {
                     var cards = GetAllCards();
-                    if (!cards.Contains(request.GetCard()))
+                    var currentCard = request.GetCard();
+                    if (!cards.Contains(currentCard))
                         return new CardPaymentResponse { TransactionStatus = TransactionStatus.Declined.ToString(), Message = "Wrong card details", RequestId = request.RequestId };
                     var bankAccounts = GetAllBankAccounts();
                     if (!bankAccounts.Contains(request.GetBankAccount()))
