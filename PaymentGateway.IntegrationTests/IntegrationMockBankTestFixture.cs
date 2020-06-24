@@ -95,11 +95,9 @@ namespace PaymentGateway.IntegrationTests
 
         private void InitializePaymentProcessorApiTestServer(string relativeTargetProjectParentDir)
         {
-            var fakeSucceededCardPaymentResponse = Helper.CreateFake_Succeeded_CardPaymentResponse();
-            var mockBankPaymentProxy = Mock.Of<IBankPaymentProxy>();
-            Mock.Get(mockBankPaymentProxy)
-                .Setup(m => m.CreatePaymentAsync(It.IsAny<CardPaymentRequest>())).ReturnsAsync(fakeSucceededCardPaymentResponse);
-
+            //var fakeSucceededCardPaymentResponse = Helper.CreateFake_Succeeded_CardPaymentResponse();
+            var IBankPaymentProxy = Helper.CreateBankPaymentProxyMock();
+           
             var startupAssembly = typeof(TStartupPgProcApi).GetTypeInfo().Assembly;
             var contentRoot = GetProjectPath(relativeTargetProjectParentDir, startupAssembly);
 
@@ -109,10 +107,10 @@ namespace PaymentGateway.IntegrationTests
 
             var webHostBuilder = new WebHostBuilder()
                 .UseContentRoot(contentRoot)
-                .ConfigureServices(InitializeServicesPaymentProcessorApi)
+                 .ConfigureServices(InitializeServicesPaymentProcessorApi)
                 .ConfigureTestServices(services => {
                     services.RemoveAll<IBankPaymentProxy>();
-                    services.TryAddTransient(sp => mockBankPaymentProxy);
+                    services.TryAddTransient(sp => IBankPaymentProxy);
                 })
                 .UseConfiguration(configurationBuilder.Build())
                 .UseEnvironment("Development")
@@ -122,7 +120,7 @@ namespace PaymentGateway.IntegrationTests
             PgProcApiServer = new TestServer(webHostBuilder);
 
             // Add configuration for client
-            PgProcApiClient = PgApiServer.CreateClient();
+            PgProcApiClient = PgProcApiServer.CreateClient();
             PgProcApiClient.BaseAddress = new Uri("http://localhost:6002");
             PgProcApiClient.DefaultRequestHeaders.Accept.Clear();
             PgProcApiClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));

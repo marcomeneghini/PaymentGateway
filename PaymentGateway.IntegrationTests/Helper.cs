@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Moq;
 using PaymentGateway.Processor.Api.Domain;
 
 namespace PaymentGateway.IntegrationTests
@@ -18,5 +19,83 @@ namespace PaymentGateway.IntegrationTests
         }
 
         
+
+        public static IBankPaymentProxy CreateBankPaymentProxyMock()
+        {
+
+            var mockBankPaymentProxy = new Mock<IBankPaymentProxy>();
+            mockBankPaymentProxy.Setup(m => m.CreatePaymentAsync(It.IsAny<CardPaymentRequest>()))
+                .ReturnsAsync((CardPaymentRequest request) =>
+                {
+                    var cards = GetAllCards();
+                    if (!cards.Contains(request.GetCard()))
+                        return new CardPaymentResponse { TransactionStatus = TransactionStatus.Declined.ToString(), Message = "Wrong card details", RequestId = request.RequestId };
+                    var bankAccounts = GetAllBankAccounts();
+                    if (!bankAccounts.Contains(request.GetBankAccount()))
+                        return new CardPaymentResponse { TransactionStatus = TransactionStatus.Declined.ToString(), Message = "Wrong bank account details", RequestId = request.RequestId };
+                    return new CardPaymentResponse { TransactionStatus = TransactionStatus.Succeeded.ToString(), RequestId = request.RequestId, TransactionId = Guid.NewGuid().ToString()};
+                });
+            return mockBankPaymentProxy.Object;
+        }
+
+        private static List<Card> GetAllCards()
+        {
+            return new List<Card>( )
+            {
+                GenerateCard_JohnDoe(),
+                GenerateCard_JaneDoe()
+            };
+        }
+        public static Card GenerateCard_JohnDoe()
+        {
+            return new Card()
+            {
+                CardHolderName = "John Doe",
+                CardNumber = "1234 1234 1234 1234",
+                MonthExpiryDate = 1,
+                YearExpiryDate = 2021,
+            };
+        }
+
+        public static Card GenerateCard_JaneDoe()
+        {
+            return new Card()
+            {
+                CardHolderName = "Jane Doe",
+                CardNumber = "0000 1234 1234 1234",
+                MonthExpiryDate = 1,
+                YearExpiryDate = 2021,
+            };
+        }
+
+        public static List<BankAccount> GetAllBankAccounts()
+        {
+            return new List<BankAccount>()
+            {
+                GenerateBankAccount_Amazon(),
+                GenerateBankAccount_Apple()
+            };
+        }
+
+        public static BankAccount GenerateBankAccount_Amazon()
+        {
+            return new BankAccount()
+            {
+                AccountHolder = "Amazon",
+                AccountNumber = "11111111111111",
+                SortCode = "000000"
+
+            };
+        }
+
+        public static BankAccount GenerateBankAccount_Apple()
+        {
+            return new BankAccount()
+            {
+                AccountHolder = "Apple",
+                AccountNumber = "2222222222222",
+                SortCode = "123456"
+            };
+        }
     }
 }

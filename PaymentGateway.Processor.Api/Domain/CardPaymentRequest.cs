@@ -51,5 +51,7 @@ namespace PaymentGateway.Processor.Api.Domain
         /// Merchant Bank Account
         /// </summary>
         public string MerchantAccountNumber { get; set; }
+
+       
     }
 }

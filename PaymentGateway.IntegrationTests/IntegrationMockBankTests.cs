@@ -70,6 +70,7 @@ namespace PaymentGateway.IntegrationTests
                     {
                         var stringResponse = await response.Content.ReadAsStringAsync();
                         paymentStatus = JsonConvert.DeserializeObject<PaymentStatusModel>(stringResponse);
+                        break;
                     }
                     await Task.Delay(2000);
                 }
@@ -78,8 +79,61 @@ namespace PaymentGateway.IntegrationTests
                     Console.WriteLine(e);
                 }
             }
-            Assert.Equal(paymentStatus.Status, PaymentStatusEnum.Scheduled.ToString());
+            Assert.Equal(paymentStatus.Status, PaymentStatusEnum.Completed.ToString());
+        }
 
+        [Fact]
+        public async Task TestE2E_CreatePayment_WrongCard_ValidAmazon_Async()
+        {
+            // Arrange
+            var request = new
+            {
+                Url = "/api/merchantcardpayments",
+                Body = new
+                {
+                    MerchantId = amazonValidMerchantGuid.ToString(),
+                    RequestId = Guid.NewGuid().ToString(),
+                    CardNumber = "---- 1234 1234 1234",
+                    CardHolderName = "John Doe",
+                    MonthExpiryDate = 1,
+                    YearExpiryDate = 2021,
+                    CVV = "555",
+                    Amount = 10
+                }
+            };
+
+            // Act
+            var merchantPaymentHttpResponse = await PgApiClient.PostAsync(request.Url, ContentHelper.GetStringContent(request.Body));
+            merchantPaymentHttpResponse.EnsureSuccessStatusCode();
+            var merchantPaymentResponseString = await merchantPaymentHttpResponse.Content.ReadAsStringAsync();
+            var merchantPaymentResponse = JsonConvert.DeserializeObject<CreatePaymentResponseModel>(merchantPaymentResponseString);
+
+            PaymentStatusModel paymentStatus = new PaymentStatusModel() { Status = "" };
+            // loop to get the value of the payment status from the PaymentGateway.Processor
+            for (int i = 0; i < 3; i++)
+            {
+                try
+                {
+                    // Arrange
+                    var paymetProcessorRequest = $"/api/PaymentStatuses?paymentId={merchantPaymentResponse.PaymentRequestId}";
+
+                    // Act
+                    var response = await PgProcApiClient.GetAsync(paymetProcessorRequest);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var stringResponse = await response.Content.ReadAsStringAsync();
+                        paymentStatus = JsonConvert.DeserializeObject<PaymentStatusModel>(stringResponse);
+                        break;
+                    }
+                    await Task.Delay(2000);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+            }
+            Assert.Equal(paymentStatus.Status, PaymentStatusEnum.Error.ToString());
         }
     }
 }
