@@ -18,7 +18,7 @@ namespace PaymentGateway.Api.Infrastructure
             var amazon = CreateMerchant_Amazon();
             merchants.TryAdd(amazon.Id, amazon);
 
-            var apple = CreateMerchant_Apple();
+            var apple = CreateMerchant_InvalidApple();
             merchants.TryAdd(apple.Id, apple);
         }
         public async Task<Merchant> GetMerchantById(Guid merchantId)
@@ -33,29 +33,29 @@ namespace PaymentGateway.Api.Infrastructure
                 return null;
             });
         }
-
+         
         public static Merchant CreateMerchant_Amazon()
         {
             return new Merchant()
             {
                 Id = Guid.Parse("53D92C77-3C0E-447C-ABC5-0AF6CF829A22"),
-                AccountNumber = "11111111111111",
+                AccountNumber = "AmazonAccountNumber",
                 Denomination = "Amazon",
                 IsValid = true,
-                SortCode = "000000"
+                SortCode = "AAMMZZ"
             };
 
         }
 
-        public static Merchant CreateMerchant_Apple()
+        public static Merchant CreateMerchant_InvalidApple()
         {
             return new Merchant()
             {
                 Id = Guid.Parse("11112C77-3C0E-447C-ABC5-0AF6CF821111"),
-                AccountNumber = "2222222222222",
+                AccountNumber = "AppleAccountNumber",
                 Denomination = "Apple",
                 IsValid = false,
-                SortCode = "123456"
+                SortCode = "AAPPLL"
             };
 
         }

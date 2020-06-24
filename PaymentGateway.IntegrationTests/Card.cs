@@ -21,11 +21,17 @@ namespace PaymentGateway.IntegrationTests
         /// </summary>
         public int YearExpiryDate { get; set; }
 
+        public string CVV { get; set; }
+
         public bool Equals(Card other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return CardNumber == other.CardNumber && CardHolderName == other.CardHolderName && MonthExpiryDate == other.MonthExpiryDate && YearExpiryDate == other.YearExpiryDate;
+            return CardNumber == other.CardNumber && 
+                   CardHolderName == other.CardHolderName &&
+                   MonthExpiryDate == other.MonthExpiryDate && 
+                   YearExpiryDate == other.YearExpiryDate &&
+                    CVV==other.CVV;
         }
 
         public override bool Equals(object obj)
@@ -38,7 +44,7 @@ namespace PaymentGateway.IntegrationTests
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(CardNumber, CardHolderName, MonthExpiryDate, YearExpiryDate);
+            return HashCode.Combine(CardNumber, CardHolderName, MonthExpiryDate, YearExpiryDate, CVV);
         }
     }
 }

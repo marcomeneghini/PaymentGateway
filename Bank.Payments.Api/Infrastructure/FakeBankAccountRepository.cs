@@ -24,7 +24,6 @@ namespace Bank.Payments.Api.Infrastructure
                 AccountHolder = "Amazon",
                 AccountNumber = "11111111111111",
                 SortCode = "000000"
-
             };
         }
 

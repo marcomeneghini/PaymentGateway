@@ -51,9 +51,10 @@ namespace PaymentGateway.IntegrationTests
             return new Card()
             {
                 CardHolderName = "John Doe",
-                CardNumber = "1234 1234 1234 1234",
+                CardNumber = "1111 1111 1111 1111",
                 MonthExpiryDate = 1,
-                YearExpiryDate = 2021,
+                YearExpiryDate = 1,
+                CVV = "111"
             };
         }
 
@@ -62,9 +63,10 @@ namespace PaymentGateway.IntegrationTests
             return new Card()
             {
                 CardHolderName = "Jane Doe",
-                CardNumber = "0000 1234 1234 1234",
-                MonthExpiryDate = 1,
-                YearExpiryDate = 2021,
+                CardNumber = "2222 2222 2222 2222",
+                MonthExpiryDate = 2,
+                YearExpiryDate = 2,
+                CVV = "222"
             };
         }
 
@@ -82,8 +84,8 @@ namespace PaymentGateway.IntegrationTests
             return new BankAccount()
             {
                 AccountHolder = "Amazon",
-                AccountNumber = "11111111111111",
-                SortCode = "000000"
+                AccountNumber = "AmazonAccountNumber",
+                SortCode = "AAMMZZ"
 
             };
         }
@@ -93,8 +95,8 @@ namespace PaymentGateway.IntegrationTests
             return new BankAccount()
             {
                 AccountHolder = "Apple",
-                AccountNumber = "2222222222222",
-                SortCode = "123456"
+                AccountNumber = "AppleAccountNumber",
+                SortCode = "AAPPLL"
             };
         }
     }
