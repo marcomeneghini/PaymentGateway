@@ -12,7 +12,7 @@ namespace PaymentGateway.Api.Domain.Exceptions
         public InvalidMerchantReason InvalidMerchantReason { get; private set; }
 
         public HttpStatusCode HttpStatusCode { get; private set; }
-        public InvalidMerchantException(Guid merchantId,InvalidMerchantReason invalidMerchantReason, HttpStatusCode statusCode= HttpStatusCode.BadRequest) 
+        public InvalidMerchantException(Guid merchantId,InvalidMerchantReason invalidMerchantReason, HttpStatusCode statusCode= HttpStatusCode.NotFound) 
             :base($"merchantId:{merchantId}, reason:{invalidMerchantReason}")
         {
             MerchantId = merchantId;

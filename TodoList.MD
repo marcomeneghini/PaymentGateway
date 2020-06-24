@@ -49,7 +49,8 @@ PG_PROC - SERILOG - IMPROVE LOGS
 --DONE
 ------MVP 2 COMPLETE! -----------
 
-I think it could be enough for a test, otherwise i'd start thinking to commercilize it :D
+PG_API INTEGRATION TEST - OK
+
 
 -----------------------
 EXTRAS

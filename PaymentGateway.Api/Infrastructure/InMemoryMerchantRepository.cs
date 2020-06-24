@@ -54,7 +54,7 @@ namespace PaymentGateway.Api.Infrastructure
                 Id = Guid.Parse("11112C77-3C0E-447C-ABC5-0AF6CF821111"),
                 AccountNumber = "2222222222222",
                 Denomination = "Apple",
-                IsValid = true,
+                IsValid = false,
                 SortCode = "123456"
             };
 

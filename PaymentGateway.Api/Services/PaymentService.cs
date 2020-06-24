@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using PaymentGateway.Api.Domain;
 using PaymentGateway.Api.Domain.Exceptions;
@@ -45,7 +46,7 @@ namespace PaymentGateway.Api.Services
                 if (merchant == null)
                     throw new InvalidMerchantException(request.MerchantId, InvalidMerchantReason.NotPresent);
                 if (!merchant.IsValid)
-                    throw new InvalidMerchantException(merchant.Id, InvalidMerchantReason.Invalid);
+                    throw new InvalidMerchantException(merchant.Id, InvalidMerchantReason.Invalid,HttpStatusCode.BadRequest);
 
                 // Prepare the full payment data to send to the Event Broker
               
