@@ -50,10 +50,14 @@ PG_PROC - SERILOG - IMPROVE LOGS
 ------MVP 2 COMPLETE! -----------
 
 PG_API - INTEGRATION TEST - OK
-PG_PROC - INTEGRATION TEST GetPaymentStatus Not Found
-PG_PROC - INTEGRATION TEST GetPaymentStatus Completed
-PG_PROC - INTEGRATION TEST GetPaymentStatus Scheduled
-PG_PROC - INTEGRATION TEST GetPaymentStatus Error
+PG_PROC - INTEGRATION TEST GetPaymentStatus Not Found- OK
+PG_PROC - INTEGRATION TEST GetPaymentStatus Completed- OK
+PG_PROC - INTEGRATION TEST GetPaymentStatus Scheduled- OK
+PG_PROC - INTEGRATION TEST GetPaymentStatus Error - OK
+
+PG_PROC - INTEGRATION - Inject Mock<IBankPaymentRepository> 
+
+
 -----------------------
 EXTRAS
 -----------------------

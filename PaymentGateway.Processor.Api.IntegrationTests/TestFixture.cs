@@ -12,6 +12,9 @@ using Microsoft.AspNetCore.Mvc.ViewComponents;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Moq;
+using PaymentGateway.Processor.Api.Domain;
 
 namespace PaymentGateway.Processor.Api.IntegrationTests
 {
@@ -57,6 +60,8 @@ namespace PaymentGateway.Processor.Api.IntegrationTests
 
         protected virtual void InitializeServices(IServiceCollection services)
         {
+
+
             var startupAssembly = typeof(TStartup).GetTypeInfo().Assembly;
 
             var manager = new ApplicationPartManager
@@ -68,7 +73,6 @@ namespace PaymentGateway.Processor.Api.IntegrationTests
                 FeatureProviders =
                 {
                     new ControllerFeatureProvider(),
-                    new ViewComponentFeatureProvider()
                 }
             };
 
@@ -77,6 +81,12 @@ namespace PaymentGateway.Processor.Api.IntegrationTests
 
         protected TestFixture(string relativeTargetProjectParentDir)
         {
+            var fakeSucceededCardPaymentResponse = Helper.CreateFake_Succeeded_CardPaymentResponse("request1");
+            var mockBankPaymentProxy = Mock.Of<IBankPaymentProxy>();
+            Mock.Get(mockBankPaymentProxy)
+                .Setup(m => m.CreatePaymentAsync(It.IsAny<CardPaymentRequest>())).ReturnsAsync(fakeSucceededCardPaymentResponse);
+                    
+
             var startupAssembly = typeof(TStartup).GetTypeInfo().Assembly;
             var contentRoot = GetProjectPath(relativeTargetProjectParentDir, startupAssembly);
 
@@ -86,7 +96,10 @@ namespace PaymentGateway.Processor.Api.IntegrationTests
 
             var webHostBuilder = new WebHostBuilder()
                 .UseContentRoot(contentRoot)
-                .ConfigureServices(InitializeServices)
+                .ConfigureTestServices(services => {
+                    services.RemoveAll<IBankPaymentProxy>();
+                    services.TryAddTransient(sp => mockBankPaymentProxy);
+                })
                 .UseConfiguration(configurationBuilder.Build())
                 .UseEnvironment("Development")
                 .UseStartup(typeof(TStartup));

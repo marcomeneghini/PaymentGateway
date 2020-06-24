@@ -68,7 +68,7 @@ namespace PaymentGateway.Api.IntegrationTests
                 FeatureProviders =
                 {
                     new ControllerFeatureProvider(),
-                    new ViewComponentFeatureProvider()
+                   // new ViewComponentFeatureProvider()
                 }
             };
 

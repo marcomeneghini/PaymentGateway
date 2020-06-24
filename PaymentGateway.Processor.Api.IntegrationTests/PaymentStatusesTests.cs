@@ -34,6 +34,7 @@ namespace PaymentGateway.Processor.Api.IntegrationTests
             var response = await Client.GetAsync(request);
 
             // Assert
+         
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
             
         }
@@ -91,5 +92,7 @@ namespace PaymentGateway.Processor.Api.IntegrationTests
             var paymentStatus = JsonConvert.DeserializeObject<PaymentStatusModel>(stringResponse);
             Assert.Equal(paymentStatus.Status, PaymentStatusEnum.Error.ToString());
         }
+
+
     }
 }
