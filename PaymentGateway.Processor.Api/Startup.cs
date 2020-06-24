@@ -71,8 +71,8 @@ namespace PaymentGateway.Processor.Api
                 {
                    //var bankConfiguration = new BankPaymentConfiguration();
                     //Configuration.GetSection(BankPaymentConfiguration.SectionName).Bind(bankConfiguration);
-
-                    client.BaseAddress = new Uri( Configuration["BankPaymentsAddress"]);
+                    var bankPaymentsAddress = Configuration["BankPaymentsAddress"];
+                    client.BaseAddress = new Uri(bankPaymentsAddress);
                     //client.BaseAddress = new Uri(bankConfiguration.BaseAddress);
 
                     client.DefaultRequestHeaders.Accept.Clear();

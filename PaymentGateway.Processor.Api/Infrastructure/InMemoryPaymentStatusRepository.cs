@@ -12,6 +12,18 @@ namespace PaymentGateway.Processor.Api.Infrastructure
     {
         private ConcurrentDictionary<Guid, PaymentStatus> paymentStatuses =
             new ConcurrentDictionary<Guid, PaymentStatus>();
+
+        public InMemoryPaymentStatusRepository()
+        {
+            var scheduled = Create_Scheduled_PaymentStatus();
+            paymentStatuses.TryAdd(scheduled.PaymentId, scheduled);
+
+            var completed = Create_Completed_PaymentStatus();
+            paymentStatuses.TryAdd(completed.PaymentId, completed);
+
+            var error = Create_Error_PaymentStatus();
+            paymentStatuses.TryAdd(error.PaymentId, error);
+        }
         public async Task<PaymentStatus> GetPaymentStatus(Guid paymentId)
         {
             var paymentStatus= await Task.Run(() =>
@@ -65,5 +77,41 @@ namespace PaymentGateway.Processor.Api.Infrastructure
             });
             
         }
-    }
+
+        public static PaymentStatus Create_Scheduled_PaymentStatus()
+        {
+            return new PaymentStatus()
+            {
+                PaymentId = Guid.Parse("55577777-4444-447C-ABC5-0AF6CF829A22"),
+                RequestId =  Guid.NewGuid().ToString(),
+                Status = PaymentStatusEnum.Scheduled.ToString()
+            };
+
+        }
+
+        public static PaymentStatus Create_Completed_PaymentStatus()
+        {
+            return new PaymentStatus()
+            {
+                PaymentId = Guid.Parse("66677777-4444-447C-ABC5-0AF6CF829A22"),
+                RequestId = Guid.NewGuid().ToString(),
+                Status = PaymentStatusEnum.Completed.ToString(),
+                UpdatedAt = DateTimeOffset.Now.AddSeconds(3),
+                TransactionId = "transaction1"
+            };
+        }
+
+
+        public static PaymentStatus Create_Error_PaymentStatus()
+            {
+                return new PaymentStatus()
+                {
+                    PaymentId = Guid.Parse("77777777-4444-447C-ABC5-0AF6CF829A22"),
+                    RequestId = Guid.NewGuid().ToString(),
+                    Status = PaymentStatusEnum.Error.ToString(),
+                    UpdatedAt = DateTimeOffset.Now.AddSeconds(3),
+                    TransactionId = "transaction2"
+                };
+            }
+        }
 }

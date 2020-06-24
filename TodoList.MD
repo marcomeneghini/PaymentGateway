@@ -49,9 +49,11 @@ PG_PROC - SERILOG - IMPROVE LOGS
 --DONE
 ------MVP 2 COMPLETE! -----------
 
-PG_API INTEGRATION TEST - OK
-
-
+PG_API - INTEGRATION TEST - OK
+PG_PROC - INTEGRATION TEST GetPaymentStatus Not Found
+PG_PROC - INTEGRATION TEST GetPaymentStatus Completed
+PG_PROC - INTEGRATION TEST GetPaymentStatus Scheduled
+PG_PROC - INTEGRATION TEST GetPaymentStatus Error
 -----------------------
 EXTRAS
 -----------------------
