@@ -20,7 +20,7 @@ SHRD - IEventBrokerSubscriber MessageArrived()
 PG_PROC - Listen Queue PaymentRequests
 PG_PROC - finalize service
 
-------MVP 1 COMPLETE!(some Extras included already) -----------
+------MVP 1 COMPLETED!(some Extras included already) -----------
 
 BANK - Change Enum To String in the model for status
 PG_PROC - implement Polly on Bank Proxy
@@ -47,7 +47,7 @@ PG_API  - IMPROVE LOGS
 --DONE
 PG_PROC - SERILOG - IMPROVE LOGS
 --DONE
-------MVP 2 COMPLETE! -----------
+------MVP 2 COMPLETED! -----------
 
 PG_API - INTEGRATION TEST - OK
 PG_PROC - INTEGRATION TEST GetPaymentStatus Not Found- OK
@@ -57,6 +57,21 @@ PG_PROC - INTEGRATION TEST GetPaymentStatus Error - OK
 
 PG_PROC - INTEGRATION - Inject Mock<IBankPaymentRepository> 
 
+E2E Integration Tests - 2 services+RabbitMQ in container
+
+------Beta 1 COMPLETED! -----------
+-----------------------------------
+--------- Oustanding 24/6 ---------
+-----------------------------------
+PG_API	Swagger + api versioning
+PG_PROC Swagger + api versioning 
+
+PG_API	Verify Validation (422)
+PG_PROC Verify Validation
+
+Cleanup
+-----------------------------------
+-----------------------------------
 
 -----------------------
 EXTRAS
@@ -68,7 +83,6 @@ Bank Implementation
 Application logging = SERILOG  
 Exception Handling Middleware
 Unit Testing
-
 ------ OUTSTANDING -------------
 ADD Application metrics 
 ADD Authentication 
