@@ -14,7 +14,7 @@ at the moment the system allows the client to request card paymente between Card
     "CardHolderName":"John Doe",
     "MonthExpiryDate":1,
     "YearExpiryDate":1,
-    "CVV" = "111"
+    "CVV" : "111"
 }
 ```
 
@@ -26,7 +26,7 @@ at the moment the system allows the client to request card paymente between Card
     "CardHolderName":"Jane Doe",
     "MonthExpiryDate":2,
     "YearExpiryDate":2   
-     CVV = "222"
+     "CVV" : "222"
 }
 ``` 
 * Amazon Merchent Id : 53D92C77-3C0E-447C-ABC5-0AF6CF829A22
