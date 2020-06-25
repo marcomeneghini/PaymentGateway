@@ -13,7 +13,8 @@ at the moment the system allows the client to request card paymente between Card
     "CardNumber":"1111 1111 1111 1111",
     "CardHolderName":"John Doe",
     "MonthExpiryDate":1,
-    "YearExpiryDate":1
+    "YearExpiryDate":1,
+    "CVV" = "111"
 }
 ```
 
@@ -21,10 +22,10 @@ at the moment the system allows the client to request card paymente between Card
 * Jane Doe 
 ```json
 {
-     CardHolderName = "Jane Doe",
-     CardNumber = "2222 2222 2222 2222",
-     MonthExpiryDate = 2,
-     YearExpiryDate = 2,
+    "CardNumber":"2222 2222 2222 2222",
+    "CardHolderName":"Jane Doe",
+    "MonthExpiryDate":2,
+    "YearExpiryDate":2   
      CVV = "222"
 }
 ``` 
