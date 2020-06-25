@@ -29,8 +29,8 @@ at the moment the system allows the client to request card paymente between Card
     "CVV":"222"
 }
 ``` 
-* Amazon Merchent Id : 53D92C77-3C0E-447C-ABC5-0AF6CF829A22
-* Apple Merchant Id :11112C77-3C0E-447C-ABC5-0AF6CF821111
+* Amazon Merchant Id : 53D92C77-3C0E-447C-ABC5-0AF6CF829A22
+* Apple  Merchant Id  : 11112C77-3C0E-447C-ABC5-0AF6CF821111
 
 ## Test with Postman
 Run the solution with docker-compose as statup, open Postaman performa POST to this url 
@@ -59,7 +59,7 @@ with the Apple's one or change the card details with the Jane's ones. You will r
 }
 ```
 this emasn the payment has been processed correctly and the reference to retrieve the status is paymentRequestId 
-### Get the resutl
+### Get the result
 To retrieve the result of the transaction (it will be processed asyncronously), with Postaman in anoter tab perform a GET to the following url:
 
 http://localhost:7000/api/PaymentStatuses?paymentId={paymentRequestId}
