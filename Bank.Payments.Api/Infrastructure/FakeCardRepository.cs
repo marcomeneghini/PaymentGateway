@@ -23,9 +23,9 @@ namespace Bank.Payments.Api.Infrastructure
             return new Card()
             {
                 CardHolderName = "John Doe",
-                CardNumber = "1234 1234 1234 1234",
+                CardNumber = "1111 1111 1111 1111",
                 MonthExpiryDate = 1,
-                YearExpiryDate = 2021,
+                YearExpiryDate = 1
             };
         }
 
@@ -34,9 +34,9 @@ namespace Bank.Payments.Api.Infrastructure
             return new Card()
             {
                 CardHolderName = "Jane Doe",
-                CardNumber = "0000 1234 1234 1234",
-                MonthExpiryDate = 1,
-                YearExpiryDate = 2021,
+                CardNumber = "2222 2222 2222 2222",
+                MonthExpiryDate = 2,
+                YearExpiryDate = 2
             };
         }
 

@@ -22,8 +22,8 @@ namespace Bank.Payments.Api.Infrastructure
             return new BankAccount()
             {
                 AccountHolder = "Amazon",
-                AccountNumber = "11111111111111",
-                SortCode = "000000"
+                AccountNumber = "AmazonAccountNumber",
+                SortCode = "AAMMZZ"
             };
         }
 
@@ -32,8 +32,8 @@ namespace Bank.Payments.Api.Infrastructure
             return new BankAccount()
             {
                 AccountHolder = "Apple",
-                AccountNumber = "2222222222222",
-                SortCode = "123456"
+                AccountNumber = "AppleAccountNumber",
+                SortCode = "AAPPLL"
             };
         }
 
