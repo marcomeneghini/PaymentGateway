@@ -18,7 +18,7 @@ namespace PaymentGateway.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[ValidateModel]
+    [ValidateModel]
     public class MerchantCardPaymentsController : ControllerBase
     {
         private readonly IPaymentService _paymentService;

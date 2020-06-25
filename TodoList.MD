@@ -71,6 +71,8 @@ PG_PROC Verify Validation (422) -- OK
 
 Cleanup
 -----------------------------------
+BUG - Adding the ValidationAttribute to the Controllrt
+ make disapper the Swagger Controller :O
 -----------------------------------
 
 -----------------------
