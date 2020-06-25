@@ -3,7 +3,7 @@
 Next Steps:
 * BFF(Backend For FrontEnd) gatewat to gice the client a single entry point
 * IdentiServer - Identity server 4, Client Credential Flow (the client will keep the Secret an the ClientId)
-* NorificationProcessor - A service that notify asyncronously the api client readong from a queue in Rabbit MQ
+* NorificationProcessor - A service that notify asyncronously the api client reding from a NEW QUEUE in Rabbit MQ (PaymentsToNotify) populated by the PaymentGateway.Processor background worker. This service MUST access data about the merchant endpoint URI
 
 ## Test data
 at the moment the system allows the client to request card paymente between Card and Merchant. Valid card details are:
