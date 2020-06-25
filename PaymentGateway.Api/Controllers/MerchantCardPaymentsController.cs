@@ -33,6 +33,10 @@ namespace PaymentGateway.Api.Controllers
             _logger = logger;
         }
         [HttpPost]
+        [ProducesResponseType(typeof(ErrorResponseModel), 409)] // conflict
+        [ProducesResponseType(typeof(ErrorResponseModel), 404)] // not found
+        [ProducesResponseType(typeof(ErrorResponseModel), 500)] // internal server
+        [ProducesResponseType(typeof(CreatePaymentResponseModel), 200)]
         public async Task<IActionResult> CreatePayment(CreatePaymentRequestModel request)
         {
             _logger.LogInformation($"CreatePayment:{request}");

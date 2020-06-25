@@ -63,8 +63,8 @@ E2E Integration Tests - 2 services+RabbitMQ in container
 -----------------------------------
 --------- Oustanding 24/6 ---------
 -----------------------------------
-PG_API	Swagger + api versioning
-PG_PROC Swagger + api versioning 
+PG_API	Swagger + ProducesResponseType -- OK
+PG_PROC Swagger + ProducesResponseType
 
 PG_API	Verify Validation (422)
 PG_PROC Verify Validation

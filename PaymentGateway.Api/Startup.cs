@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 using PaymentGateway.Api.Domain;
 using PaymentGateway.Api.Infrastructure;
 using PaymentGateway.Api.Middlewares;
@@ -19,7 +20,7 @@ using PaymentGateway.SharedLib.Encryption;
 using PaymentGateway.SharedLib.EventBroker;
 using RabbitMQ.Client;
 using Serilog;
-
+using Swashbuckle;
 namespace PaymentGateway.Api
 {
     public class Startup
@@ -34,6 +35,8 @@ namespace PaymentGateway.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
+
+            
             services.AddSingleton<IMerchantRepository, InMemoryMerchantRepository>();
             services.AddSingleton<IPaymentRepository, InMemoryPaymentRepository>();
             services.AddScoped<IPaymentService, PaymentService>();
@@ -42,6 +45,10 @@ namespace PaymentGateway.Api
            
 
             services.AddControllers();
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "PaymentGateway Demo", Version = "v1" });
+            });
             //services.AddDbContext<PaymentGatewayDbContext>(opt => opt.UseInMemoryDatabase(Guid.NewGuid().ToString()),ServiceLifetime.Scoped,ServiceLifetime.Scoped);
             services.AddHealthChecks();
             services.AddAutoMapper(typeof(Startup));
@@ -93,6 +100,12 @@ namespace PaymentGateway.Api
             app.UseMiddleware(typeof(RequestIdLoggingMiddleware));
 
             app.UseRouting();
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "PaymentGateway Demo V1");
+            });
 
             app.UseEndpoints(endpoints =>
             {
