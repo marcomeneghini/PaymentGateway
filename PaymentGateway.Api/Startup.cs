@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using PaymentGateway.Api.Attributes;
 using PaymentGateway.Api.Domain;
 using PaymentGateway.Api.Infrastructure;
 using PaymentGateway.Api.Middlewares;
@@ -41,10 +42,9 @@ namespace PaymentGateway.Api
             services.AddSingleton<IPaymentRepository, InMemoryPaymentRepository>();
             services.AddScoped<IPaymentService, PaymentService>();
             services.AddScoped<ICipherService, AesCipherService>();
-
-           
-
             services.AddControllers();
+
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "PaymentGateway Demo", Version = "v1" });

@@ -46,15 +46,15 @@ namespace PaymentGateway.Processor.Api
 
                 var factory = new ConnectionFactory()
                 {
-                    HostName = Configuration["EventBrokerConnection"],
+                    HostName = string.IsNullOrEmpty(Configuration["EventBrokerConnection"])?"rabbitmq": Configuration["EventBrokerConnection"],
                     DispatchConsumersAsync = true
                 };
-
+                // set a default 
                 if (!string.IsNullOrEmpty(Configuration["EventBrokerUserName"]))
                 {
                     factory.UserName = Configuration["EventBrokerUserName"];
                 }
-
+                // set a default 
                 if (!string.IsNullOrEmpty(Configuration["EventBrokerPassword"]))
                 {
                     factory.Password = Configuration["EventBrokerPassword"];
@@ -70,11 +70,10 @@ namespace PaymentGateway.Processor.Api
             });
             services.AddHttpClient<IBankPaymentProxy, MyBankPaymentProxy>(client =>
                 {
-                   //var bankConfiguration = new BankPaymentConfiguration();
-                    //Configuration.GetSection(BankPaymentConfiguration.SectionName).Bind(bankConfiguration);
+                   
                     var bankPaymentsAddress = Configuration["BankPaymentsAddress"];
                     client.BaseAddress = new Uri(bankPaymentsAddress);
-                    //client.BaseAddress = new Uri(bankConfiguration.BaseAddress);
+                   
 
                     client.DefaultRequestHeaders.Accept.Clear();
 

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using PaymentGateway.Api.Attributes;
 using PaymentGateway.Api.Domain;
 using PaymentGateway.Api.Domain.Exceptions;
 using PaymentGateway.Api.Models;
@@ -17,6 +18,7 @@ namespace PaymentGateway.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //[ValidateModel]
     public class MerchantCardPaymentsController : ControllerBase
     {
         private readonly IPaymentService _paymentService;
@@ -32,7 +34,9 @@ namespace PaymentGateway.Api.Controllers
             _mapper = mapper;
             _logger = logger;
         }
+
         [HttpPost]
+        [ProducesResponseType(typeof(ValidationResultModel), 422)] // UnprocessableEntity
         [ProducesResponseType(typeof(ErrorResponseModel), 409)] // conflict
         [ProducesResponseType(typeof(ErrorResponseModel), 404)] // not found
         [ProducesResponseType(typeof(ErrorResponseModel), 500)] // internal server

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -7,12 +8,15 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PaymentGateway.Processor.Api.Domain;
+using PaymentGateway.Processor.Api.Filters;
 using PaymentGateway.Processor.Api.Models;
+using PaymentGateway.SharedLib.Validation;
 
 namespace PaymentGateway.Processor.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [ValidateModel]
     public class PaymentStatusesController : ControllerBase
     {
         private readonly IPaymentStatusRepository _paymentStatusRepository;
@@ -28,8 +32,10 @@ namespace PaymentGateway.Processor.Api.Controllers
 
         [HttpGet]
         [ProducesResponseType(typeof(ErrorResponseModel), 404)] // not found
+        [ProducesResponseType(typeof(ValidationResultModel), 422)] // Unprocessable Entity
         [ProducesResponseType(typeof(PaymentStatusModel), 200)] // OK
-        public async Task<IActionResult> GetByPaymentId(Guid paymentId)
+        public async Task<IActionResult> GetByPaymentId(
+            [RegularExpression(RegexValidator.VALID_UUID)] Guid paymentId)
         {
            
             var paymentStatus = await _paymentStatusRepository.GetPaymentStatus(paymentId);

@@ -19,6 +19,7 @@ namespace PaymentGateway.IntegrationTests
         private HttpClient PgProcApiClient;
 
         private Guid unknownMerchantGuid = new Guid("00092C77-3C0E-447C-ABC5-0AF6CF829A22");
+       
         private Guid amazonValidMerchantGuid = InMemoryMerchantRepository.CreateMerchant_Amazon().Id;
         private Guid appleInValidMerchantGuid = InMemoryMerchantRepository.CreateMerchant_InvalidApple().Id;
 
@@ -59,7 +60,7 @@ namespace PaymentGateway.IntegrationTests
 
             PaymentStatusModel paymentStatus=new PaymentStatusModel(){Status = ""};
             // loop to get the value of the payment status from the PaymentGateway.Processor
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < 4; i++)
             {
                 try
                 {
@@ -118,7 +119,7 @@ namespace PaymentGateway.IntegrationTests
 
             PaymentStatusModel paymentStatus = new PaymentStatusModel() { Status = "" };
             // loop to get the value of the payment status from the PaymentGateway.Processor
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < 4; i++)
             {
                 try
                 {
@@ -146,7 +147,6 @@ namespace PaymentGateway.IntegrationTests
             Assert.Equal(merchantPaymentResponse.RequestId, paymentStatus.RequestId);
         }
 
-        
 
         [Fact]
         public async Task TestE2E_CreatePayment_WrongCard_ValidAmazon_Async()
@@ -164,6 +164,7 @@ namespace PaymentGateway.IntegrationTests
                     MonthExpiryDate = 10,
                     YearExpiryDate = 10,
                     CVV = "000",
+                    Currency = "GBP",
                     Amount = 10
                 }
             };
@@ -201,5 +202,7 @@ namespace PaymentGateway.IntegrationTests
             }
             Assert.Equal(PaymentStatusEnum.Error.ToString(), paymentStatus.Status);
         }
+
+        
     }
 }
