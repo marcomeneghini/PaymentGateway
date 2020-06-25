@@ -15,7 +15,7 @@ at the moment the system allows the client to request card paymente between Card
     "YearExpiryDate":1
 }
 
-*Jane Doe 
+* Jane Doe 
 {
     "CardNumber":"1111 1111 1111 1111",
     "CardHolderName":"John Doe",
@@ -23,8 +23,8 @@ at the moment the system allows the client to request card paymente between Card
     "YearExpiryDate":1
 }
 
-*Amazon Merchent Id : 53D92C77-3C0E-447C-ABC5-0AF6CF829A22
-*Apple Merchant Id :11112C77-3C0E-447C-ABC5-0AF6CF821111
+* Amazon Merchent Id : 53D92C77-3C0E-447C-ABC5-0AF6CF829A22
+* Apple Merchant Id :11112C77-3C0E-447C-ABC5-0AF6CF821111
 
 ## Test with Postman
 Run the solution with docker-compose as statup, open Postaman performa POST to this url 
@@ -43,7 +43,7 @@ with this body:
     "Amount":10
 }
 
-This means has been requested a payment from John Doe to Apple og 10 £. You can swap the MerchanId
+This means has been requested a payment from John Doe to Apple og 10 Â£. You can swap the MerchanId
 with the Apple's one or chenge the card details with the Jane's ones. You will receive a 200 with this body.
 
 {
