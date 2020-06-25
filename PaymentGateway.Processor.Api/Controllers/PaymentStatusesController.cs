@@ -27,6 +27,8 @@ namespace PaymentGateway.Processor.Api.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(typeof(ErrorResponseModel), 404)] // not found
+        [ProducesResponseType(typeof(PaymentStatusModel), 200)] // OK
         public async Task<IActionResult> GetByPaymentId(Guid paymentId)
         {
            

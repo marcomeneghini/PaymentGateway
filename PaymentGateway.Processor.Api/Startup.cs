@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 using PaymentGateway.Processor.Api.Domain;
 using PaymentGateway.Processor.Api.Infrastructure;
 using PaymentGateway.Processor.Api.Messaging;
@@ -110,6 +111,10 @@ namespace PaymentGateway.Processor.Api
             services.AddControllers();
            
             services.AddHealthChecks();
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "PaymentGateway Processor Demo", Version = "v1" });
+            });
             services.AddAutoMapper(typeof(Startup));
         }
 
@@ -126,6 +131,12 @@ namespace PaymentGateway.Processor.Api
            
           
             app.UseRouting();
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "PaymentGateway Processor Demo V1");
+            });
 
             app.UseEndpoints(endpoints =>
             {
