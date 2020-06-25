@@ -44,11 +44,11 @@ with this body:
     "Amount":10
 }
 
-This means has been requested a payment from John Doe to Apple og 10 £. You can swap the MerchanId
-with the Apple's one or chenge the card details with the Jane's ones. You will receive a 200 with this body.
+This means has been requested a payment from John Doe to Apple of 10 £. You can swap the MerchanId
+with the Apple's one or change the card details with the Jane's ones. You will receive a 200 with this body.
 
 {
-    "requestId": "requesst7",
+    "requestId": "differenteverycall",
     "paymentRequestId": "908a22f4-70cc-4f5b-972b-dd265dd0c8f5"
 }
 
