@@ -76,3 +76,6 @@ This call will return a 200 with this body:
 }
 ```
 The paymetn completed successfully and the client has the "transactionId" from the bank to reconciliate the payments 
+
+# Tests, mocks
+The every service has its own unittest and integration test. The solution has also a Bank.Payments.Api that runs with docker-compose. This project has been added as plus and to test the BankPaymentsProxy in the PaymentGateways.Processor Background worker (PGPB)  when run and debug the solution with F5. The integration tests that involve the PGPB use a mockup class created with Moq that has the same inner logic (same cards and bank accounts allowed to perform transactions.
