@@ -1,9 +1,10 @@
 # PaymentGateway
 
 Next Steps:
-* BFF(Backend For FrontEnd) gatewat to gice the client a single entry point
+* Database support for PaymentGateway.Api and PaymentGateway.Processor.Api
+* BFF(Backend For FrontEnd) gateway to give the client a single entry point
 * IdentiServer - Identity server 4, Client Credential Flow (the client will keep the Secret an the ClientId)
-* NorificationProcessor - A service that notify asyncronously the api client reding from a NEW QUEUE in Rabbit MQ (PaymentsToNotify) populated by the PaymentGateway.Processor background worker. This service MUST access data about the merchant endpoint URI
+* NotificationProcessor - A service that notify asyncronously the api client reding from a NEW QUEUE in Rabbit MQ (PaymentsToNotify) populated by the PaymentGateway.Processor background worker. This service MUST access data about the merchant endpoint URI
 
 ## Test data
 at the moment the system allows the client to request card paymente between Card and Merchant. Valid card details are:
@@ -50,7 +51,7 @@ with this body:
     "Amount":10
 }
 ```
-This means has been requested a payment from John Doe to Apple of 10 £. You can swap the MerchanId
+This means that a payment has been requested from John Doe to Apple of 10 £. You can swap the MerchanId
 with the Apple's one or change the card details with the Jane's ones. You will receive a 200 with this body.
 ```json
 {
