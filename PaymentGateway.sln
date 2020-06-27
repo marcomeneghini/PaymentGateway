@@ -49,11 +49,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTests", "UnitTests", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IntegrationTests", "IntegrationTests", "{5213103B-56FF-4572-9468-AA089B136C48}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentGateway.Api.IntegrationTests", "PaymentGateway.Api.IntegrationTests\PaymentGateway.Api.IntegrationTests.csproj", "{C355B9F7-18AE-4182-9175-E25DA6B7D1EC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaymentGateway.Api.IntegrationTests", "PaymentGateway.Api.IntegrationTests\PaymentGateway.Api.IntegrationTests.csproj", "{C355B9F7-18AE-4182-9175-E25DA6B7D1EC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentGateway.Processor.Api.IntegrationTests", "PaymentGateway.Processor.Api.IntegrationTests\PaymentGateway.Processor.Api.IntegrationTests.csproj", "{BE67A518-64F8-429F-8569-DFCBF1E928FB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaymentGateway.Processor.Api.IntegrationTests", "PaymentGateway.Processor.Api.IntegrationTests\PaymentGateway.Processor.Api.IntegrationTests.csproj", "{BE67A518-64F8-429F-8569-DFCBF1E928FB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentGateway.IntegrationTests", "PaymentGateway.IntegrationTests\PaymentGateway.IntegrationTests.csproj", "{151B301B-C744-47DA-9418-9CCEA5C4792C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaymentGateway.IntegrationTests", "PaymentGateway.IntegrationTests\PaymentGateway.IntegrationTests.csproj", "{151B301B-C744-47DA-9418-9CCEA5C4792C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

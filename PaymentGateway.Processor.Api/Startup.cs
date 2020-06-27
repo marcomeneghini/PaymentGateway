@@ -68,19 +68,19 @@ namespace PaymentGateway.Processor.Api
 
                 return new DefaultRabbitMQPersistentConnection(factory, logger, retryCount);
             });
-            services.AddHttpClient<IBankPaymentProxy, MyBankPaymentProxy>(client =>
-                {
-                   
-                    var bankPaymentsAddress = Configuration["BankPaymentsAddress"];
-                    client.BaseAddress = new Uri(bankPaymentsAddress);
-                   
+            services.AddTransient<IBankPaymentProxy,FakeBankPaymentProxy>();
 
-                    client.DefaultRequestHeaders.Accept.Clear();
+            //services.AddHttpClient<IBankPaymentProxy, MyBankPaymentProxy>(client =>
+            //    {
+            //        var bankPaymentsAddress = Configuration["BankPaymentsAddress"];
+            //        client.BaseAddress = new Uri(bankPaymentsAddress);
 
-                    client.DefaultRequestHeaders.Accept.Add(
-                        new MediaTypeWithQualityHeaderValue("application/json"));
-                }
-            );
+            //        client.DefaultRequestHeaders.Accept.Clear();
+
+            //        client.DefaultRequestHeaders.Accept.Add(
+            //            new MediaTypeWithQualityHeaderValue("application/json"));
+            //    }
+            //);
             var channel = Channel.CreateBounded<EncryptedMessage>(100);
             services.AddSingleton(channel);
 
