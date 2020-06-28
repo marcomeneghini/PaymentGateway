@@ -88,7 +88,7 @@ namespace PaymentGateway.Processor.Api.Messaging
                             // perform the call 
                             try
                             {
-                                bankPaymentResponse = _bankPaymentProxy.CreatePaymentAsync(request).Result;
+                                bankPaymentResponse = _bankPaymentProxy.CreatePaymentAsync(request).GetAwaiter().GetResult();
                             }
                             catch (AggregateException e)
                             {
@@ -98,6 +98,10 @@ namespace PaymentGateway.Processor.Api.Messaging
                                 {
                                     _logger.LogError($"{agrEx.GetType().Name}:{e.Message}");
                                 }
+                            }
+                            catch (Exception e)
+                            {
+                                _logger.LogError($"{e.GetType().Name}:{e.Message}");
                             }
                         });
 

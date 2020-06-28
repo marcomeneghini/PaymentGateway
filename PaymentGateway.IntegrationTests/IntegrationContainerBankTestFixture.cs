@@ -19,7 +19,7 @@ using PaymentGateway.Processor.Api.Domain;
 
 namespace PaymentGateway.IntegrationTests
 {
-    public class IntegrationMockBankTestFixture<TStartupPgApi, TStartupPgProcApi> : IDisposable
+    public class IntegrationContainerBankTestFixture<TStartupPgApi, TStartupPgProcApi> : IDisposable
     {
 
         public static string GetProjectPath(string projectRelativePath, Assembly startupAssembly)
@@ -53,12 +53,12 @@ namespace PaymentGateway.IntegrationTests
 
         #region Constructors
 
-        public IntegrationMockBankTestFixture() : this(Path.Combine(""))
+        public IntegrationContainerBankTestFixture() : this(Path.Combine(""))
         {
 
         }
 
-        protected IntegrationMockBankTestFixture(string relativeTargetProjectParentDir)
+        protected IntegrationContainerBankTestFixture(string relativeTargetProjectParentDir)
         {
             InitializePaymentGatewayApiTestServer(relativeTargetProjectParentDir);
             InitializePaymentProcessorApiTestServer(relativeTargetProjectParentDir);
@@ -88,15 +88,14 @@ namespace PaymentGateway.IntegrationTests
 
             // Add configuration for client
             PgApiClient = PgApiServer.CreateClient();
-            PgApiClient.BaseAddress = new Uri("http://localhost:6001");
+            PgApiClient.BaseAddress = new Uri("http://localhost:9000");
             PgApiClient.DefaultRequestHeaders.Accept.Clear();
             PgApiClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
         private void InitializePaymentProcessorApiTestServer(string relativeTargetProjectParentDir)
         {
-            //var fakeSucceededCardPaymentResponse = Helper.CreateFake_Succeeded_CardPaymentResponse();
-            var IBankPaymentProxy = Helper.CreateBankPaymentProxyMock();
+          
            
             var startupAssembly = typeof(TStartupPgProcApi).GetTypeInfo().Assembly;
             var contentRoot = GetProjectPath(relativeTargetProjectParentDir, startupAssembly);
@@ -108,10 +107,6 @@ namespace PaymentGateway.IntegrationTests
             var webHostBuilder = new WebHostBuilder()
                 .UseContentRoot(contentRoot)
                  .ConfigureServices(InitializeServicesPaymentProcessorApi)
-                .ConfigureTestServices(services => {
-                    services.RemoveAll<IBankPaymentProxy>();
-                    services.TryAddTransient(sp => IBankPaymentProxy);
-                })
                 .UseConfiguration(configurationBuilder.Build())
                 .UseEnvironment("Development")
                 .UseStartup(typeof(TStartupPgProcApi));
@@ -121,7 +116,7 @@ namespace PaymentGateway.IntegrationTests
 
             // Add configuration for client
             PgProcApiClient = PgProcApiServer.CreateClient();
-            PgProcApiClient.BaseAddress = new Uri("http://localhost:6002");
+            PgProcApiClient.BaseAddress = new Uri("http://localhost:9001");
             PgProcApiClient.DefaultRequestHeaders.Accept.Clear();
             PgProcApiClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
@@ -174,5 +169,6 @@ namespace PaymentGateway.IntegrationTests
             PgApiClient.Dispose();
             PgProcApiClient.Dispose();
         }
+
     }
 }
