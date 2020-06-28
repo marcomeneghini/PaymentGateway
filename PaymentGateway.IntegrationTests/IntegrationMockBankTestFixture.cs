@@ -168,6 +168,10 @@ namespace PaymentGateway.IntegrationTests
 
         public void Dispose()
         {
+            PgApiServer.Dispose();
+            PgProcApiServer.Dispose();
+            PgApiClient.Dispose();
+            PgProcApiClient.Dispose();
         }
     }
 }
