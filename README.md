@@ -1,9 +1,9 @@
 # PaymentGateway
 
 Next Steps:
-* Database support for PaymentGateway.Api and PaymentGateway.Processor.Api
-* BFF(Backend For FrontEnd) gateway to give the client a single entry point
-* IdentiServer - Identity server 4, Client Credential Flow (the client will keep the Secret an the ClientId)
+* Database support for PaymentGateway.Api and PaymentGateway.Processor.Api, consequent seed injected in the testfixture for different test cases.
+* BFF(Backend For FrontEnd) gateway to give the client a single entry point.
+* IdentiServer - Identity server 4, Client Credential Flow (the client will keep the Secret an the ClientId).
 * NotificationProcessor - A service that notify asyncronously the api client reding from a NEW QUEUE in Rabbit MQ (PaymentsToNotify) populated by the PaymentGateway.Processor background worker. This service MUST access data about the merchant endpoint URI
 
 ## Test data
@@ -78,5 +78,6 @@ This call will return a 200 with this body:
 ```
 The paymetn completed successfully and the client has the "transactionId" from the bank to reconciliate the payments 
 
-# Tests, mocks
-The every service has its own unittest and integration test. The solution has also a Bank.Payments.Api that runs with docker-compose. This project has been added as plus and to test the BankPaymentsProxy in the PaymentGateways.Processor Background worker (PGPB)  when run and debug the solution with F5. The integration tests that involve the PGPB use a mockup class created with Moq that has the same inner logic (same cards and bank accounts allowed to perform transactions.
+# Connecting the Bank services, development and testing strategy
+To implement the MyBankPaymentsProxy, a simulator is added to the solution and to docker-compose (Bank.Payments.Api). During the integration tests a mockup proxy is injected to guarantee end to end (E2E) flow test.
+
