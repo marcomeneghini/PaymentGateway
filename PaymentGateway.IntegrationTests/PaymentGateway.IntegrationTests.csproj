@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Bank.Payments.Api\Bank.Payments.Api.csproj" />
     <ProjectReference Include="..\PaymentGateway.Api\PaymentGateway.Api.csproj" />
     <ProjectReference Include="..\PaymentGateway.Processor.Api\PaymentGateway.Processor.Api.csproj" />
     <ProjectReference Include="..\PaymentGateway.SharedLib\PaymentGateway.SharedLib.csproj" />

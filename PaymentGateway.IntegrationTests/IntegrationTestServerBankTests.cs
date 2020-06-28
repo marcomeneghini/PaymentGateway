@@ -11,9 +11,10 @@ using PaymentGateway.Processor.Api.Models;
 using Xunit;
 using PgApi =PaymentGateway.Api ;
 using PgProcessorApi = PaymentGateway.Processor.Api;
+using BankApi = Bank.Payments.Api;
 namespace PaymentGateway.IntegrationTests
 {
-    public  class IntegrationMockBankTests : IClassFixture<IntegrationMockBankTestFixture<PgApi.Startup, PgProcessorApi.Startup>>
+    public  class IntegrationTestServerBankTests : IClassFixture<IntegrationTestServerBankTestFixture<PgApi.Startup, PgProcessorApi.Startup, BankApi.Startup>>
     {
         private HttpClient PgApiClient;
         private HttpClient PgProcApiClient;
@@ -24,14 +25,14 @@ namespace PaymentGateway.IntegrationTests
         private Guid appleInValidMerchantGuid = InMemoryMerchantRepository.CreateMerchant_InvalidApple().Id;
 
 
-        public IntegrationMockBankTests(IntegrationMockBankTestFixture<PgApi.Startup, PgProcessorApi.Startup> fixture)
+        public IntegrationTestServerBankTests(IntegrationTestServerBankTestFixture<PgApi.Startup, PgProcessorApi.Startup, BankApi.Startup> fixture)
         {
             PgApiClient = fixture.PgApiClient;
             PgProcApiClient = fixture.PgProcApiClient;
         }
 
         [Fact]
-        public async Task Test_CreatePayment_John_ValidAmazon_Async()
+        public async Task TestE2E_CreatePayment_John_ValidAmazon_Async()
         {
             var johnDoeCard = Helper.GenerateCard_JohnDoe();
             // Arrange
@@ -90,7 +91,7 @@ namespace PaymentGateway.IntegrationTests
         }
 
         [Fact]
-        public async Task Test_CreatePayment_Jane_ValidAmazon_Async()
+        public async Task TestE2E_CreatePayment_Jane_ValidAmazon_Async()
         {
             var janeDoeCard = Helper.GenerateCard_JaneDoe();
             // Arrange
@@ -149,7 +150,7 @@ namespace PaymentGateway.IntegrationTests
 
 
         [Fact]
-        public async Task Test_CreatePayment_WrongCard_ValidAmazon_Async()
+        public async Task TestE2E_CreatePayment_WrongCard_ValidAmazon_Async()
         {
             // Arrange
             var request = new
