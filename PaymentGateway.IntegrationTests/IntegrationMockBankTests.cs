@@ -60,7 +60,7 @@ namespace PaymentGateway.IntegrationTests
 
             PaymentStatusModel paymentStatus=new PaymentStatusModel(){Status = ""};
             // loop to get the value of the payment status from the PaymentGateway.Processor
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 3; i++)
             {
                 try
                 {
@@ -74,9 +74,15 @@ namespace PaymentGateway.IntegrationTests
                     {
                         var stringResponse = await response.Content.ReadAsStringAsync();
                         paymentStatus = JsonConvert.DeserializeObject<PaymentStatusModel>(stringResponse);
-                        break;
+                        if (paymentStatus.Status== PaymentStatusEnum.Scheduled.ToString())
+                        {
+                            await Task.Delay(2000);
+                        }
+                        else
+                        {
+                            break;
+                        }
                     }
-                    await Task.Delay(2000);
                 }
                 catch (Exception e)
                 {
@@ -119,7 +125,7 @@ namespace PaymentGateway.IntegrationTests
 
             PaymentStatusModel paymentStatus = new PaymentStatusModel() { Status = "" };
             // loop to get the value of the payment status from the PaymentGateway.Processor
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 3; i++)
             {
                 try
                 {
@@ -133,9 +139,15 @@ namespace PaymentGateway.IntegrationTests
                     {
                         var stringResponse = await response.Content.ReadAsStringAsync();
                         paymentStatus = JsonConvert.DeserializeObject<PaymentStatusModel>(stringResponse);
-                        break;
+                        if (paymentStatus.Status == PaymentStatusEnum.Scheduled.ToString())
+                        {
+                            await Task.Delay(2000);
+                        }
+                        else
+                        {
+                            break;
+                        }
                     }
-                    await Task.Delay(2000);
                 }
                 catch (Exception e)
                 {
@@ -191,9 +203,15 @@ namespace PaymentGateway.IntegrationTests
                     {
                         var stringResponse = await response.Content.ReadAsStringAsync();
                         paymentStatus = JsonConvert.DeserializeObject<PaymentStatusModel>(stringResponse);
-                        break;
+                        if (paymentStatus.Status == PaymentStatusEnum.Scheduled.ToString())
+                        {
+                            await Task.Delay(2000);
+                        }
+                        else
+                        {
+                            break;
+                        }
                     }
-                    await Task.Delay(2000);
                 }
                 catch (Exception e)
                 {

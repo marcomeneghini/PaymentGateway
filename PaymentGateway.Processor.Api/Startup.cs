@@ -68,12 +68,12 @@ namespace PaymentGateway.Processor.Api
 
                 return new DefaultRabbitMQPersistentConnection(factory, logger, retryCount);
             });
+            //services.AddTransient<IBankPaymentProxy,FakeBankPaymentProxy>();
+
             services.AddHttpClient<IBankPaymentProxy, MyBankPaymentProxy>(client =>
                 {
-                   
                     var bankPaymentsAddress = Configuration["BankPaymentsAddress"];
                     client.BaseAddress = new Uri(bankPaymentsAddress);
-                   
 
                     client.DefaultRequestHeaders.Accept.Clear();
 

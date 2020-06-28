@@ -4,14 +4,12 @@ services:
 
   rabbitmq:
     image: rabbitmq:3-management-alpine
-
+      
   bank.payments.api:
     image: ${DOCKER_REGISTRY-}bankpaymentsapi
     build:
       context: .
       dockerfile: Bank.Payments.Api/Dockerfile
-   
-     
 
   paymentgateway.api:
     image: ${DOCKER_REGISTRY-}paymentgatewayapi
@@ -30,4 +28,7 @@ services:
     depends_on:     
       - rabbitmq
       
+
+
+
 
