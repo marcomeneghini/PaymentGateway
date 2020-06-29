@@ -9,6 +9,7 @@ Next Steps:
 Improvements:
 * BFF(Backend For FrontEnd) gateway to give the client a single entry point.
 * System Healthcheck is a condition to accept a payment request. A definition of "System Healty" is required (Example, at least 1 Processor in healty status, with an average processing time below 3 seconds)
+* Structured log and log aggregation (Splunk)
 
 ## Test data
 at the moment the system allows the client to request card paymente between Card and Merchant. Valid card details are:
