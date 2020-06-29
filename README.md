@@ -2,9 +2,12 @@
 
 Next Steps:
 * Database support for PaymentGateway.Api and PaymentGateway.Processor.Api, consequent seed injected in the testfixture for different test cases.
-* BFF(Backend For FrontEnd) gateway to give the client a single entry point.
 * IdentiServer - Identity server 4, Client Credential Flow (the client will keep the Secret an the ClientId).
 * NotificationProcessor - A service that notify asyncronously the api client reding from a NEW QUEUE in RabbitMQ (PaymentsToNotify) populated by the PaymentGateway.Processor background worker. This service MUST access data about the merchant endpoint URI
+
+Improvements:
+* BFF(Backend For FrontEnd) gateway to give the client a single entry point.
+* System Healthcheck is a condition to accept a payment request. A definition of "System Healty" is required (Example, at least 1 Processor in healty status, with an average processing time below 3 seconds)
 
 ## Test data
 at the moment the system allows the client to request card paymente between Card and Merchant. Valid card details are:
