@@ -22,24 +22,11 @@ namespace PaymentGateway.Api.Middlewares
             _next = next;
             _logger = logger;
         }
-
         public async Task Invoke(HttpContext context)
         {
             try
             {
                 await _next(context);
-            }
-            catch (InvalidMerchantException e)
-            {
-                var referenceCode = Guid.NewGuid().ToString();
-                _logger.LogError($"InvalidMerchantException:{e}");
-                await HandleInvalidMerchantExceptionAsync(context, e, referenceCode);
-            }
-            catch (RequestAlreadyProcessedException e)
-            {
-                var referenceCode = Guid.NewGuid().ToString();
-                _logger.LogError($"RequestAlreadyProcessedException:{e}");
-                await HandleRequestAlreadyProcessedExceptioAsync(context, e, referenceCode);
             }
             catch (Exception exception)
             {
@@ -47,35 +34,6 @@ namespace PaymentGateway.Api.Middlewares
                 _logger.LogCritical($"Unexpected exception:{exception}");
                 await HandleExceptionAsync(context, exception, referenceCode);
             }
-        }
-
-        private Task HandleInvalidMerchantExceptionAsync(HttpContext context, InvalidMerchantException exception, string referenceCode)
-        {
-            context.Response.ContentType = "application/json";
-            context.Response.StatusCode = (int)exception.HttpStatusCode;
-
-            var obj = new ErrorResponseModel()
-            {
-                ReferenceCode = referenceCode,
-                ErrorType = nameof(InvalidMerchantException),
-                Message = exception.Message
-            };
-            return context.Response.WriteAsync(JsonConvert.SerializeObject(obj));
-        }
-
-        private Task HandleRequestAlreadyProcessedExceptioAsync(HttpContext context, RequestAlreadyProcessedException exception, string referenceCode)
-        {
-            context.Response.ContentType = "application/json";
-            context.Response.StatusCode = (int) exception.HttpStatusCode;
-
-            var obj = new ErrorResponseModel()
-            {
-                RequestId = exception.RequestId,
-                ReferenceCode = referenceCode,
-                ErrorType = nameof(RequestAlreadyProcessedException),
-                Message = exception.Message
-            };
-            return context.Response.WriteAsync(JsonConvert.SerializeObject(obj));
         }
 
         private Task HandleExceptionAsync(HttpContext context, Exception exception, string referenceCode)
