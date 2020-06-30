@@ -15,7 +15,7 @@ using Microsoft.OpenApi.Models;
 using PaymentGateway.Api.Attributes;
 using PaymentGateway.Api.Domain;
 using PaymentGateway.Api.Infrastructure;
-using PaymentGateway.Api.Middlewares;
+using PaymentGateway.Api.Middleware;
 using PaymentGateway.Api.Services;
 using PaymentGateway.SharedLib.Encryption;
 using PaymentGateway.SharedLib.EventBroker;

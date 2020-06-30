@@ -9,6 +9,8 @@ using AutoMapper;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using PaymentGateway.Processor.Api.Domain;
+using PaymentGateway.Processor.Api.Domain.Entities;
+using PaymentGateway.Processor.Api.Domain.Exceptions;
 using PaymentGateway.SharedLib.Encryption;
 using PaymentGateway.SharedLib.Messages;
 using Polly;

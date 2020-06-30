@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using PaymentGateway.Api.Domain.Exceptions;
-using PaymentGateway.Api.Models;
+using PaymentGateway.Processor.Api.Domain;
+using PaymentGateway.Processor.Api.Models;
 using Serilog;
 
-namespace PaymentGateway.Api.Middlewares
+namespace PaymentGateway.Processor.Api.Middleware
 {
     public class ExceptionMiddleware
     {
@@ -22,6 +22,7 @@ namespace PaymentGateway.Api.Middlewares
             _next = next;
             _logger = logger;
         }
+
         public async Task Invoke(HttpContext context)
         {
             try

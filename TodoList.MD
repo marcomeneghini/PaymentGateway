@@ -98,14 +98,18 @@
 * ------------------------------------
 * ------------ 30/06/2020 ------------
 * Bugfixing : exception as flow control
--- PG_API - removed exception as flow control
+* -- PG_API - removed exception as flow control
 
+* -- PG_PROC - removed exception as flow control
 * Bugfixing : separation of concerns
 * Bugfixing : wrong http code (422 Unprocessable Entity)  OK
+* Check TODOs in code
+
 
 * Add LogEntry for structured log (in sharedlib)
 * PG_API - Add Logging
 * PG_PROC - Add Logging
+
 
 
 

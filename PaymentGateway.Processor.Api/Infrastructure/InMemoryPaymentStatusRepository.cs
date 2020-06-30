@@ -5,6 +5,8 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using PaymentGateway.Processor.Api.Domain;
+using PaymentGateway.Processor.Api.Domain.Entities;
+using PaymentGateway.Processor.Api.Domain.Exceptions;
 
 namespace PaymentGateway.Processor.Api.Infrastructure
 {
@@ -32,7 +34,6 @@ namespace PaymentGateway.Processor.Api.Infrastructure
                 {
                     return paymentStatus;
                 }
-
                 return null;
             });
            
@@ -78,6 +79,9 @@ namespace PaymentGateway.Processor.Api.Infrastructure
             
         }
 
+
+        #region Static Methods
+
         public static PaymentStatus Create_Scheduled_PaymentStatus()
         {
             return new PaymentStatus()
@@ -103,15 +107,17 @@ namespace PaymentGateway.Processor.Api.Infrastructure
 
 
         public static PaymentStatus Create_Error_PaymentStatus()
+        {
+            return new PaymentStatus()
             {
-                return new PaymentStatus()
-                {
-                    PaymentId = Guid.Parse("77777777-4444-447C-ABC5-0AF6CF829A22"),
-                    RequestId = Guid.NewGuid().ToString(),
-                    Status = PaymentStatusEnum.Error.ToString(),
-                    UpdatedAt = DateTimeOffset.Now.AddSeconds(3),
-                    TransactionId = "transaction2"
-                };
-            }
+                PaymentId = Guid.Parse("77777777-4444-447C-ABC5-0AF6CF829A22"),
+                RequestId = Guid.NewGuid().ToString(),
+                Status = PaymentStatusEnum.Error.ToString(),
+                UpdatedAt = DateTimeOffset.Now.AddSeconds(3),
+                TransactionId = "transaction2"
+            };
         }
+
+        #endregion
+    }
 }

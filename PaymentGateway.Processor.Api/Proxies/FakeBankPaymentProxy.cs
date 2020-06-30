@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using PaymentGateway.Processor.Api.Domain;
+using PaymentGateway.Processor.Api.Domain.Exceptions;
 
 namespace PaymentGateway.Processor.Api.Proxies
 {

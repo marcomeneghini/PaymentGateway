@@ -6,6 +6,7 @@ using System.Threading.Channels;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using PaymentGateway.Processor.Api.Domain;
+using PaymentGateway.Processor.Api.Domain.Entities;
 using PaymentGateway.SharedLib.Encryption;
 using PaymentGateway.SharedLib.Messages;
 

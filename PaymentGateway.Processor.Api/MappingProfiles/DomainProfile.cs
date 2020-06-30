@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using PaymentGateway.Processor.Api.Domain;
+using PaymentGateway.Processor.Api.Domain.Entities;
 using PaymentGateway.Processor.Api.Models;
 using PaymentGateway.Processor.Api.Proxies;
 using PaymentGateway.SharedLib.Messages;
