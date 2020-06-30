@@ -32,11 +32,10 @@ namespace PaymentGateway.Processor.Api.Controllers
 
         [HttpGet]
         [ProducesResponseType(typeof(ErrorResponseModel), 404)] // not found
-        [ProducesResponseType(typeof(ValidationResultModel), 422)] // Unprocessable Entity
+        [ProducesResponseType(typeof(ValidationResultModel), 400)] // Bad Request
         [ProducesResponseType(typeof(PaymentStatusModel), 200)] // OK
         public async Task<IActionResult> GetByPaymentId(
-            [RegularExpression(RegexValidator.VALID_UUID)] Guid paymentId)
-        {
+            [RegularExpression(RegexValidator.VALID_UUID)] Guid paymentId) {
            
             var paymentStatus = await _paymentStatusRepository.GetPaymentStatus(paymentId);
             if (paymentStatus==null)
@@ -51,7 +50,6 @@ namespace PaymentGateway.Processor.Api.Controllers
                 });
             }
             return Ok(_mapper.Map<PaymentStatusModel>(paymentStatus));
-
         }
     }
 }
