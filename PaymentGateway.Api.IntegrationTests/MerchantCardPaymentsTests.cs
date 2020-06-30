@@ -196,7 +196,7 @@ namespace PaymentGateway.Api.IntegrationTests
             var stringvalue = await response.Content.ReadAsStringAsync();
 
             // Assert
-            Assert.Equal(HttpStatusCode.UnprocessableEntity, response.StatusCode);
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
             // try to deserialize
             var errorResponse = JsonConvert.DeserializeObject<ValidationResultModel>(stringvalue);
 

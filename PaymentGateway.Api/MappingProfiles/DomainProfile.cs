@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using PaymentGateway.Api.Domain;
+using PaymentGateway.Api.Domain.Entities;
 using PaymentGateway.Api.Models;
 
 namespace PaymentGateway.Api.MappingProfiles
@@ -12,8 +13,8 @@ namespace PaymentGateway.Api.MappingProfiles
     {
         public DomainProfile()
         {
-            CreateMap<CreatePaymentRequestModel, CreatePaymentRequest>().ReverseMap();
-            CreateMap<CreatePaymentResponseModel, CreatePaymentResponse>().ReverseMap();
+            CreateMap<CreatePaymentRequestModel, Payment>();
+            CreateMap<CreatePaymentResponse, CreatePaymentResponseModel>();
         }
     }
 }

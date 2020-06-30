@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PaymentGateway.Api.Domain
+namespace PaymentGateway.Api.Domain.Entities
 {
     public enum InvalidMerchantReason
     {

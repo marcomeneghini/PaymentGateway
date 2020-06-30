@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using PaymentGateway.Api.Domain;
+using PaymentGateway.Api.Domain.Entities;
 using PaymentGateway.Api.Domain.Exceptions;
 
 namespace PaymentGateway.Api.Infrastructure

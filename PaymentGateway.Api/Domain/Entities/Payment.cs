@@ -1,18 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PaymentGateway.Api.Domain
+namespace PaymentGateway.Api.Domain.Entities
 {
-    public class CreatePaymentRequest
+    public class Payment
     {
+        public Guid PaymentId { get; set; }
+
         public Guid MerchantId { get; set; }
 
         public string RequestId { get; set; }
-        /// <summary>
-        /// the card number of the customer
-        /// </summary>
+        public PaymentStatusEnum PaymentStatus { get; set; }
+
         public string CardNumber { get; set; }
 
         /// <summary>
@@ -42,5 +44,18 @@ namespace PaymentGateway.Api.Domain
         /// Amount to be payed to the merchant
         /// </summary>
         public decimal Amount { get; set; }
+
+    
+        public PaymentStatus GetPaymentStatus()
+        {
+            return new PaymentStatus()
+            {
+                PaymentId = PaymentId,
+                Status = PaymentStatus,
+                RequestId = RequestId
+            };
+        }
     }
+
+
 }

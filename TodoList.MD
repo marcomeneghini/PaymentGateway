@@ -97,10 +97,15 @@
 * ADD NOtification.Api (to notify the client)
 * ------------------------------------
 * ------------ 30/06/2020 ------------
-* Bugfixing : exception flow propagation
-* Bugfixing : separation of concerns
-* Bugfixing : wrong http code (422 Unprocessable Entity)
+* Bugfixing : exception as flow control
+-- PG_API - removed exception as flow control
 
+* Bugfixing : separation of concerns
+* Bugfixing : wrong http code (422 Unprocessable Entity)  OK
+
+* Add LogEntry for structured log (in sharedlib)
+* PG_API - Add Logging
+* PG_PROC - Add Logging
 
 
 

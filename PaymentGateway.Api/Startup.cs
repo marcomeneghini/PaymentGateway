@@ -42,6 +42,7 @@ namespace PaymentGateway.Api
             services.AddSingleton<IPaymentRepository, InMemoryPaymentRepository>();
             services.AddScoped<IPaymentService, PaymentService>();
             services.AddScoped<ICipherService, AesCipherService>();
+            services.AddTransient<IErrorMapper,ErrorMapper>();
             services.AddControllers();
 
 
