@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using PaymentGateway.Processor.Api.Domain;
+using PaymentGateway.Processor.Api.Domain.Entities;
 
 namespace PaymentGateway.Processor.Api.IntegrationTests
 {

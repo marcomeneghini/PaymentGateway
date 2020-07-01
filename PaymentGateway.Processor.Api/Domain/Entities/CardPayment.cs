@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PaymentGateway.Processor.Api.Domain
+namespace PaymentGateway.Processor.Api.Domain.Entities
 {
-    public class CardPaymentRequest
+    public class CardPayment
     {
+        public Guid PaymentId { get; set; }
 
         public string RequestId { get; set; }
         /// <summary>
@@ -52,6 +53,6 @@ namespace PaymentGateway.Processor.Api.Domain
         /// </summary>
         public string MerchantAccountNumber { get; set; }
 
-
+       
     }
 }

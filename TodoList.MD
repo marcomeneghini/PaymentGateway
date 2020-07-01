@@ -102,10 +102,11 @@
 * Bugfixing : separation of concerns						OK
 * Bugfixing : wrong http code (422 Unprocessable Entity)	OK
 
-* -- PG_PROC - removed exception as flow control
+* PG_PROC - CardPaymentRequest/Response into domain entities (CardPayment)
+* PG_PROC - removed exception as flow control	
+
 * Check TODOs in code
-
-
+* PG_API Add Validators (sort code, account number, month, year, name)
 * Add LogEntry for structured log (in sharedlib)
 * PG_API	- Add Logging
 * PG_PROC - Add Logging

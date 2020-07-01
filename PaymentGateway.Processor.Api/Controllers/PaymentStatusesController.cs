@@ -40,11 +40,14 @@ namespace PaymentGateway.Processor.Api.Controllers
             var paymentStatus = await _paymentStatusRepository.GetPaymentStatus(paymentId);
             if (paymentStatus==null)
             {
+                // this reference code links the response returned to the client
+                // with the log entry that has more details
+                var referenceCode = Guid.NewGuid().ToString();
                 var message = $"Payment not found. PaymentId:{paymentId}";
                 _logger.LogError(message);
                 return NotFound(new ErrorResponseModel()
                 {
-                    ReferenceCode = Guid.NewGuid().ToString(),
+                    ReferenceCode = referenceCode,
                     ErrorType = "PaymentNotFoundException",
                     Message = message
                 });

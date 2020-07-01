@@ -123,7 +123,6 @@ namespace PaymentGateway.Processor.Api.Messaging
                             paymentStatus.TransactionId = bankPaymentResponse.TransactionId;
                         }
                         
-
                         await _paymentStatusRepository.UpdatePaymentStatus(paymentStatus);
                     }
                     catch (Exception e)
