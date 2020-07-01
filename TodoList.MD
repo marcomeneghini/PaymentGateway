@@ -85,9 +85,11 @@
 * Application logging = SERILOG  
 * Exception Handling Middleware
 * Unit Testing
-* ------ OUTSTANDING -------------
+
+## ------ OUTSTANDING -------------
 * ADD Application metrics 
 * ADD Authentication 
+* ADD Client API
 * ADD Build script / CI 
 * ADD Performance testing = Gatling
 * ADD Data storage 
@@ -96,7 +98,8 @@
 * ADD BFF CLIENT GATEWAY 
 * ADD NOtification.Api (to notify the client)
 * ------------------------------------
-* ------------ 30/06/2020 ------------
+
+## ------------ 30/06/2020 ------------
 * Bugfixing : exception as flow control						OK
 * -- PG_API - removed exception as flow control				OK
 * Bugfixing : separation of concerns						OK
@@ -106,16 +109,18 @@
 * PG_PROC - removed exception as flow control BankPaymentProxy / PaymentResult add an error code 
 * Check TODOs in code													OK
 * PG_API Add Validators (sort code, account number, month, year, name) OK 
-
 * PG_API ValidationResultModel:ErrorResponseModel	and add err code  OK
-* PG_PROC ValidationResultModel:ErrorResponseModel	and add err code
+* PG_PROC ValidationResultModel:ErrorResponseModel	and add err code OK
 
-* --------------------------- New branch ---------------------------
+## --------------------------- New branches ---------------------------
+### Add API Client
+### Add Authentication
+### Add Data Storage
+
+## ------final review
 * Add LogEntry for structured log (in sharedlib)
-* PG_API	- Add Logging
-* PG_PROC - Add Logging
-
-
-
+* PG_API	- Add LogEntry 
+* PG_PROC	- Add LogEntry
+* General	- Add logs visulizer 
 
 
