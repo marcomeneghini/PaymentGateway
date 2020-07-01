@@ -9,9 +9,9 @@ namespace PaymentGateway.IntegrationTests
 {
     public static class Helper
     {
-        public static CardPaymentResponse CreateFake_Succeeded_CardPaymentResponse()
+        public static PaymentResult CreateFake_Succeeded_CardPaymentResponse()
         {
-            return new CardPaymentResponse()
+            return new PaymentResult()
             {
                 RequestId = "",
                 TransactionStatus  = TransactionStatus.Succeeded.ToString(),
@@ -25,17 +25,17 @@ namespace PaymentGateway.IntegrationTests
         {
 
             var mockBankPaymentProxy = new Mock<IBankPaymentProxy>();
-            mockBankPaymentProxy.Setup(m => m.CreatePaymentAsync(It.IsAny<CardPaymentRequest>()))
-                .ReturnsAsync((CardPaymentRequest request) =>
+            mockBankPaymentProxy.Setup(m => m.CreatePaymentAsync(It.IsAny<CardPayment>()))
+                .ReturnsAsync((CardPayment request) =>
                 {
                     var cards = GetAllCards();
                     var currentCard = request.GetCard();
                     if (!cards.Contains(currentCard))
-                        return new CardPaymentResponse { TransactionStatus = TransactionStatus.Declined.ToString(), Message = "Wrong card details", RequestId = request.RequestId };
+                        return new PaymentResult { TransactionStatus = TransactionStatus.Declined.ToString(), Message = "Wrong card details", RequestId = request.RequestId };
                     var bankAccounts = GetAllBankAccounts();
                     if (!bankAccounts.Contains(request.GetBankAccount()))
-                        return new CardPaymentResponse { TransactionStatus = TransactionStatus.Declined.ToString(), Message = "Wrong bank account details", RequestId = request.RequestId };
-                    return new CardPaymentResponse { TransactionStatus = TransactionStatus.Succeeded.ToString(), RequestId = request.RequestId, TransactionId = Guid.NewGuid().ToString()};
+                        return new PaymentResult { TransactionStatus = TransactionStatus.Declined.ToString(), Message = "Wrong bank account details", RequestId = request.RequestId };
+                    return new PaymentResult { TransactionStatus = TransactionStatus.Succeeded.ToString(), RequestId = request.RequestId, TransactionId = Guid.NewGuid().ToString()};
                 });
             return mockBankPaymentProxy.Object;
         }

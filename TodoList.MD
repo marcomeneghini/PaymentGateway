@@ -102,7 +102,7 @@
 * Bugfixing : separation of concerns						OK
 * Bugfixing : wrong http code (422 Unprocessable Entity)	OK
 
-* PG_PROC - CardPaymentRequest/Response into domain entities (CardPayment)
+* PG_PROC - CardPaymentRequest/Response into domain entities (CardPayment) OK
 * PG_PROC - removed exception as flow control	
 
 * Check TODOs in code

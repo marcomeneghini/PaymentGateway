@@ -8,6 +8,7 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using AutoMapper;
 using PaymentGateway.Processor.Api.Domain;
+using PaymentGateway.Processor.Api.Domain.Entities;
 using PaymentGateway.Processor.Api.Domain.Exceptions;
 
 namespace PaymentGateway.Processor.Api.Proxies
@@ -25,7 +26,7 @@ namespace PaymentGateway.Processor.Api.Proxies
             _mapper = mapper;
         }
 
-        public async Task<CardPaymentResponse> CreatePaymentAsync(CardPaymentRequest request)
+        public async Task<PaymentResult> CreatePaymentAsync(CardPayment request)
         {
             CardPaymentResponseDto responseDto;
             HttpResponseMessage response;
@@ -51,7 +52,7 @@ namespace PaymentGateway.Processor.Api.Proxies
                 throw new BankPaymentDetailsException(responseDto.Message);
             }
 
-            return _mapper.Map<CardPaymentResponse>(responseDto);
+            return _mapper.Map<PaymentResult>(responseDto);
         }
            
     }

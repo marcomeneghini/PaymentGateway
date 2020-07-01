@@ -15,6 +15,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Moq;
 using PaymentGateway.Processor.Api.Domain;
+using PaymentGateway.Processor.Api.Domain.Entities;
 
 namespace PaymentGateway.Processor.Api.IntegrationTests
 {
@@ -84,7 +85,7 @@ namespace PaymentGateway.Processor.Api.IntegrationTests
             var fakeSucceededCardPaymentResponse = Helper.CreateFake_Succeeded_CardPaymentResponse("request1");
             var mockBankPaymentProxy = Mock.Of<IBankPaymentProxy>();
             Mock.Get(mockBankPaymentProxy)
-                .Setup(m => m.CreatePaymentAsync(It.IsAny<CardPaymentRequest>())).ReturnsAsync(fakeSucceededCardPaymentResponse);
+                .Setup(m => m.CreatePaymentAsync(It.IsAny<CardPayment>())).ReturnsAsync(fakeSucceededCardPaymentResponse);
                     
 
             var startupAssembly = typeof(TStartup).GetTypeInfo().Assembly;

@@ -76,8 +76,8 @@ namespace PaymentGateway.Processor.Api.Messaging
                             continue;
                         }
 
-                        CardPaymentResponse bankPaymentResponse = null;
-                        var request = _mapper.Map<CardPaymentRequest>(decryptedMessage);
+                        PaymentResult bankPaymentResponse = null;
+                        var request = _mapper.Map<CardPayment>(decryptedMessage);
 
                         #region Use Polly to rety calling the bank payment service, 3 times
 

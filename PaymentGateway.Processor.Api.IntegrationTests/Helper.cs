@@ -8,9 +8,9 @@ namespace PaymentGateway.Processor.Api.IntegrationTests
 {
     public static class Helper
     {
-        public static CardPaymentResponse CreateFake_Succeeded_CardPaymentResponse(string requestId)
+        public static PaymentResult CreateFake_Succeeded_CardPaymentResponse(string requestId)
         {
-            return new CardPaymentResponse()
+            return new PaymentResult()
             {
                 RequestId = requestId,
                 TransactionStatus  = TransactionStatus.Succeeded.ToString(),
