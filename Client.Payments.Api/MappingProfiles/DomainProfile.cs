@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Client.Payments.Api.Domain.Entities;
 using Client.Payments.Api.Infrastructure.PaymentGateway;
+using Client.Payments.Api.Infrastructure.PaymentGatewayProcessor;
 using Client.Payments.Api.Models;
 
 namespace Client.Payments.Api.MappingProfiles
@@ -17,6 +18,8 @@ namespace Client.Payments.Api.MappingProfiles
             CreateMap<Payment, CreatePaymentRequestDto>().ReverseMap();
             CreateMap<CreatePaymentResponseDto, PaymentResponse>();
             CreateMap<PaymentResponse, PaymentResponseModel>();
+            CreateMap<PaymentStatusDto, PaymentStatusResponse>();
+
 
         }
     }

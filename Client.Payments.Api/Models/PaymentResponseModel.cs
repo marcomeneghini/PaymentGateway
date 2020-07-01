@@ -14,6 +14,16 @@ namespace Client.Payments.Api.Models
         public string RequestId { get; set; }
 
         public Guid PaymentRequestId { get; set; }
+
+        // from the PROC
+
+        public string Status { get; set; }
+
+        public Guid TransactionId { get; set; }
+
+        public DateTimeOffset? CreatedAt { get; set; }
+
+        public DateTimeOffset? UpdatedAt { get; set; }
     }
 }
 
