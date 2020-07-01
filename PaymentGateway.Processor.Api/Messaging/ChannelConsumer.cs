@@ -70,7 +70,7 @@ namespace PaymentGateway.Processor.Api.Messaging
                             _logger.LogError($"PaymentRepositoryException:{e.Message}");
                         }
 
-                        if (paymentStatus==null)
+                        if (paymentStatus == null)
                         {
                             _logger.LogError($"No payment status present with id :{decryptedMessage.PaymentRequestId}. Skipping!");
                             continue;
@@ -112,10 +112,10 @@ namespace PaymentGateway.Processor.Api.Messaging
                         #endregion
 
                         // check the response from the bank payment service
-                        if (bankPaymentResponse == null)
+                        if (bankPaymentResponse == null || !string.IsNullOrEmpty(bankPaymentResponse.ErrorCode))
                         {
                             paymentStatus.Status = PaymentStatusEnum.Error.ToString();
-                            _logger.LogError($"Received Null from the server. RequestId:{decryptedMessage.RequestId}");
+                            _logger.LogError($"Bank payment service error. RequestId:{decryptedMessage.RequestId}. Additional Code:{bankPaymentResponse?.ErrorCode} .Additional Message:{bankPaymentResponse?.Message}");
                         }
                         else
                         {

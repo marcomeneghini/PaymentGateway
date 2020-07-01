@@ -103,7 +103,7 @@
 * Bugfixing : wrong http code (422 Unprocessable Entity)	OK
 
 * PG_PROC - CardPaymentRequest/Response into domain entities (CardPayment) OK
-* PG_PROC - removed exception as flow control	
+* PG_PROC - removed exception as flow control BankPaymentProxy / PaymentResult add an error code 
 
 * Check TODOs in code
 * PG_API Add Validators (sort code, account number, month, year, name)

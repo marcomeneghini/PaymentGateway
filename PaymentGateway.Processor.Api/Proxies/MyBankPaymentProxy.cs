@@ -39,17 +39,30 @@ namespace PaymentGateway.Processor.Api.Proxies
             }
             catch (Exception e)
             {
+                // keep this exception used by Polly to retry teh operation
                 throw new BankNotAvailableException(e.Message);
             }
 
             if (response.StatusCode == HttpStatusCode.Conflict)
             {
                 // duplicated requestId
-                throw new RequestIdConflictException(responseDto.RequestId);
+                return  new PaymentResult()
+                {
+                    RequestId = responseDto.RequestId,
+                    TransactionStatus = TransactionStatus.Declined.ToString(),
+                    ErrorCode = Consts.BANK_REQUESTID_DUPLICATED_ERRORCODE,
+                    Message = $"Bank RequestId Conflict. RequestId:{responseDto.RequestId}"
+                };
             }
             else if (response.StatusCode == HttpStatusCode.BadRequest)
             {
-                throw new BankPaymentDetailsException(responseDto.Message);
+                return new PaymentResult()
+                {
+                    RequestId = responseDto.RequestId,
+                    TransactionStatus = TransactionStatus.Declined.ToString(),
+                    ErrorCode = Consts.BANK_PAYMENT_WRONGDETAILS_ERRORCODE,
+                    Message = $"Wrong payment details. RequestId:{responseDto.RequestId}"
+                };
             }
 
             return _mapper.Map<PaymentResult>(responseDto);
