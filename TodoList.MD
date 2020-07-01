@@ -105,9 +105,11 @@
 * PG_PROC - CardPaymentRequest/Response into domain entities (CardPayment) OK
 * PG_PROC - removed exception as flow control BankPaymentProxy / PaymentResult add an error code 
 * Check TODOs in code													OK
-* PG_API Add Validators (sort code, account number, month, year, name)	IN PROGRESS
-* PG_API ValidationResultModel:ErrorResponseModel and add err code
-* PG_PROC ValidationResultModel:ErrorResponseModel and add err code
+* PG_API Add Validators (sort code, account number, month, year, name) OK 
+
+* PG_API ValidationResultModel:ErrorResponseModel	and add err code
+* PG_PROC ValidationResultModel:ErrorResponseModel	and add err code
+
 * --------------------------- New branch ---------------------------
 * Add LogEntry for structured log (in sharedlib)
 * PG_API	- Add Logging

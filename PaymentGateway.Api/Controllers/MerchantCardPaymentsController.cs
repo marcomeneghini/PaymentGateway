@@ -57,6 +57,7 @@ namespace PaymentGateway.Api.Controllers
                 _logger.LogError($"DUPLICATE_REQUEST. ReferenceCode:{referenceCode}");
                 return Conflict(new ErrorResponseModel
                 {
+                    ErrorCode = Consts.DUPLICATE_REQUEST_CODE,
                     Message = _errorMapper.GetMessage(response.ErrorCode, request.RequestId),
                     RequestId = request.RequestId,
                     ReferenceCode = referenceCode.ToString()
@@ -67,6 +68,7 @@ namespace PaymentGateway.Api.Controllers
                 _logger.LogError($"MERCHANT_INVALID. ReferenceCode:{referenceCode}");
                 return BadRequest(new ErrorResponseModel
                 {
+                    ErrorCode = Consts.MERCHANT_INVALID_CODE,
                     Message = _errorMapper.GetMessage(response.ErrorCode, request.MerchantId.ToString()),
                     RequestId = request.RequestId,
                     ReferenceCode = referenceCode.ToString()
@@ -77,6 +79,7 @@ namespace PaymentGateway.Api.Controllers
                 _logger.LogError($"MERCHANT_NOT_PRESENT. ReferenceCode:{referenceCode}");
                 return NotFound(new ErrorResponseModel
                 {
+                    ErrorCode = Consts.MERCHANT_NOT_PRESENT_CODE,
                     Message = _errorMapper.GetMessage(response.ErrorCode, request.MerchantId.ToString()),
                     RequestId = request.RequestId,
                     ReferenceCode = referenceCode.ToString()
