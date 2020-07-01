@@ -4,7 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace PaymentGateway.Processor.Api.Domain
+namespace PaymentGateway.Processor.Api.Domain.Exceptions
 {
     public class PaymentRepositoryException:Exception
     {

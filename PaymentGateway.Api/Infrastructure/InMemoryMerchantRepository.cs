@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.AccessControl;
 using System.Threading.Tasks;
 using PaymentGateway.Api.Domain;
+using PaymentGateway.Api.Domain.Entities;
 
 namespace PaymentGateway.Api.Infrastructure
 {

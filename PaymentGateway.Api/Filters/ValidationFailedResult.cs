@@ -15,7 +15,7 @@ namespace PaymentGateway.Api.Attributes
         public ValidationFailedResult(ModelStateDictionary modelState)
             : base(new ValidationResultModel(modelState))
         {
-            StatusCode = StatusCodes.Status422UnprocessableEntity;
+            StatusCode = StatusCodes.Status400BadRequest;
         }
         
     }

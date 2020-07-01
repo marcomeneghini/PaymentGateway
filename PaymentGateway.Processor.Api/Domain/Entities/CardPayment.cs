@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PaymentGateway.Api.Domain
+namespace PaymentGateway.Processor.Api.Domain.Entities
 {
-    public class CreatePaymentRequest
+    public class CardPayment
     {
-        public Guid MerchantId { get; set; }
+        public Guid PaymentId { get; set; }
 
         public string RequestId { get; set; }
         /// <summary>
@@ -42,5 +42,17 @@ namespace PaymentGateway.Api.Domain
         /// Amount to be payed to the merchant
         /// </summary>
         public decimal Amount { get; set; }
+
+        /// <summary>
+        /// Merchant Sort Code
+        /// </summary>
+        public string MerchantSortCode { get; set; }
+
+        /// <summary>
+        /// Merchant Bank Account
+        /// </summary>
+        public string MerchantAccountNumber { get; set; }
+
+       
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-
+using Microsoft.Extensions.Logging;
 using PaymentGateway.SharedLib.Messages;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -13,12 +13,17 @@ namespace PaymentGateway.SharedLib.EventBroker
     public class RabbitMQEventBrokerSubscriber:IEventBrokerSubscriber,IDisposable
     {
         private readonly IRabbitMQPersistentConnection _connection;
+        private readonly ILogger<RabbitMQEventBrokerSubscriber> _logger;
         private IModel _channel;
         private QueueDeclareOk _queue;
+        
 
-        public RabbitMQEventBrokerSubscriber(IRabbitMQPersistentConnection connection)
+        public RabbitMQEventBrokerSubscriber(
+            IRabbitMQPersistentConnection connection,
+            ILogger<RabbitMQEventBrokerSubscriber> logger )
         {
             _connection = connection;
+            _logger = logger;
         }
         public void Subscribe(string exchangeName, string routingKey, string queueName)
         {
@@ -60,20 +65,18 @@ namespace PaymentGateway.SharedLib.EventBroker
 
             _channel.QueueBind(_queue.QueueName, exchangeName, routingKey, null);
 
-            _channel.CallbackException += _channel_CallbackException;
+           
 
             //TODO: VERIFY this code
-            //_channel.CallbackException += (sender, ea) =>
-            //{
-            //    InitChannel(exchangeName, routingKey, queueName);
-            //    InitSubscribe();
-            //};
+            _channel.CallbackException += (sender, ea) =>
+            {
+                _logger.LogWarning($"RabbitMQ channel/model exception: {ea.Exception}");
+                _logger.LogWarning("Retry connecting.");
+                InitChannel(exchangeName, routingKey, queueName);
+                InitSubscribe();
+            };
         }
 
-        private void _channel_CallbackException(object sender, CallbackExceptionEventArgs e)
-        {
-            var a = e;
-        }
 
         private void InitSubscribe()
         {

@@ -5,6 +5,8 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using PaymentGateway.Processor.Api.Domain;
+using PaymentGateway.Processor.Api.Domain.Entities;
+using PaymentGateway.Processor.Api.Domain.Exceptions;
 
 namespace PaymentGateway.Processor.Api.Infrastructure
 {
@@ -32,7 +34,6 @@ namespace PaymentGateway.Processor.Api.Infrastructure
                 {
                     return paymentStatus;
                 }
-
                 return null;
             });
            
@@ -43,14 +44,9 @@ namespace PaymentGateway.Processor.Api.Infrastructure
         {
             await Task.Run(() =>
             {
-                try
-                {
-                    paymentStatuses.TryAdd(paymentStatus.PaymentId, paymentStatus);
-                }
-                catch (Exception e)
-                {
-                    throw new PaymentRepositoryException(e.Message);
-                }
+               
+                paymentStatuses.TryAdd(paymentStatus.PaymentId, paymentStatus);
+               
                 return Task.CompletedTask;
             });
 
@@ -61,22 +57,19 @@ namespace PaymentGateway.Processor.Api.Infrastructure
         {
             await Task.Run(() =>
             {
-                try
+               
+                if (paymentStatuses.TryGetValue(paymentStatus.PaymentId, out var existingPaymentStatus))
                 {
-                    if (paymentStatuses.TryGetValue(paymentStatus.PaymentId, out var existingPaymentStatus))
-                    {
-                        paymentStatuses.TryUpdate(paymentStatus.PaymentId, paymentStatus, existingPaymentStatus);
-                    }
+                    paymentStatuses.TryUpdate(paymentStatus.PaymentId, paymentStatus, existingPaymentStatus);
                 }
-                catch (Exception e)
-                {
-                    throw new PaymentRepositoryException(e.Message);
-                }
-
+              
                 return Task.CompletedTask;
             });
             
         }
+
+
+        #region Static Methods
 
         public static PaymentStatus Create_Scheduled_PaymentStatus()
         {
@@ -103,15 +96,17 @@ namespace PaymentGateway.Processor.Api.Infrastructure
 
 
         public static PaymentStatus Create_Error_PaymentStatus()
+        {
+            return new PaymentStatus()
             {
-                return new PaymentStatus()
-                {
-                    PaymentId = Guid.Parse("77777777-4444-447C-ABC5-0AF6CF829A22"),
-                    RequestId = Guid.NewGuid().ToString(),
-                    Status = PaymentStatusEnum.Error.ToString(),
-                    UpdatedAt = DateTimeOffset.Now.AddSeconds(3),
-                    TransactionId = "transaction2"
-                };
-            }
+                PaymentId = Guid.Parse("77777777-4444-447C-ABC5-0AF6CF829A22"),
+                RequestId = Guid.NewGuid().ToString(),
+                Status = PaymentStatusEnum.Error.ToString(),
+                UpdatedAt = DateTimeOffset.Now.AddSeconds(3),
+                TransactionId = "transaction2"
+            };
         }
+
+        #endregion
+    }
 }

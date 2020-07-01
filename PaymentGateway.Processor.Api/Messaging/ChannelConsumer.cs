@@ -9,6 +9,8 @@ using AutoMapper;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using PaymentGateway.Processor.Api.Domain;
+using PaymentGateway.Processor.Api.Domain.Entities;
+using PaymentGateway.Processor.Api.Domain.Exceptions;
 using PaymentGateway.SharedLib.Encryption;
 using PaymentGateway.SharedLib.Messages;
 using Polly;
@@ -63,15 +65,21 @@ namespace PaymentGateway.Processor.Api.Messaging
                         {
                             paymentStatus = await _paymentStatusRepository.GetPaymentStatus(decryptedMessage.PaymentRequestId);
                         }
-                        catch (PaymentRepositoryException e)
+                        catch (Exception e)
                         {
                             _logger.LogError($"PaymentRepositoryException:{e.Message}");
                         }
 
-                        CardPaymentResponse bankPaymentResponse = null;
-                       
-                        var request = _mapper.Map<CardPaymentRequest>(decryptedMessage);
+                        if (paymentStatus == null)
+                        {
+                            _logger.LogError($"No payment status present with id :{decryptedMessage.PaymentRequestId}. Skipping!");
+                            continue;
+                        }
 
+                        PaymentResult bankPaymentResponse = null;
+                        var request = _mapper.Map<CardPayment>(decryptedMessage);
+
+                        #region Use Polly to rety calling the bank payment service, 3 times
 
                         var policy = Policy.Handle<SocketException>()
                             .Or<BankNotAvailableException>()
@@ -101,11 +109,13 @@ namespace PaymentGateway.Processor.Api.Messaging
                             }
                         });
 
+                        #endregion
 
-                        if (bankPaymentResponse == null)
+                        // check the response from the bank payment service
+                        if (bankPaymentResponse == null || !string.IsNullOrEmpty(bankPaymentResponse.ErrorCode))
                         {
                             paymentStatus.Status = PaymentStatusEnum.Error.ToString();
-                            _logger.LogError($"Received Null from the server. RequestId:{decryptedMessage.RequestId}");
+                            _logger.LogError($"Bank payment service error. RequestId:{decryptedMessage.RequestId}. Additional Code:{bankPaymentResponse?.ErrorCode} .Additional Message:{bankPaymentResponse?.Message}");
                         }
                         else
                         {
@@ -113,7 +123,6 @@ namespace PaymentGateway.Processor.Api.Messaging
                             paymentStatus.TransactionId = bankPaymentResponse.TransactionId;
                         }
                         
-
                         await _paymentStatusRepository.UpdatePaymentStatus(paymentStatus);
                     }
                     catch (Exception e)

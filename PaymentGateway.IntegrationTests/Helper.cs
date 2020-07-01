@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.Text;
 using Moq;
 using PaymentGateway.Processor.Api.Domain;
+using PaymentGateway.Processor.Api.Domain.Entities;
 
 namespace PaymentGateway.IntegrationTests
 {
     public static class Helper
     {
-        public static CardPaymentResponse CreateFake_Succeeded_CardPaymentResponse()
+        public static PaymentResult CreateFake_Succeeded_CardPaymentResponse()
         {
-            return new CardPaymentResponse()
+            return new PaymentResult()
             {
                 RequestId = "",
                 TransactionStatus  = TransactionStatus.Succeeded.ToString(),
@@ -24,17 +25,17 @@ namespace PaymentGateway.IntegrationTests
         {
 
             var mockBankPaymentProxy = new Mock<IBankPaymentProxy>();
-            mockBankPaymentProxy.Setup(m => m.CreatePaymentAsync(It.IsAny<CardPaymentRequest>()))
-                .ReturnsAsync((CardPaymentRequest request) =>
+            mockBankPaymentProxy.Setup(m => m.CreatePaymentAsync(It.IsAny<CardPayment>()))
+                .ReturnsAsync((CardPayment request) =>
                 {
                     var cards = GetAllCards();
                     var currentCard = request.GetCard();
                     if (!cards.Contains(currentCard))
-                        return new CardPaymentResponse { TransactionStatus = TransactionStatus.Declined.ToString(), Message = "Wrong card details", RequestId = request.RequestId };
+                        return new PaymentResult { TransactionStatus = TransactionStatus.Declined.ToString(), Message = "Wrong card details", RequestId = request.RequestId };
                     var bankAccounts = GetAllBankAccounts();
                     if (!bankAccounts.Contains(request.GetBankAccount()))
-                        return new CardPaymentResponse { TransactionStatus = TransactionStatus.Declined.ToString(), Message = "Wrong bank account details", RequestId = request.RequestId };
-                    return new CardPaymentResponse { TransactionStatus = TransactionStatus.Succeeded.ToString(), RequestId = request.RequestId, TransactionId = Guid.NewGuid().ToString()};
+                        return new PaymentResult { TransactionStatus = TransactionStatus.Declined.ToString(), Message = "Wrong bank account details", RequestId = request.RequestId };
+                    return new PaymentResult { TransactionStatus = TransactionStatus.Succeeded.ToString(), RequestId = request.RequestId, TransactionId = Guid.NewGuid().ToString()};
                 });
             return mockBankPaymentProxy.Object;
         }
@@ -52,9 +53,9 @@ namespace PaymentGateway.IntegrationTests
             return new Card()
             {
                 CardHolderName = "John Doe",
-                CardNumber = "1111 1111 1111 1111",
+                CardNumber = "1298 1111 1111 1111",
                 MonthExpiryDate = 1,
-                YearExpiryDate = 1,
+                YearExpiryDate = 2021,
                 CVV = "111"
             };
         }
@@ -64,9 +65,9 @@ namespace PaymentGateway.IntegrationTests
             return new Card()
             {
                 CardHolderName = "Jane Doe",
-                CardNumber = "2222 2222 2222 2222",
+                CardNumber = "1298 2222 2222 2222",
                 MonthExpiryDate = 2,
-                YearExpiryDate = 2,
+                YearExpiryDate = 2022,
                 CVV = "222"
             };
         }

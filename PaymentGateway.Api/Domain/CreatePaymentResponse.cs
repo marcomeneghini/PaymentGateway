@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace PaymentGateway.Api.Domain
 {
-    public class CreatePaymentResponse
+    public class CreatePaymentResponse: ResponseBase
     {
         public string RequestId { get; set; }
 

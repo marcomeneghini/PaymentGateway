@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Serilog.Context;
 
-namespace PaymentGateway.Api.Middlewares
+namespace PaymentGateway.Api.Middleware
 {
     public class RequestIdLoggingMiddleware
     {
