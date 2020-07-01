@@ -51,18 +51,38 @@ namespace PaymentGateway.Api.Controllers
         {
             _logger.LogInformation($"CreatePayment:{request}");
              var response = await _paymentService.CreatePayment(_mapper.Map<Payment>(request));
+             var referenceCode = Guid.NewGuid();
             if(response.ErrorCode == Consts.DUPLICATE_REQUEST_CODE)
             {
-                return Conflict(new ErrorResponseModel { Message = _errorMapper.GetMessage(response.ErrorCode, request.RequestId) });
+                _logger.LogError($"DUPLICATE_REQUEST. ReferenceCode:{referenceCode}");
+                return Conflict(new ErrorResponseModel
+                {
+                    Message = _errorMapper.GetMessage(response.ErrorCode, request.RequestId),
+                    RequestId = request.RequestId,
+                    ReferenceCode = referenceCode.ToString()
+                });
             }
-            if (response.ErrorCode == Consts.MERCHANT_INVALID_CODE)
+            if (response.ErrorCode == Consts.MERCHANT_INVALID_CODE )
             {
-                return BadRequest(new ErrorResponseModel { Message = _errorMapper.GetMessage(response.ErrorCode, request.MerchantId.ToString()) });
+                _logger.LogError($"MERCHANT_INVALID. ReferenceCode:{referenceCode}");
+                return BadRequest(new ErrorResponseModel
+                {
+                    Message = _errorMapper.GetMessage(response.ErrorCode, request.MerchantId.ToString()),
+                    RequestId = request.RequestId,
+                    ReferenceCode = referenceCode.ToString()
+                });
             }
-            if (response.ErrorCode == Consts.MERCHANT_NOT_PRESENT_CODE)
+            if ( response.ErrorCode == Consts.MERCHANT_NOT_PRESENT_CODE)
             {
-                return NotFound(new ErrorResponseModel { Message = _errorMapper.GetMessage(response.ErrorCode, request.MerchantId.ToString()) });
+                _logger.LogError($"MERCHANT_NOT_PRESENT. ReferenceCode:{referenceCode}");
+                return NotFound(new ErrorResponseModel
+                {
+                    Message = _errorMapper.GetMessage(response.ErrorCode, request.MerchantId.ToString()),
+                    RequestId = request.RequestId,
+                    ReferenceCode = referenceCode.ToString()
+                });
             }
+
             _logger.LogInformation($"CreatePayment OK");
             return Ok(_mapper.Map<CreatePaymentResponseModel>(response));
         }
