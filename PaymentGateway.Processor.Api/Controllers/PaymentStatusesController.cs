@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PaymentGateway.Processor.Api.Domain;
+using PaymentGateway.Processor.Api.Domain.Entities;
 using PaymentGateway.Processor.Api.Filters;
 using PaymentGateway.Processor.Api.Models;
 using PaymentGateway.SharedLib.Validation;
@@ -47,8 +48,8 @@ namespace PaymentGateway.Processor.Api.Controllers
                 _logger.LogError(message);
                 return NotFound(new ErrorResponseModel()
                 {
+                    ErrorCode = Consts.PAYMENTSTATUS_NOTFOUND_ERRORCODE,
                     ReferenceCode = referenceCode,
-                    ErrorType = "PaymentNotFoundException",
                     Message = message
                 });
             }

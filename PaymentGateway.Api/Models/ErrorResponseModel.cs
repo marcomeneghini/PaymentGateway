@@ -13,8 +13,6 @@ namespace PaymentGateway.Api.Models
         public string ReferenceCode { get; set; }
         public string RequestId { get; set; }
 
-        public string ErrorType { get; set; }
-
         public string Message { get; set; }
 
       

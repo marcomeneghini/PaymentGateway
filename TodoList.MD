@@ -107,7 +107,7 @@
 * Check TODOs in code													OK
 * PG_API Add Validators (sort code, account number, month, year, name) OK 
 
-* PG_API ValidationResultModel:ErrorResponseModel	and add err code
+* PG_API ValidationResultModel:ErrorResponseModel	and add err code  OK
 * PG_PROC ValidationResultModel:ErrorResponseModel	and add err code
 
 * --------------------------- New branch ---------------------------

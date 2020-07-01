@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using PaymentGateway.Processor.Api.Domain;
+using PaymentGateway.Processor.Api.Domain.Entities;
 using PaymentGateway.Processor.Api.Models;
 using Serilog;
 
@@ -44,8 +45,8 @@ namespace PaymentGateway.Processor.Api.Middleware
 
             var obj = new ErrorResponseModel()
             {
+                ErrorCode = Consts.UNEXPECTED_ERROR_CODE,
                 ReferenceCode = referenceCode,
-                
                 Message = $"Unmanaged Exception. Message:{exception.Message}"
             };
             return context.Response.WriteAsync(JsonConvert.SerializeObject(obj));
