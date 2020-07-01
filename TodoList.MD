@@ -107,6 +107,8 @@
 
 * Check TODOs in code
 * PG_API Add Validators (sort code, account number, month, year, name)
+
+* --------------------------- New branch ---------------------------
 * Add LogEntry for structured log (in sharedlib)
 * PG_API	- Add Logging
 * PG_PROC - Add Logging
