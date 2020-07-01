@@ -44,14 +44,9 @@ namespace PaymentGateway.Processor.Api.Infrastructure
         {
             await Task.Run(() =>
             {
-                try
-                {
-                    paymentStatuses.TryAdd(paymentStatus.PaymentId, paymentStatus);
-                }
-                catch (Exception e)
-                {
-                    throw new PaymentRepositoryException(e.Message);
-                }
+               
+                paymentStatuses.TryAdd(paymentStatus.PaymentId, paymentStatus);
+               
                 return Task.CompletedTask;
             });
 
@@ -62,18 +57,12 @@ namespace PaymentGateway.Processor.Api.Infrastructure
         {
             await Task.Run(() =>
             {
-                try
+               
+                if (paymentStatuses.TryGetValue(paymentStatus.PaymentId, out var existingPaymentStatus))
                 {
-                    if (paymentStatuses.TryGetValue(paymentStatus.PaymentId, out var existingPaymentStatus))
-                    {
-                        paymentStatuses.TryUpdate(paymentStatus.PaymentId, paymentStatus, existingPaymentStatus);
-                    }
+                    paymentStatuses.TryUpdate(paymentStatus.PaymentId, paymentStatus, existingPaymentStatus);
                 }
-                catch (Exception e)
-                {
-                    throw new PaymentRepositoryException(e.Message);
-                }
-
+              
                 return Task.CompletedTask;
             });
             

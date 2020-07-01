@@ -65,15 +65,21 @@ namespace PaymentGateway.Processor.Api.Messaging
                         {
                             paymentStatus = await _paymentStatusRepository.GetPaymentStatus(decryptedMessage.PaymentRequestId);
                         }
-                        catch (PaymentRepositoryException e)
+                        catch (Exception e)
                         {
                             _logger.LogError($"PaymentRepositoryException:{e.Message}");
                         }
 
+                        if (paymentStatus==null)
+                        {
+                            _logger.LogError($"No payment status present with id :{decryptedMessage.PaymentRequestId}. Skipping!");
+                            continue;
+                        }
+
                         CardPaymentResponse bankPaymentResponse = null;
-                       
                         var request = _mapper.Map<CardPaymentRequest>(decryptedMessage);
 
+                        #region Use Polly to rety calling the bank payment service, 3 times
 
                         var policy = Policy.Handle<SocketException>()
                             .Or<BankNotAvailableException>()
@@ -103,7 +109,9 @@ namespace PaymentGateway.Processor.Api.Messaging
                             }
                         });
 
+                        #endregion
 
+                        // check the response from the bank payment service
                         if (bankPaymentResponse == null)
                         {
                             paymentStatus.Status = PaymentStatusEnum.Error.ToString();
