@@ -32,3 +32,10 @@ services:
 
 
 
+
+  client.payments.api:
+    image: ${DOCKER_REGISTRY-}clientpaymentsapi
+    build:
+      context: .
+      dockerfile: Client.Payments.Api/Dockerfile
+

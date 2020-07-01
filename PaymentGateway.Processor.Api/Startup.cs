@@ -81,6 +81,7 @@ namespace PaymentGateway.Processor.Api
                         new MediaTypeWithQualityHeaderValue("application/json"));
                 }
             );
+
             var channel = Channel.CreateBounded<EncryptedMessage>(100);
             services.AddSingleton(channel);
 
@@ -127,8 +128,7 @@ namespace PaymentGateway.Processor.Api
             }
             loggerfactory.AddSerilog();
 
-           
-          
+            
             app.UseRouting();
             app.UseSwagger();
 
