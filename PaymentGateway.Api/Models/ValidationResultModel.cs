@@ -9,8 +9,7 @@ namespace PaymentGateway.Api.Models
 {
     public class ValidationResultModel
     {
-        public string Message { get; }
-
+        public string Message { get; set; }
         public List<ValidationError> Errors { get; }
 
         public ValidationResultModel(ModelStateDictionary modelState)

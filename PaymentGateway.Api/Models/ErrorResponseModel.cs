@@ -7,6 +7,8 @@ namespace PaymentGateway.Api.Models
 {
     public class ErrorResponseModel
     {
+
+
         public string ReferenceCode { get; set; }
         public string RequestId { get; set; }
 

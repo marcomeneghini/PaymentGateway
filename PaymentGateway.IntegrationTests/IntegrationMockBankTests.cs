@@ -171,10 +171,10 @@ namespace PaymentGateway.IntegrationTests
                 {
                     MerchantId = amazonValidMerchantGuid.ToString(),
                     RequestId = Guid.NewGuid().ToString(),
-                    CardNumber = "---- ---- ---- ---",
+                    CardNumber = "1298 0000 0000 0000",
                     CardHolderName = "Luke Doe",
                     MonthExpiryDate = 10,
-                    YearExpiryDate = 10,
+                    YearExpiryDate = 2022,
                     CVV = "000",
                     Currency = "GBP",
                     Amount = 10

@@ -40,7 +40,7 @@ namespace PaymentGateway.Api.IntegrationTests
                 {
                     MerchantId = amazonValidMerchantGuid.ToString(),
                     RequestId = Guid.NewGuid().ToString(),
-                    CardNumber = "1234 1234 1234 1234",
+                    CardNumber = "1298 1234 1234 1234",
                     CardHolderName = "John Doe",
                     MonthExpiryDate = 1,
                     YearExpiryDate = 2021,
@@ -98,7 +98,7 @@ namespace PaymentGateway.Api.IntegrationTests
                 {
                     MerchantId = unknownMerchantGuid.ToString(),
                     RequestId = Guid.NewGuid().ToString(),
-                    CardNumber = "1234 1234 1234 1234",
+                    CardNumber = "1298 1234 1234 1234",
                     CardHolderName = "John Doe",
                     MonthExpiryDate = 1,
                     YearExpiryDate = 2021,
@@ -130,7 +130,7 @@ namespace PaymentGateway.Api.IntegrationTests
                 {
                     MerchantId = amazonValidMerchantGuid.ToString(),
                     RequestId = "request1",
-                    CardNumber = "1234 1234 1234 1234",
+                    CardNumber = "1298 1234 1234 1234",
                     CardHolderName = "John Doe",
                     MonthExpiryDate = 1,
                     YearExpiryDate = 2021,
@@ -180,7 +180,7 @@ namespace PaymentGateway.Api.IntegrationTests
                 {
                     MerchantId = invalidGuid,
                     RequestId = "request1",
-                    CardNumber = "1234 1234 1234 1234",
+                    CardNumber = "1298 1234 1234 1234",
                     CardHolderName = "John Doe",
                     MonthExpiryDate = 1,
                     YearExpiryDate = 2021,

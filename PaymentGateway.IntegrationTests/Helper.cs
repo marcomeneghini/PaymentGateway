@@ -53,9 +53,9 @@ namespace PaymentGateway.IntegrationTests
             return new Card()
             {
                 CardHolderName = "John Doe",
-                CardNumber = "1111 1111 1111 1111",
+                CardNumber = "1298 1111 1111 1111",
                 MonthExpiryDate = 1,
-                YearExpiryDate = 1,
+                YearExpiryDate = 2021,
                 CVV = "111"
             };
         }
@@ -65,9 +65,9 @@ namespace PaymentGateway.IntegrationTests
             return new Card()
             {
                 CardHolderName = "Jane Doe",
-                CardNumber = "2222 2222 2222 2222",
+                CardNumber = "1298 2222 2222 2222",
                 MonthExpiryDate = 2,
-                YearExpiryDate = 2,
+                YearExpiryDate = 2022,
                 CVV = "222"
             };
         }
