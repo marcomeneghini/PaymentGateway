@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -11,6 +14,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using PaymentGateway.Api.Attributes;
 using PaymentGateway.Api.Domain;
@@ -36,12 +41,25 @@ namespace PaymentGateway.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
+            IdentityModelEventSource.ShowPII = true;
+
             services.AddAuthentication("Bearer")
-                .AddJwtBearer("Bearer", config =>
+                .AddJwtBearer("Bearer", options =>
                 {
-                    config.Authority = Configuration["Authority"];
-                    config.Audience = "PaymentGateway";
-                    config.RequireHttpsMetadata = false;
+                    options.BackchannelHttpHandler = new HttpClientHandler()
+                    {
+                        ServerCertificateCustomValidationCallback =   (message, cert, chain, errors) =>
+                        {
+                            return true;
+                        },
+                    };
+                    //var key = new JsonWebKey(File.ReadAllText(@"tempkey.jwk"));
+                    //options.TokenValidationParameters=new TokenValidationParameters()
+                    //{
+                    //    IssuerSigningKey = key
+                    //};
+                    options.Authority = Configuration["Authority"];
+                    options.Audience = "PaymentGateway";
                 });
             
             services.AddSingleton<IMerchantRepository, InMemoryMerchantRepository>();
@@ -107,16 +125,15 @@ namespace PaymentGateway.Api
             app.UseMiddleware(typeof(RequestIdLoggingMiddleware));
 
             app.UseRouting();
-
-            app.UseAuthentication();
-            app.UseAuthorization();
-
             app.UseSwagger();
 
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "PaymentGateway Demo V1");
             });
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

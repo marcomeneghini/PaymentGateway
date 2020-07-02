@@ -8,5 +8,7 @@ namespace Client.Payments.Api.Domain
     public interface ITokenProvider
     {
         Task<string> GetAccessToken();
+
+        Task<string> CustomGetApiToken();
     }
 }

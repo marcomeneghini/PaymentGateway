@@ -26,4 +26,10 @@
     <ProjectReference Include="..\PaymentGateway.SharedLib\PaymentGateway.SharedLib.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="tempkey.jwk">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

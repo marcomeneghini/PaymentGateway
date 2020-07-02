@@ -17,11 +17,18 @@ namespace Company.IdentityServer
             };
         public static IEnumerable<ApiResource> GetApiResources() =>
             new List<ApiResource> {
-                new ApiResource("PaymentGateway")
+                new ApiResource()
+                {
+                    Name = "PaymentGateway",
+                    Scopes = new List<string>(){"CreatePaymentScope"},
+                    ShowInDiscoveryDocument = true
+                   
+                }
+                
             };
         public static IEnumerable<ApiScope> GetApiScopes() =>
             new List<ApiScope> {
-                new ApiScope("PaymentGateway")
+                new ApiScope("CreatePaymentScope")
             };
 
         public static IEnumerable<Client> GetClients() =>
@@ -31,8 +38,8 @@ namespace Company.IdentityServer
                     ClientSecrets = { new Secret("amazonSecret".ToSha256()) },
 
                     AllowedGrantTypes = GrantTypes.ClientCredentials,
-
-                    AllowedScopes = { "PaymentGateway" }
+                    
+                    AllowedScopes = { "CreatePaymentScope" }
                 },
 
             };

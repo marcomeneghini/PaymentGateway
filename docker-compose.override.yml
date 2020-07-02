@@ -12,7 +12,7 @@ services:
       - EventBrokerConnection=rabbitmq
       - EventBrokerUserName=guest
       - EventBrokerPassword=guest
-      - Authority=http://company.identityserver/
+      - Authority=https://company.identityserver/
     ports:
       - "6000:80"
       - "6001:443"

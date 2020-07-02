@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ using Client.Payments.Api.Domain;
 using IdentityModel;
 using IdentityModel.Client;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json.Linq;
 
 namespace Client.Payments.Api.Infrastructure
 {
@@ -26,8 +28,7 @@ namespace Client.Payments.Api.Infrastructure
         public async Task<string> GetAccessToken()
         {
             var identityServerAddress = _configuration["IdentityServer"];
-           
-
+            
             using (var httpClientHandler = new HttpClientHandler())
             {
 
@@ -39,6 +40,7 @@ namespace Client.Payments.Api.Infrastructure
                 {
                     try
                     {
+                        
                         var discoveryDocument = await client.GetDiscoveryDocumentAsync(identityServerAddress);
                         var clientId = _configuration["ClientId"];
                         var clientSecret = _configuration["ClientSecret"];
@@ -49,7 +51,7 @@ namespace Client.Payments.Api.Infrastructure
                                 ClientId = clientId,
                                 ClientSecret = clientSecret,
                                 
-                                Scope = "paymentGateway"
+                                Scope = "CreatePaymentScope"
                             });
                         return tokenResponse.AccessToken;
                     }
@@ -61,6 +63,50 @@ namespace Client.Payments.Api.Infrastructure
                 }
             }
 
+        }
+
+        public  async Task<string> CustomGetApiToken()
+        {
+        
+            var identityServerAddress = _configuration["IdentityServer"];
+            var clientId = _configuration["ClientId"];
+            var clientSecret = _configuration["ClientSecret"];
+            using (var client = new HttpClient())
+            {
+                //setup client
+                client.BaseAddress = new Uri(identityServerAddress);
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                //setup login data
+                var formContent = new FormUrlEncodedContent(new[]
+                {
+                    new KeyValuePair<string, string>("grant_type", "client_credentials"),
+                    new KeyValuePair<string, string>("client_id", clientId),
+                    new KeyValuePair<string, string>("client_secret", clientSecret),
+                    new KeyValuePair<string, string>("scope", "CreatePaymentScope")
+                });
+
+                //send request
+                try
+                {
+                    var responseMessage = await client.PostAsync("connect/token", formContent);
+                    if (responseMessage.IsSuccessStatusCode)
+                    {
+                        //get access token from response body
+                        var responseJson = responseMessage.Content.ReadAsStringAsync().Result;
+                        var jObject = JObject.Parse(responseJson);
+                        return jObject.GetValue("access_token").ToString();
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    throw;
+                }
+             
+                return string.Empty;
+            }
         }
 
         public async Task<string> GetAccessToken__()

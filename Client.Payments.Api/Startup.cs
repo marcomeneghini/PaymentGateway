@@ -18,6 +18,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Logging;
 using Microsoft.OpenApi.Models;
 using Serilog;
 
@@ -35,14 +36,14 @@ namespace Client.Payments.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
-          
 
+            
             services.AddAuthentication("Bearer")
-                .AddJwtBearer("Bearer", config => {
-                    config.Authority = Configuration["IdentityServer"];
-                    config.Audience = "Client.Payments.Api";
-                    config.RequireHttpsMetadata = false;
-                   
+                .AddJwtBearer("Bearer", config =>
+                {
+                    config.Authority =  Configuration["IdentityServer"];
+                    config.Audience = "amazonId";
+                    //config.RequireHttpsMetadata = false;
                 });
             services.AddHttpClient();
             services.AddTransient<ITokenProvider, TokenProvider>();
