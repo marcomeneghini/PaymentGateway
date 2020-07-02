@@ -40,23 +40,7 @@ namespace PaymentGateway.Processor.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
-            IdentityModelEventSource.ShowPII = true;
-
-            services.AddAuthentication("Bearer")
-                .AddJwtBearer("Bearer", options =>
-                {
-                    options.BackchannelHttpHandler = new HttpClientHandler()
-                    {
-                        ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true,
-                    };
-                    //var key = new JsonWebKey(File.ReadAllText(@"tempkey.jwk"));
-                    //options.TokenValidationParameters=new TokenValidationParameters()
-                    //{
-                    //    IssuerSigningKey = key
-                    //};
-                    options.Authority = Configuration["Authority"];
-                    options.Audience = "Processor";
-                });
+            ConfigureAuth(services);
             services.AddHttpClient();
             services.AddSingleton<IPaymentStatusRepository, InMemoryPaymentStatusRepository>();
             services.AddSingleton<IRabbitMQPersistentConnection>(sp =>
@@ -164,6 +148,28 @@ namespace PaymentGateway.Processor.Api
                 endpoints.MapHealthChecks("/health");
                 endpoints.MapDefaultControllerRoute();
             });
+        }
+
+        protected virtual void ConfigureAuth(IServiceCollection services)
+        {
+
+            IdentityModelEventSource.ShowPII = true;
+
+            services.AddAuthentication("Bearer")
+                .AddJwtBearer("Bearer", options =>
+                {
+                    options.BackchannelHttpHandler = new HttpClientHandler()
+                    {
+                        ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true,
+                    };
+                    //var key = new JsonWebKey(File.ReadAllText(@"tempkey.jwk"));
+                    //options.TokenValidationParameters=new TokenValidationParameters()
+                    //{
+                    //    IssuerSigningKey = key
+                    //};
+                    options.Authority = Configuration["Authority"];
+                    options.Audience = "Processor";
+                });
         }
     }
 }

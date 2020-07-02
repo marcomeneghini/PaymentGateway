@@ -10,7 +10,7 @@ using Xunit;
 
 namespace PaymentGateway.Processor.Api.IntegrationTests
 {
-    public class PaymentStatusesTests : IClassFixture<TestFixture<Startup>>
+    public class PaymentStatusesTests : IClassFixture<TestFixture<Startup,TestStartupNoAuth>>
     {
         private HttpClient Client;
         private Guid notPresentPaymentId= Guid.NewGuid();
@@ -18,7 +18,7 @@ namespace PaymentGateway.Processor.Api.IntegrationTests
         private Guid paymentStatusScheduledId = new Guid("55577777-4444-447C-ABC5-0AF6CF829A22");
         private Guid paymentStatusCompletedId = new Guid("66677777-4444-447C-ABC5-0AF6CF829A22");
         private Guid paymentStatusErrorId = new Guid("77777777-4444-447C-ABC5-0AF6CF829A22");
-        public PaymentStatusesTests(TestFixture<Startup> fixture)
+        public PaymentStatusesTests(TestFixture<Startup, TestStartupNoAuth> fixture)
         {
             Client = fixture.Client;
         }

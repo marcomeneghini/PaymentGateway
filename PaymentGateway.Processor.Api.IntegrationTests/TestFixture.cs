@@ -19,7 +19,7 @@ using PaymentGateway.Processor.Api.Domain.Entities;
 
 namespace PaymentGateway.Processor.Api.IntegrationTests
 {
-    public class TestFixture<TStartup> : IDisposable
+    public class TestFixture<TStartup, TStartupNoAuth> : IDisposable
     {
         public static string GetProjectPath(string projectRelativePath, Assembly startupAssembly)
         {
@@ -103,7 +103,7 @@ namespace PaymentGateway.Processor.Api.IntegrationTests
                 })
                 .UseConfiguration(configurationBuilder.Build())
                 .UseEnvironment("Development")
-                .UseStartup(typeof(TStartup));
+                .UseStartup(typeof(TStartupNoAuth));
 
             // Create instance of test server
             Server = new TestServer(webHostBuilder);
