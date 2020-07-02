@@ -88,14 +88,14 @@ namespace PaymentGateway.Api
         }
 
        
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerfactory)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
 
-            loggerfactory.AddSerilog();
+            loggerFactory.AddSerilog();
 
             app.UseMiddleware(typeof(ExceptionMiddleware));
             app.UseMiddleware(typeof(RequestIdLoggingMiddleware));

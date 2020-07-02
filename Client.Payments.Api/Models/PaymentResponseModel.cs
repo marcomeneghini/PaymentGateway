@@ -7,6 +7,8 @@ namespace Client.Payments.Api.Models
 {
     public class PaymentResponseModel
     {
+        public string ReferenceCode { get; set; }
+
         public string ErrorCode { get; set; }
 
         public string Message { get; set; }

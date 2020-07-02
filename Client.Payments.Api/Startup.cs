@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using AutoMapper;
+using Client.Payments.Api.Api.Middleware;
 using Client.Payments.Api.Domain;
 using Client.Payments.Api.Infrastructure;
 using Client.Payments.Api.Infrastructure.PaymentGateway;
@@ -15,6 +16,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace Client.Payments.Api
 {
@@ -60,13 +63,15 @@ namespace Client.Payments.Api
         }
 
      
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env,ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
 
+            loggerFactory.AddSerilog();
+            app.UseMiddleware(typeof(ExceptionMiddleware));
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>

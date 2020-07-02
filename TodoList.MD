@@ -114,6 +114,14 @@
 
 ## --------------------------- New branches ---------------------------
 ### Add API Client
+* Added PaymentsController that cretes the payment and iterates n times 
+to call get the payment status. IT retirns an aggregate set of informations.  OK
+
+* Add serilog OK
+* Implement the PaymentStatsesControlelr
+* Add swagger
+* Add RequestId to the RequestBody
+
 ### Add Authentication
 ### Add Data Storage
 

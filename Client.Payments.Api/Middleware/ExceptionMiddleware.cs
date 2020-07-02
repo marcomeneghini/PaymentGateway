@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Client.Payments.Api.Domain.Entities;
+using Client.Payments.Api.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using PaymentGateway.Api.Domain.Entities;
-using PaymentGateway.Api.Domain.Exceptions;
-using PaymentGateway.Api.Models;
+
 using Serilog;
 
-namespace PaymentGateway.Api.Middleware
+namespace Client.Payments.Api.Api.Middleware
 {
     public class ExceptionMiddleware
     {
@@ -27,14 +27,14 @@ namespace PaymentGateway.Api.Middleware
         {
             try
             {
-                _logger.LogInformation($"Start {context.Request.Method}.");
+                _logger.LogInformation($"Start Method:{context.Request.Method} Path:{context.Request.Path}.");
                 await _next(context);
-                _logger.LogInformation($"End {context.Request.Method}.");
+                _logger.LogInformation($"End {context.Request.Method}  Path:{context.Request.Path}.");
             }
             catch (Exception exception)
             {
                 var referenceCode = Guid.NewGuid().ToString();
-                _logger.LogCritical($"Unexpected exception:{exception}");
+                _logger.LogCritical($"Unexpected exception:{exception} - ReferenceCode:{referenceCode}");
                 await HandleExceptionAsync(context, exception, referenceCode);
             }
         }
@@ -44,10 +44,10 @@ namespace PaymentGateway.Api.Middleware
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
-            var obj = new ErrorResponseModel()
+            var obj = new PaymentResponseModel()
             {
                 ReferenceCode = referenceCode,
-                ErrorCode = Consts.UNEXPECTED_ERROR_CODE,
+                ErrorCode = Consts.UKNOWN_ERROR_CODE,
                 Message = $"Unmanaged Exception. Message:{exception.Message}"
             };
             return context.Response.WriteAsync(JsonConvert.SerializeObject(obj));

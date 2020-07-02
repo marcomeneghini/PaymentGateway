@@ -8,6 +8,7 @@ using Client.Payments.Api.Models;
 using Client.Payments.Api.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace Client.Payments.Api.Controllers
 {
@@ -17,17 +18,23 @@ namespace Client.Payments.Api.Controllers
     {
         private readonly IPaymentService _paymentService;
         private readonly IMapper _mapper;
+        private readonly ILogger<PaymentsController> _logger;
 
 
-        public PaymentsController(IPaymentService paymentService,IMapper mapper)
+        public PaymentsController(
+            IPaymentService paymentService,
+            IMapper mapper,
+            ILogger<PaymentsController> logger)
         {
             _paymentService = paymentService;
             _mapper = mapper;
+            _logger = logger;
         }
 
         [HttpPost]
         public async Task<IActionResult> CreatePayment(PaymentModel paymentModel)
         {
+           
             var response = await _paymentService.DoPaymentAsync(_mapper.Map<Payment>(paymentModel));
 
             return Ok(_mapper.Map<PaymentResponseModel>(response));
