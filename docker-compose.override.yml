@@ -12,6 +12,7 @@ services:
       - EventBrokerConnection=rabbitmq
       - EventBrokerUserName=guest
       - EventBrokerPassword=guest
+      - Authority=http://company.identityserver/
     ports:
       - "6000:80"
       - "6001:443"
@@ -26,7 +27,8 @@ services:
       - EventBrokerConnection=rabbitmq
       - EventBrokerUserName=guest
       - EventBrokerPassword=guest
-      - BankPaymentsAddress=http://bank.payments.api
+      - BankPaymentsAddress=http://bank.payments.api/
+      - Authority=https://company.identityserver/
     ports:
       - "7000:80"
       - "7001:443"
@@ -49,9 +51,12 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
-      - PaymentGatewayAddress=http://paymentgateway.api
-      - PaymentGatewayProcessorAddress=http://paymentgateway.processor.api
+      - PaymentGatewayAddress=http://paymentgateway.api/
+      - PaymentGatewayProcessorAddress=http://paymentgateway.processor.api/
       - MerchantId=53D92C77-3C0E-447C-ABC5-0AF6CF829A22
+      - ClientId=amazonId
+      - ClientSecret=amazonSecret
+      - IdentityServer=https://company.identityserver/
     ports:
       - "8000:80"
       - "8001:443"
@@ -64,8 +69,8 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
     ports:
-      - "80"
-      - "443"
+      - "9000:80"
+      - "9001:443"
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro

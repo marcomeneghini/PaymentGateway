@@ -9,21 +9,30 @@ namespace Company.IdentityServer
 {
     public static class StaticInitializer
     {
+        public static IEnumerable<IdentityResource> GetIdentityResources() =>
+            new List<IdentityResource>
+            {
+                new IdentityResources.OpenId(),
+                new IdentityResources.Profile() // <-- usefull
+            };
         public static IEnumerable<ApiResource> GetApiResources() =>
             new List<ApiResource> {
-                new ApiResource("PaymentGateway.Api"),
-                new ApiResource("PaymentGateway.Processor.Api")
+                new ApiResource("PaymentGateway")
+            };
+        public static IEnumerable<ApiScope> GetApiScopes() =>
+            new List<ApiScope> {
+                new ApiScope("PaymentGateway")
             };
 
         public static IEnumerable<Client> GetClients() =>
             new List<Client> {
                 new Client {
-                    ClientId = "amazon_id",
+                    ClientId = "amazonId",
                     ClientSecrets = { new Secret("amazonSecret".ToSha256()) },
 
                     AllowedGrantTypes = GrantTypes.ClientCredentials,
 
-                    AllowedScopes = { "PaymentGateway.Api", "PaymentGateway.Processor.Api" }
+                    AllowedScopes = { "PaymentGateway" }
                 },
 
             };

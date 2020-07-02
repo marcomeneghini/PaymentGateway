@@ -36,7 +36,13 @@ namespace PaymentGateway.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
-          
+            services.AddAuthentication("Bearer")
+                .AddJwtBearer("Bearer", config =>
+                {
+                    config.Authority = Configuration["Authority"];
+                    config.Audience = "PaymentGateway";
+                    config.RequireHttpsMetadata = false;
+                });
             
             services.AddSingleton<IMerchantRepository, InMemoryMerchantRepository>();
             services.AddSingleton<IPaymentRepository, InMemoryPaymentRepository>();
@@ -101,7 +107,10 @@ namespace PaymentGateway.Api
             app.UseMiddleware(typeof(RequestIdLoggingMiddleware));
 
             app.UseRouting();
+
+            app.UseAuthentication();
             app.UseAuthorization();
+
             app.UseSwagger();
 
             app.UseSwaggerUI(c =>

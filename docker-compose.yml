@@ -4,7 +4,14 @@ services:
 
   rabbitmq:
     image: rabbitmq:3-management-alpine
-      
+
+  company.identityserver:
+    image: ${DOCKER_REGISTRY-}companyidentityserver
+    build:
+      context: .
+      dockerfile: Company.IdentityServer/Dockerfile
+
+
   bank.payments.api:
     image: ${DOCKER_REGISTRY-}bankpaymentsapi
     build:
@@ -17,8 +24,8 @@ services:
       context: .
       dockerfile: PaymentGateway.Api/Dockerfile
     depends_on:     
-      - rabbitmq
-
+      - rabbitmq    
+      - company.identityserver
 
   paymentgateway.processor.api:
     image: ${DOCKER_REGISTRY-}paymentgatewayprocessorapi
@@ -38,11 +45,5 @@ services:
     build:
       context: .
       dockerfile: Client.Payments.Api/Dockerfile
-
-
-  company.identityserver:
-    image: ${DOCKER_REGISTRY-}companyidentityserver
-    build:
-      context: .
-      dockerfile: Company.IdentityServer/Dockerfile
-
+    depends_on:     
+      - company.identityserver
