@@ -36,7 +36,7 @@ namespace PaymentGateway.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
-
+          
             
             services.AddSingleton<IMerchantRepository, InMemoryMerchantRepository>();
             services.AddSingleton<IPaymentRepository, InMemoryPaymentRepository>();
@@ -101,6 +101,7 @@ namespace PaymentGateway.Api
             app.UseMiddleware(typeof(RequestIdLoggingMiddleware));
 
             app.UseRouting();
+            app.UseAuthorization();
             app.UseSwagger();
 
             app.UseSwaggerUI(c =>

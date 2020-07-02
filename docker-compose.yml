@@ -39,3 +39,10 @@ services:
       context: .
       dockerfile: Client.Payments.Api/Dockerfile
 
+
+  company.identityserver:
+    image: ${DOCKER_REGISTRY-}companyidentityserver
+    build:
+      context: .
+      dockerfile: Company.IdentityServer/Dockerfile
+
