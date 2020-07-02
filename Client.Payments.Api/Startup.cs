@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -39,27 +40,31 @@ namespace Client.Payments.Api
 
             
             services.AddAuthentication("Bearer")
-                .AddJwtBearer("Bearer", config =>
+                .AddJwtBearer("Bearer", options =>
                 {
-                    config.Authority =  Configuration["IdentityServer"];
-                    config.Audience = "amazonId";
+                    options.BackchannelHttpHandler = new HttpClientHandler()
+                    {
+                        ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true,
+                    };
+                    options.Authority =  Configuration["IdentityServer"];
+                    options.Audience = "amazonId";
                     //config.RequireHttpsMetadata = false;
                 });
             services.AddHttpClient();
             services.AddTransient<ITokenProvider, TokenProvider>();
 
-            services.AddHttpClient<IPaymentGatewayProcessorProxy, PaymentGatewayProcessorProxy>(
-            client =>
-                {
-                    var paymentGatewayProcessorAddress = Configuration["PaymentGatewayProcessorAddress"];
-                    client.BaseAddress = new Uri(paymentGatewayProcessorAddress);
+            services.AddTransient<IPaymentGatewayProcessorProxy, PaymentGatewayProcessorProxy>();
+            //client =>
+            //    {
+            //        var paymentGatewayProcessorAddress = Configuration["PaymentGatewayProcessorAddress"];
+            //        client.BaseAddress = new Uri(paymentGatewayProcessorAddress);
 
-                    client.DefaultRequestHeaders.Accept.Clear();
+            //        client.DefaultRequestHeaders.Accept.Clear();
 
-                    client.DefaultRequestHeaders.Accept.Add(
-                        new MediaTypeWithQualityHeaderValue("application/json"));
-                }
-            );
+            //        client.DefaultRequestHeaders.Accept.Add(
+            //            new MediaTypeWithQualityHeaderValue("application/json"));
+            //    }
+            //);
             services.AddTransient<IPaymentGatewayProxy,PaymentGatewayProxy>();
             //client =>
             //    {

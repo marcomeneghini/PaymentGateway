@@ -122,6 +122,10 @@ to call get the payment status. IT retirns an aggregate set of informations.  OK
 * Add RequestId to the RequestBody  OK
 
 ### Add Authentication
+* add identity server
+* add PG_API as resource
+* add PR_PROC as resource
+* fix tests
 ### Add Data Storage
 
 ## ------final review

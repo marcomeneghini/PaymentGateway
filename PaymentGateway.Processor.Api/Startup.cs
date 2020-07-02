@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Channels;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Logging;
 using Microsoft.OpenApi.Models;
 using PaymentGateway.Processor.Api.Domain;
 using PaymentGateway.Processor.Api.Infrastructure;
@@ -38,6 +40,23 @@ namespace PaymentGateway.Processor.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
+            IdentityModelEventSource.ShowPII = true;
+
+            services.AddAuthentication("Bearer")
+                .AddJwtBearer("Bearer", options =>
+                {
+                    options.BackchannelHttpHandler = new HttpClientHandler()
+                    {
+                        ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true,
+                    };
+                    //var key = new JsonWebKey(File.ReadAllText(@"tempkey.jwk"));
+                    //options.TokenValidationParameters=new TokenValidationParameters()
+                    //{
+                    //    IssuerSigningKey = key
+                    //};
+                    options.Authority = Configuration["Authority"];
+                    options.Audience = "Processor";
+                });
             services.AddHttpClient();
             services.AddSingleton<IPaymentStatusRepository, InMemoryPaymentStatusRepository>();
             services.AddSingleton<IRabbitMQPersistentConnection>(sp =>
@@ -136,6 +155,9 @@ namespace PaymentGateway.Processor.Api
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "PaymentGateway Processor Demo V1");
             });
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

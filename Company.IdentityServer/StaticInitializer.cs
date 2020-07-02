@@ -22,9 +22,14 @@ namespace Company.IdentityServer
                     Name = "PaymentGateway",
                     Scopes = new List<string>(){"CreatePaymentScope"},
                     ShowInDiscoveryDocument = true
-                   
+                },
+                new ApiResource()
+                {
+                    Name = "Processor",
+                    Scopes = new List<string>(){"CreatePaymentScope"},
+                    ShowInDiscoveryDocument = true
                 }
-                
+
             };
         public static IEnumerable<ApiScope> GetApiScopes() =>
             new List<ApiScope> {

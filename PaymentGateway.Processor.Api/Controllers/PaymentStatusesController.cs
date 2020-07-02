@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -32,6 +33,7 @@ namespace PaymentGateway.Processor.Api.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         [ProducesResponseType(typeof(ErrorResponseModel), 404)]     // not found
         [ProducesResponseType(typeof(ValidationResultModel), 400)]  // Bad Request
         [ProducesResponseType(typeof(PaymentStatusModel), 200)]     // OK

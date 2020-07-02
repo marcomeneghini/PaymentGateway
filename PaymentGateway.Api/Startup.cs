@@ -48,10 +48,7 @@ namespace PaymentGateway.Api
                 {
                     options.BackchannelHttpHandler = new HttpClientHandler()
                     {
-                        ServerCertificateCustomValidationCallback =   (message, cert, chain, errors) =>
-                        {
-                            return true;
-                        },
+                        ServerCertificateCustomValidationCallback =   (message, cert, chain, errors) => true,
                     };
                     //var key = new JsonWebKey(File.ReadAllText(@"tempkey.jwk"));
                     //options.TokenValidationParameters=new TokenValidationParameters()
@@ -161,34 +158,7 @@ namespace PaymentGateway.Api
                 });
         }
 
-        //private void RegisterEventBus(IServiceCollection services)
-        //{
-        //    var subscriptionClientName = Configuration["SubscriptionClientName"];
-
-
-        //    services.AddSingleton<IEventBus, EventBusRabbitMQ>(sp =>
-        //    {
-        //        var rabbitMQPersistentConnection = sp.GetRequiredService<IRabbitMQPersistentConnection>();
-        //        var iLifetimeScope = sp.GetRequiredService<ILifetimeScope>();
-        //        var logger = sp.GetRequiredService<ILogger<EventBusRabbitMQ>>();
-        //        var eventBusSubcriptionsManager = sp.GetRequiredService<IEventBusSubscriptionsManager>();
-
-        //        var retryCount = 5;
-        //        if (!string.IsNullOrEmpty(Configuration["EventBusRetryCount"]))
-        //        {
-        //            retryCount = int.Parse(Configuration["EventBusRetryCount"]);
-        //        }
-
-        //        return new EventBusRabbitMQ(rabbitMQPersistentConnection, logger, iLifetimeScope, eventBusSubcriptionsManager, subscriptionClientName, retryCount);
-        //    });
-
-
-        //    services.AddSingleton<IEventBusSubscriptionsManager, InMemoryEventBusSubscriptionsManager>();
-
-        //    services.AddTransient<ProductPriceChangedIntegrationEventHandler>();
-        //    services.AddTransient<OrderStartedIntegrationEventHandler>();
-        //}
-
+       
 
     }
 }

@@ -9,6 +9,6 @@ namespace Client.Payments.Api.Domain
     {
         Task<string> GetAccessToken();
 
-        Task<string> CustomGetApiToken();
+     
     }
 }
