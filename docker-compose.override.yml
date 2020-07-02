@@ -44,3 +44,17 @@ services:
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+
+  client.payments.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - PaymentGatewayAddress=http://paymentgateway.api
+      - PaymentGatewayProcessorAddress=http://paymentgateway.processor.api
+      - MerchantId=53D92C77-3C0E-447C-ABC5-0AF6CF829A22
+    ports:
+      - "8000:80"
+      - "8001:443"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
