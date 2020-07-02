@@ -116,7 +116,6 @@
 ### Add API Client
 * Added PaymentsController that cretes the payment and iterates n times 
 to call get the payment status. IT retirns an aggregate set of informations.  OK
-
 * Add serilog OK
 * Implement the PaymentStatsesController OK
 * Add swagger OK 
@@ -130,5 +129,5 @@ to call get the payment status. IT retirns an aggregate set of informations.  OK
 * PG_API	- Add LogEntry 
 * PG_PROC	- Add LogEntry
 * General	- Add logs visulizer 
-
+* CLI - Check error flow
 
