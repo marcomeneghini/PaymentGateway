@@ -13,7 +13,7 @@ using Xunit;
 
 namespace PaymentGateway.Api.IntegrationTests
 {
-    public class MerchantCardPaymentsTests: IClassFixture<TestFixture<Startup>>
+    public class MerchantCardPaymentsTests: IClassFixture<TestFixture<Startup, TestStartupNoAuth>>
     {
         private HttpClient Client;
 
@@ -24,7 +24,7 @@ namespace PaymentGateway.Api.IntegrationTests
         private Guid amazonValidMerchantGuid = InMemoryMerchantRepository.CreateMerchant_Amazon().Id;
         private Guid appleInValidMerchantGuid = InMemoryMerchantRepository.CreateMerchant_InvalidApple().Id;
         private string invalidGuid = "sssss00092C77-3C0E-447C-ABC5-0AF6CF829A22";
-        public MerchantCardPaymentsTests(TestFixture<Startup> fixture)
+        public MerchantCardPaymentsTests(TestFixture<Startup,TestStartupNoAuth> fixture)
         {
             Client = fixture.Client;
         }

@@ -7,15 +7,17 @@ using System.Reflection;
 using System.Text;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.ViewComponents;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace PaymentGateway.Api.IntegrationTests
 {
-    public class TestFixture<TStartup>:IDisposable
+    public class TestFixture<TStartup,TStartupNoAuth>:IDisposable
     {
         public static string GetProjectPath(string projectRelativePath, Assembly startupAssembly)
         {
@@ -89,7 +91,7 @@ namespace PaymentGateway.Api.IntegrationTests
                 .ConfigureServices(InitializeServices)
                 .UseConfiguration(configurationBuilder.Build())
                 .UseEnvironment("Development")
-                .UseStartup(typeof(TStartup));
+                .UseStartup(typeof(TStartupNoAuth));
 
             // Create instance of test server
             Server = new TestServer(webHostBuilder);

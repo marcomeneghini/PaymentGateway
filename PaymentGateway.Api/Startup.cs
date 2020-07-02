@@ -41,24 +41,8 @@ namespace PaymentGateway.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
-            IdentityModelEventSource.ShowPII = true;
+            ConfigureAuth(services);
 
-            services.AddAuthentication("Bearer")
-                .AddJwtBearer("Bearer", options =>
-                {
-                    options.BackchannelHttpHandler = new HttpClientHandler()
-                    {
-                        ServerCertificateCustomValidationCallback =   (message, cert, chain, errors) => true,
-                    };
-                    //var key = new JsonWebKey(File.ReadAllText(@"tempkey.jwk"));
-                    //options.TokenValidationParameters=new TokenValidationParameters()
-                    //{
-                    //    IssuerSigningKey = key
-                    //};
-                    options.Authority = Configuration["Authority"];
-                    options.Audience = "PaymentGateway";
-                });
-            
             services.AddSingleton<IMerchantRepository, InMemoryMerchantRepository>();
             services.AddSingleton<IPaymentRepository, InMemoryPaymentRepository>();
             services.AddScoped<IPaymentService, PaymentService>();
@@ -158,7 +142,31 @@ namespace PaymentGateway.Api
                 });
         }
 
-       
+        /// <summary>
+        /// this will be overridden during Integration tests
+        /// </summary>
+        /// <param name="services"></param>
+        protected virtual void ConfigureAuth(IServiceCollection services)
+        {
+
+            IdentityModelEventSource.ShowPII = true;
+
+            services.AddAuthentication("Bearer")
+                .AddJwtBearer("Bearer", options =>
+                {
+                    options.BackchannelHttpHandler = new HttpClientHandler()
+                    {
+                        ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true,
+                    };
+                    //var key = new JsonWebKey(File.ReadAllText(@"tempkey.jwk"));
+                    //options.TokenValidationParameters=new TokenValidationParameters()
+                    //{
+                    //    IssuerSigningKey = key
+                    //};
+                    options.Authority = Configuration["Authority"];
+                    options.Audience = "PaymentGateway";
+                });
+        }
 
     }
 }
