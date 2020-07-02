@@ -31,6 +31,8 @@ namespace Client.Payments.Api.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType(typeof(PaymentResponseModel), 400)]  // bad request / validation
+        [ProducesResponseType(typeof(PaymentResponseModel), 200)] // OK
         public async Task<IActionResult> CreatePayment(PaymentModel paymentModel)
         {
            

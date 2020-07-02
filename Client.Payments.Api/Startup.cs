@@ -17,6 +17,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 using Serilog;
 
 namespace Client.Payments.Api
@@ -58,7 +59,13 @@ namespace Client.Payments.Api
 
             services.AddTransient<IPaymentService, PaymentService>();
             services.AddControllers();
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Client Api Demo", Version = "v1" });
+            });
             services.AddHealthChecks();
+
             services.AddAutoMapper(typeof(Startup));
         }
 
@@ -73,6 +80,12 @@ namespace Client.Payments.Api
             loggerFactory.AddSerilog();
             app.UseMiddleware(typeof(ExceptionMiddleware));
             app.UseRouting();
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Client Api Demo V1");
+            });
 
             app.UseEndpoints(endpoints =>
             {

@@ -30,13 +30,13 @@ namespace Client.Payments.Api.Services
         {
             // send the payment request through _paymentGatewayProxy
             payment.MerchantId = merchantIdGuid;
-            payment.RequestId = Guid.NewGuid().ToString();
+            //payment.RequestId = Guid.NewGuid().ToString();
             var response =await  _paymentGatewayProxy.CreatePaymentAsync(payment);
             if (response!=null && string.IsNullOrEmpty(response.ErrorCode) )
             {
                 for (int i = 0; i < 3; i++)
                 {
-                    Task.Delay(1000);
+                    await Task.Delay(1000);
                     var paymentStatus = await _paymentGatewayProcessorProxy.GetPaymentStatusAsync(response.PaymentRequestId);
                     if (paymentStatus!=null && string.IsNullOrEmpty(paymentStatus.ErrorCode))
                     {

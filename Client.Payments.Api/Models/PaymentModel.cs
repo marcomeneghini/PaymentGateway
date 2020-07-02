@@ -10,7 +10,7 @@ namespace Client.Payments.Api.Models
 {
     public class PaymentModel
     {
-        
+        public string RequestId { get; set; }
         /// <summary>
         /// the card number of the customer
         /// </summary>

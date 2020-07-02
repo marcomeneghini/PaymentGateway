@@ -28,6 +28,8 @@ namespace Client.Payments.Api.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(typeof(PaymentStatusModel), 400)]  // bad request / validation
+        [ProducesResponseType(typeof(PaymentStatusModel), 200)] // OK
         public async Task<IActionResult> GetByPaymentGuidId(Guid paymentRequestId)
         {
             var response = await _paymentGatewayProcessorProxy.GetPaymentStatusAsync(paymentRequestId);

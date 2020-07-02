@@ -35,7 +35,7 @@ namespace Client.Payments.Api
             Log.Logger = new LoggerConfiguration()
                 .Enrich.FromLogContext()  // tells serilog to get values from LogContext for common values
                 .ReadFrom.Configuration(configuration)
-                .Filter.ByExcluding(c => c.Properties.Any(p => p.Value.ToString().Contains("swagger")))
+                //.Filter.ByExcluding(c => c.Properties.Any(p => p.Value.ToString().Contains("swagger")))
                 .Filter.ByExcluding(c => c.Properties.Any(p => p.Value.ToString().Contains("healthcheck")))
                 .CreateLogger();
 

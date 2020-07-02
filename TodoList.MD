@@ -119,8 +119,8 @@ to call get the payment status. IT retirns an aggregate set of informations.  OK
 
 * Add serilog OK
 * Implement the PaymentStatsesController OK
-* Add swagger
-* Add RequestId to the RequestBody
+* Add swagger OK 
+* Add RequestId to the RequestBody  OK
 
 ### Add Authentication
 ### Add Data Storage
