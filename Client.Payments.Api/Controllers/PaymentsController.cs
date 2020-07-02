@@ -23,12 +23,11 @@ namespace Client.Payments.Api.Controllers
 
         public PaymentsController(
             IPaymentService paymentService,
-            IMapper mapper,
-            ILogger<PaymentsController> logger)
+            IMapper mapper)
         {
             _paymentService = paymentService;
             _mapper = mapper;
-            _logger = logger;
+           
         }
 
         [HttpPost]

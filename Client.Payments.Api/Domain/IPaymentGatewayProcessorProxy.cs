@@ -8,6 +8,6 @@ namespace Client.Payments.Api.Domain
 {
     public interface IPaymentGatewayProcessorProxy
     {
-        Task<PaymentStatusResponse> GetPaymentStatusAsync(Guid paymentStatusGuid);
+        Task<PaymentStatusResponse> GetPaymentStatusAsync(Guid paymentRequestId);
     }
 }

@@ -19,8 +19,8 @@ namespace Client.Payments.Api.MappingProfiles
             CreateMap<CreatePaymentResponseDto, PaymentResponse>();
             CreateMap<PaymentResponse, PaymentResponseModel>();
             CreateMap<PaymentStatusDto, PaymentStatusResponse>();
-
-
+            CreateMap<PaymentStatusResponse, PaymentStatusModel>();
+            
         }
     }
 }

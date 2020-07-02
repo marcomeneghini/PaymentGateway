@@ -23,13 +23,13 @@ namespace Client.Payments.Api.Infrastructure.PaymentGatewayProcessor
             _mapper = mapper;
         }
 
-        public async Task<PaymentStatusResponse> GetPaymentStatusAsync(Guid paymentStatusGuid)
+        public async Task<PaymentStatusResponse> GetPaymentStatusAsync(Guid paymentRequestId)
         {
             HttpResponseMessage httpResponse;
           
 
             httpResponse = await _httpClient.GetAsync(
-                $"api/paymentstatuses?paymentId={paymentStatusGuid}");
+                $"api/paymentstatuses?paymentId={paymentRequestId}");
 
             if (httpResponse.StatusCode == HttpStatusCode.OK)
             {
