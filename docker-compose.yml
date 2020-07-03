@@ -2,28 +2,33 @@ version: '3.4'
 
 services:
 
+  sqlserver:
+    image: "mcr.microsoft.com/mssql/server"
+    #hostname: 'sqlserver'   
+
   rabbitmq:
-    image: rabbitmq:3-management-alpine
+    image: rabbitmq:3-management-alpine   
 
   company.identityserver:
     image: ${DOCKER_REGISTRY-}companyidentityserver
     build:
       context: .
-      dockerfile: Company.IdentityServer/Dockerfile
-
+      dockerfile: Company.IdentityServer/Dockerfile   
 
   bank.payments.api:
     image: ${DOCKER_REGISTRY-}bankpaymentsapi
     build:
       context: .
-      dockerfile: Bank.Payments.Api/Dockerfile
-
+      dockerfile: Bank.Payments.Api/Dockerfile    
   paymentgateway.api:
     image: ${DOCKER_REGISTRY-}paymentgatewayapi
     build:
       context: .
-      dockerfile: PaymentGateway.Api/Dockerfile
+      dockerfile: PaymentGateway.Api/Dockerfile    
+    links:
+      - "sqlserver:mysqlserver"
     depends_on:     
+      - sqlserver
       - rabbitmq    
       - company.identityserver
 
@@ -31,19 +36,17 @@ services:
     image: ${DOCKER_REGISTRY-}paymentgatewayprocessorapi
     build:
       context: .
-      dockerfile: PaymentGateway.Processor.Api/Dockerfile
+      dockerfile: PaymentGateway.Processor.Api/Dockerfile   
     depends_on:     
       - rabbitmq
       
-
-
-
-
-
   client.payments.api:
     image: ${DOCKER_REGISTRY-}clientpaymentsapi
     build:
       context: .
-      dockerfile: Client.Payments.Api/Dockerfile
+      dockerfile: Client.Payments.Api/Dockerfile   
     depends_on:     
       - company.identityserver
+
+networks:
+  default:

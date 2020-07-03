@@ -1,6 +1,14 @@
 version: '3.4'
 
 services:
+  sqlserver:
+    environment:
+      - SA_PASSWORD=CataCl1sma!
+      - ACCEPT_EULA=Y
+    ports:
+      - "11433:1433"   
+    volumes:  
+      - ./data/mssql:/var/opt/mssql3 
   rabbitmq:
     ports:
       - "15672:15672"
@@ -13,6 +21,7 @@ services:
       - EventBrokerUserName=guest
       - EventBrokerPassword=guest
       - Authority=https://company.identityserver/
+      - ConnectionStrings__SqlConnection=Server=mysqlserver;Database=PaymentGateway.Api;User Id=sa;Password=CataCl1sma!
     ports:
       - "6000:80"
       - "6001:443"
@@ -74,3 +83,4 @@ services:
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+

@@ -9,11 +9,11 @@ using PaymentGateway.Api.Domain.Exceptions;
 
 namespace PaymentGateway.Api.Infrastructure
 {
-    public class EfInMemoryPaymentRepository:IPaymentRepository
+    public class EfPaymentRepository:IPaymentRepository
     {
         private readonly PaymentGatewayDbContext _dbContext;
 
-        public EfInMemoryPaymentRepository(PaymentGatewayDbContext dbContext)
+        public EfPaymentRepository(PaymentGatewayDbContext dbContext)
         {
             _dbContext = dbContext;
         }

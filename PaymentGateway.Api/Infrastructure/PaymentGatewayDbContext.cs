@@ -14,20 +14,35 @@ namespace PaymentGateway.Api.Infrastructure
         public PaymentGatewayDbContext(DbContextOptions<PaymentGatewayDbContext> options)
             : base(options)
         {
-            LoadMerchants();
+           // LoadMerchants();
+            Database.EnsureCreated();
+          
         }
 
         public DbSet<Merchant> Merchants { get; set; }
 
         public DbSet<PaymentStatus> PaymentStatuses { get; set; }
 
-      
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            var amazon = EfMerchantRepository.CreateMerchant_Amazon();
+            var apple = EfMerchantRepository.CreateMerchant_Apple();
+
+            modelBuilder.Entity<Merchant>()
+                .HasData(amazon);
+            modelBuilder.Entity<Merchant>()
+                .HasData(apple);
+
+        }
+
         public void LoadMerchants()
         {
             
-            Merchants.Add(EfInMemoryMerchantRepository.CreateMerchant_Amazon());
+            Merchants.Add(EfMerchantRepository.CreateMerchant_Amazon());
            
-            Merchants.Add(EfInMemoryMerchantRepository.CreateMerchant_Apple());
+            Merchants.Add(EfMerchantRepository.CreateMerchant_Apple());
         }
 
         public List<Merchant> GetMerchants()

@@ -8,11 +8,11 @@ using PaymentGateway.Api.Domain.Entities;
 
 namespace PaymentGateway.Api.Infrastructure
 {
-    public class EfInMemoryMerchantRepository: IMerchantRepository
+    public class EfMerchantRepository: IMerchantRepository
     {
         private readonly PaymentGatewayDbContext _dbContext;
 
-        public EfInMemoryMerchantRepository(PaymentGatewayDbContext dbContext)
+        public EfMerchantRepository(PaymentGatewayDbContext dbContext)
         {
             _dbContext = dbContext;
         }
@@ -21,11 +21,11 @@ namespace PaymentGateway.Api.Infrastructure
         {
             return new Merchant()
             {
-                Id =Guid.Parse("53D92C77-3C0E-447C-ABC5-0AF6CF829A22"),
-                AccountNumber = "11111111111111",
+                Id = Guid.Parse("53D92C77-3C0E-447C-ABC5-0AF6CF829A22"),
+                AccountNumber = "AmazonAccountNumber",
                 Denomination = "Amazon",
                 IsValid = true,
-                SortCode = "000000"
+                SortCode = "AAMMZZ"
             };
 
         }
@@ -35,20 +35,17 @@ namespace PaymentGateway.Api.Infrastructure
             return new Merchant()
             {
                 Id = Guid.Parse("11112C77-3C0E-447C-ABC5-0AF6CF821111"),
-                AccountNumber = "2222222222222",
+                AccountNumber = "AppleAccountNumber",
                 Denomination = "Apple",
-                IsValid = true,
-                SortCode = "123456"
+                IsValid = false,
+                SortCode = "AAPPLL"
             };
 
         }
 
         public async Task<Merchant> GetMerchantById(Guid merchantId)
         {
-            //var merchants = await _dbContext.Merchants.ToListAsync();
-
-            //var merchants2 =  _dbContext.GetMerchants();
-            //return  merchants2.FirstOrDefault(x => x.Id == merchantId);
+         
             return await _dbContext.Merchants.FirstOrDefaultAsync(x => x.Id == merchantId);
         }
     }
