@@ -2,6 +2,10 @@ version: '3.4'
 
 services:
 
+  sqlserver:
+    image: "mcr.microsoft.com/mssql/server"
+    hostname: 'sqlserver'
+
   rabbitmq:
     image: rabbitmq:3-management-alpine
 
@@ -23,7 +27,10 @@ services:
     build:
       context: .
       dockerfile: PaymentGateway.Api/Dockerfile
+    links:
+      - sqlserver
     depends_on:     
+      - sqlserver
       - rabbitmq    
       - company.identityserver
 
@@ -35,11 +42,6 @@ services:
     depends_on:     
       - rabbitmq
       
-
-
-
-
-
   client.payments.api:
     image: ${DOCKER_REGISTRY-}clientpaymentsapi
     build:

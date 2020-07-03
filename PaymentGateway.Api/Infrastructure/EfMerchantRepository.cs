@@ -8,11 +8,11 @@ using PaymentGateway.Api.Domain.Entities;
 
 namespace PaymentGateway.Api.Infrastructure
 {
-    public class EfInMemoryMerchantRepository: IMerchantRepository
+    public class EfMerchantRepository: IMerchantRepository
     {
         private readonly PaymentGatewayDbContext _dbContext;
 
-        public EfInMemoryMerchantRepository(PaymentGatewayDbContext dbContext)
+        public EfMerchantRepository(PaymentGatewayDbContext dbContext)
         {
             _dbContext = dbContext;
         }
@@ -45,10 +45,7 @@ namespace PaymentGateway.Api.Infrastructure
 
         public async Task<Merchant> GetMerchantById(Guid merchantId)
         {
-            //var merchants = await _dbContext.Merchants.ToListAsync();
-
-            //var merchants2 =  _dbContext.GetMerchants();
-            //return  merchants2.FirstOrDefault(x => x.Id == merchantId);
+         
             return await _dbContext.Merchants.FirstOrDefaultAsync(x => x.Id == merchantId);
         }
     }

@@ -43,8 +43,11 @@ namespace PaymentGateway.Api
         {
             ConfigureAuth(services);
 
-            services.AddSingleton<IMerchantRepository, InMemoryMerchantRepository>();
-            services.AddSingleton<IPaymentRepository, InMemoryPaymentRepository>();
+            // Add entity entity framework .
+            services.AddDbContext<PaymentGatewayDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("SqlConnection")));
+
+            services.AddSingleton<IMerchantRepository, EfMerchantRepository>();
+            services.AddSingleton<IPaymentRepository, EfPaymentRepository>();
             services.AddScoped<IPaymentService, PaymentService>();
             services.AddScoped<ICipherService, AesCipherService>();
             services.AddTransient<IErrorMapper,ErrorMapper>();

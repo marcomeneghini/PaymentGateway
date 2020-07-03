@@ -1,6 +1,14 @@
 version: '3.4'
 
 services:
+  sqlserver:
+    environment:
+      - SA_PASSWORD=CataCl1sma!
+      - ACCEPT_EULA=Y
+    ports:
+      - "11433:1433"   
+    volumes:  
+      - ./data/mssql:/var/opt/mssql3 
   rabbitmq:
     ports:
       - "15672:15672"
@@ -74,3 +82,4 @@ services:
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+
