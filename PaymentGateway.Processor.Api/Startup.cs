@@ -9,6 +9,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -41,8 +42,11 @@ namespace PaymentGateway.Processor.Api
         public void ConfigureServices(IServiceCollection services)
         {
             ConfigureAuth(services);
+            // Add entity entity framework .
+            var sqlConnectionString = Configuration.GetConnectionString("SqlConnection");
+            services.AddDbContext<PaymentGatewayProcessorDbContext>(options => options.UseSqlServer(sqlConnectionString).EnableSensitiveDataLogging());
             services.AddHttpClient();
-            services.AddSingleton<IPaymentStatusRepository, InMemoryPaymentStatusRepository>();
+            services.AddScoped<IPaymentStatusRepository, EfPaymentStatusRepository>();
             services.AddSingleton<IRabbitMQPersistentConnection>(sp =>
             {
                 var logger = sp.GetRequiredService<ILogger<DefaultRabbitMQPersistentConnection>>();
