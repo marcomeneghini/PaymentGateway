@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using PaymentGateway.Processor.Api.Domain;
 using PaymentGateway.SharedLib.EventBroker;
 using PaymentGateway.SharedLib.Messages;
 
@@ -17,11 +19,14 @@ namespace PaymentGateway.Processor.Api.Messaging
 
         private readonly IChannelProducer _producer;
         private readonly IChannelConsumer _consumer;
+        private readonly IServiceScopeFactory _serviceScopeFactory;
+     
 
         public EventBrokerBackgroundWorker(
             IEventBrokerSubscriber eventBrokerSubscriber,
             IChannelProducer producer,
             IChannelConsumer consumer,
+            IServiceScopeFactory serviceScopeFactory,
             ILogger<EventBrokerBackgroundWorker> logger)
         {
             _eventBrokerSubscriber = eventBrokerSubscriber ?? throw new ArgumentNullException(nameof(eventBrokerSubscriber));
@@ -29,6 +34,8 @@ namespace PaymentGateway.Processor.Api.Messaging
            
             _producer = producer;
             _consumer = consumer;
+            _serviceScopeFactory = serviceScopeFactory;
+        
             _logger = logger;
         }
 
@@ -37,8 +44,12 @@ namespace PaymentGateway.Processor.Api.Messaging
             EncryptedMessage message = e.Message;
             message.ProcessedAt = DateTimeOffset.Now;
             _logger.LogInformation($"message type: {e.Message.ContentTypeName} pushedAt:{e.Message.PushedAt} processedAt:{message.ProcessedAt}");
-
-            await _producer.PublishAsync(message);
+            using (var scope = _serviceScopeFactory.CreateScope())
+            {
+                var paymentStatusRepository = scope.ServiceProvider.GetRequiredService<IPaymentStatusRepository>();
+                await _producer.PublishAsync(paymentStatusRepository, message);
+                
+            }
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -46,7 +57,11 @@ namespace PaymentGateway.Processor.Api.Messaging
             try
             {
                 _eventBrokerSubscriber.Subscribe(EventBrokerConsts.PAYMENT_REQUEST_EXCHANGE_NAME, EventBrokerConsts.PAYMENT_REQUEST_ROUTINGKEY, "Processor.Api");
-                await _consumer.BeginConsumeAsync(stoppingToken);
+                using (var scope = _serviceScopeFactory.CreateScope())
+                {
+                    var paymentStatusRepository = scope.ServiceProvider.GetRequiredService<IPaymentStatusRepository>();
+                    await _consumer.BeginConsumeAsync(paymentStatusRepository,stoppingToken);
+                }
             }
             catch (Exception e)
             {

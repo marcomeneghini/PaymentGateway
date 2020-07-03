@@ -22,8 +22,6 @@ namespace PaymentGateway.Processor.Api.Messaging
     {
         private readonly ChannelReader<EncryptedMessage> _reader;
         private readonly ILogger<ChannelConsumer> _logger;
-
-        private readonly IPaymentStatusRepository _paymentStatusRepository;
         private readonly IBankPaymentProxy _bankPaymentProxy;
         private readonly ICipherService _cipherService;
         private readonly IMapper _mapper;
@@ -33,20 +31,19 @@ namespace PaymentGateway.Processor.Api.Messaging
         public ChannelConsumer(
             ChannelReader<EncryptedMessage> reader, 
             ILogger<ChannelConsumer> logger,
-            IPaymentStatusRepository paymentStatusRepository,
             IBankPaymentProxy bankPaymentProxy,
             ICipherService cipherService,
             IMapper mapper)
         {
             _reader = reader;
             _logger = logger;
-            _paymentStatusRepository = paymentStatusRepository;
+           
             _bankPaymentProxy = bankPaymentProxy;
             _cipherService = cipherService;
             _mapper = mapper;
         }
 
-        public async Task BeginConsumeAsync(CancellationToken cancellationToken = default)
+        public async Task BeginConsumeAsync(IPaymentStatusRepository paymentStatusRepository, CancellationToken cancellationToken = default)
         {
             _logger.LogInformation($"ChannelConsumer > starting");
 
@@ -63,7 +60,7 @@ namespace PaymentGateway.Processor.Api.Messaging
                         PaymentStatus paymentStatus = null;
                         try
                         {
-                            paymentStatus = await _paymentStatusRepository.GetPaymentStatus(decryptedMessage.PaymentRequestId);
+                            paymentStatus = await paymentStatusRepository.GetPaymentStatus(decryptedMessage.PaymentRequestId);
                         }
                         catch (Exception e)
                         {
@@ -123,7 +120,7 @@ namespace PaymentGateway.Processor.Api.Messaging
                             paymentStatus.TransactionId = bankPaymentResponse.TransactionId;
                         }
                         
-                        await _paymentStatusRepository.UpdatePaymentStatus(paymentStatus);
+                        await paymentStatusRepository.UpdatePaymentStatus(paymentStatus);
                     }
                     catch (Exception e)
                     {

@@ -95,22 +95,19 @@ namespace PaymentGateway.Processor.Api
             services.AddSingleton<IEventBrokerSubscriber, RabbitMQEventBrokerSubscriber>();
             services.AddSingleton<ICipherService, AesCipherService>();
             services.AddSingleton<IChannelProducer>(ctx => {
-                //channel = ctx.GetRequiredService<Channel<EncryptedMessage>>();
                 var logger = ctx.GetRequiredService<ILogger<ChannelProducer>>();
-                var paymentRepository = ctx.GetRequiredService<IPaymentStatusRepository>();
                 var cipherService = ctx.GetRequiredService<ICipherService>();
-                return new ChannelProducer(channel.Writer, paymentRepository, cipherService ,logger);
+                return new ChannelProducer(channel.Writer, cipherService ,logger);
             });
 
             services.AddSingleton<IChannelConsumer>(ctx => {
                 //var innerChannelChannel = ctx.GetRequiredService<Channel<EncryptedMessage>>();
                 var logger = ctx.GetRequiredService<ILogger<ChannelConsumer>>();
-                var paymentRepository = ctx.GetRequiredService<IPaymentStatusRepository>();
                 var bankPaymentProxy = ctx.GetRequiredService<IBankPaymentProxy>();
                 var cipherService = ctx.GetRequiredService<ICipherService>();
                 var mapperService = ctx.GetRequiredService<IMapper>();
 
-                return new ChannelConsumer(channel.Reader, logger, paymentRepository, bankPaymentProxy, cipherService, mapperService);
+                return new ChannelConsumer(channel.Reader, logger, bankPaymentProxy, cipherService, mapperService);
             });
 
             services.AddHostedService<EventBrokerBackgroundWorker>();
