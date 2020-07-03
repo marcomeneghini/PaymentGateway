@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -13,10 +14,12 @@ using Client.Payments.Api.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Logging;
 using Microsoft.OpenApi.Models;
 using Serilog;
 
@@ -34,28 +37,46 @@ namespace Client.Payments.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddHttpClient<IPaymentGatewayProcessorProxy, PaymentGatewayProcessorProxy>(client =>
+
+            
+            services.AddAuthentication("Bearer")
+                .AddJwtBearer("Bearer", options =>
                 {
-                    var paymentGatewayProcessorAddress = Configuration["PaymentGatewayProcessorAddress"];
-                    client.BaseAddress = new Uri(paymentGatewayProcessorAddress);
+                    options.BackchannelHttpHandler = new HttpClientHandler()
+                    {
+                        ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true,
+                    };
+                    options.Authority =  Configuration["IdentityServer"];
+                    options.Audience = "amazonId";
+                    //config.RequireHttpsMetadata = false;
+                });
+            services.AddHttpClient();
+            services.AddTransient<ITokenProvider, TokenProvider>();
 
-                    client.DefaultRequestHeaders.Accept.Clear();
+            services.AddTransient<IPaymentGatewayProcessorProxy, PaymentGatewayProcessorProxy>();
+            //client =>
+            //    {
+            //        var paymentGatewayProcessorAddress = Configuration["PaymentGatewayProcessorAddress"];
+            //        client.BaseAddress = new Uri(paymentGatewayProcessorAddress);
 
-                    client.DefaultRequestHeaders.Accept.Add(
-                        new MediaTypeWithQualityHeaderValue("application/json"));
-                }
-            );
-            services.AddHttpClient<IPaymentGatewayProxy, PaymentGatewayProxy>(client =>
-                {
-                    var paymentGatewayAddress = Configuration["PaymentGatewayAddress"];
-                    client.BaseAddress = new Uri(paymentGatewayAddress);
+            //        client.DefaultRequestHeaders.Accept.Clear();
 
-                    client.DefaultRequestHeaders.Accept.Clear();
+            //        client.DefaultRequestHeaders.Accept.Add(
+            //            new MediaTypeWithQualityHeaderValue("application/json"));
+            //    }
+            //);
+            services.AddTransient<IPaymentGatewayProxy,PaymentGatewayProxy>();
+            //client =>
+            //    {
+            //        var paymentGatewayAddress = Configuration["PaymentGatewayAddress"];
+            //        client.BaseAddress = new Uri(paymentGatewayAddress);
 
-                    client.DefaultRequestHeaders.Accept.Add(
-                        new MediaTypeWithQualityHeaderValue("application/json"));
-                }
-            );
+            //        client.DefaultRequestHeaders.Accept.Clear();
+
+            //        client.DefaultRequestHeaders.Accept.Add(
+            //            new MediaTypeWithQualityHeaderValue("application/json"));
+            //    }
+            //);
 
             services.AddTransient<IPaymentService, PaymentService>();
             services.AddControllers();
@@ -80,6 +101,21 @@ namespace Client.Payments.Api
             loggerFactory.AddSerilog();
             app.UseMiddleware(typeof(ExceptionMiddleware));
             app.UseRouting();
+
+            var forwardOptions = new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto,
+                RequireHeaderSymmetry = false
+            };
+
+            forwardOptions.KnownNetworks.Clear();
+            forwardOptions.KnownProxies.Clear();
+
+            // ref: https://github.com/aspnet/Docs/issues/2384
+            app.UseForwardedHeaders(forwardOptions);
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>

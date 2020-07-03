@@ -7,15 +7,17 @@ using System.Reflection;
 using System.Text;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.ViewComponents;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace PaymentGateway.Api.IntegrationTests
 {
-    public class TestFixture<TStartup>:IDisposable
+    public class TestFixture<TStartupNoAuth>:IDisposable
     {
         public static string GetProjectPath(string projectRelativePath, Assembly startupAssembly)
         {
@@ -57,7 +59,8 @@ namespace PaymentGateway.Api.IntegrationTests
 
         protected virtual void InitializeServices(IServiceCollection services)
         {
-            var startupAssembly = typeof(TStartup).GetTypeInfo().Assembly;
+            //var startupAssembly = typeof(TStartupNoAuth).BaseType.GetTypeInfo().Assembly;
+            var startupAssembly = typeof(TStartupNoAuth).GetTypeInfo().Assembly;
 
             var manager = new ApplicationPartManager
             {
@@ -77,7 +80,8 @@ namespace PaymentGateway.Api.IntegrationTests
 
         protected TestFixture(string relativeTargetProjectParentDir)
         {
-            var startupAssembly = typeof(TStartup).GetTypeInfo().Assembly;
+            //var startupAssembly = typeof(TStartupNoAuth).BaseType.GetTypeInfo().Assembly;
+            var startupAssembly = typeof(TStartupNoAuth).GetTypeInfo().Assembly;
             var contentRoot = GetProjectPath(relativeTargetProjectParentDir, startupAssembly);
 
             var configurationBuilder = new ConfigurationBuilder()
@@ -89,14 +93,14 @@ namespace PaymentGateway.Api.IntegrationTests
                 .ConfigureServices(InitializeServices)
                 .UseConfiguration(configurationBuilder.Build())
                 .UseEnvironment("Development")
-                .UseStartup(typeof(TStartup));
+                .UseStartup(typeof(TStartupNoAuth));
 
             // Create instance of test server
             Server = new TestServer(webHostBuilder);
 
             // Add configuration for client
             Client = Server.CreateClient();
-            Client.BaseAddress = new Uri("http://localhost:5001");
+            Client.BaseAddress = new Uri("http://localhost:11011");
             Client.DefaultRequestHeaders.Accept.Clear();
             Client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }

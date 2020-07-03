@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -41,6 +42,7 @@ namespace PaymentGateway.Api.Controllers
 
         
         [HttpPost]
+        [Authorize]
         [ProducesResponseType(typeof(ValidationResultModel), 400)]  // bad request / validation
         [ProducesResponseType(typeof(ErrorResponseModel), 400)]     // bad request
         [ProducesResponseType(typeof(ErrorResponseModel), 409)]     // conflict

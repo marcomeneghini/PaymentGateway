@@ -19,7 +19,7 @@ using PaymentGateway.Processor.Api.Domain;
 
 namespace PaymentGateway.IntegrationTests
 {
-    public class IntegrationMockBankTestFixture<TStartupPgApi, TStartupPgProcApi> : IDisposable
+    public class IntegrationMockBankTestFixture<TStartupPgApiNoAuth, TStartupPgProcApiNoAuth> : IDisposable
     {
 
         public static string GetProjectPath(string projectRelativePath, Assembly startupAssembly)
@@ -69,7 +69,7 @@ namespace PaymentGateway.IntegrationTests
 
         private void InitializePaymentGatewayApiTestServer(string relativeTargetProjectParentDir)
         {
-            var startupAssembly = typeof(TStartupPgApi).GetTypeInfo().Assembly;
+            var startupAssembly = typeof(TStartupPgApiNoAuth).GetTypeInfo().Assembly;
             var contentRoot = GetProjectPath(relativeTargetProjectParentDir, startupAssembly);
 
             var configurationBuilder = new ConfigurationBuilder()
@@ -81,7 +81,7 @@ namespace PaymentGateway.IntegrationTests
                 .ConfigureServices(InitializeServicesPaymentGatewayApi)
                 .UseConfiguration(configurationBuilder.Build())
                 .UseEnvironment("Development")
-                .UseStartup(typeof(TStartupPgApi));
+                .UseStartup(typeof(TStartupPgApiNoAuth));
 
             // Create instance of test server
             PgApiServer = new TestServer(webHostBuilder);
@@ -98,7 +98,7 @@ namespace PaymentGateway.IntegrationTests
             //var fakeSucceededCardPaymentResponse = Helper.CreateFake_Succeeded_CardPaymentResponse();
             var IBankPaymentProxy = Helper.CreateBankPaymentProxyMock();
            
-            var startupAssembly = typeof(TStartupPgProcApi).GetTypeInfo().Assembly;
+            var startupAssembly = typeof(TStartupPgProcApiNoAuth).GetTypeInfo().Assembly;
             var contentRoot = GetProjectPath(relativeTargetProjectParentDir, startupAssembly);
 
             var configurationBuilder = new ConfigurationBuilder()
@@ -114,7 +114,7 @@ namespace PaymentGateway.IntegrationTests
                 })
                 .UseConfiguration(configurationBuilder.Build())
                 .UseEnvironment("Development")
-                .UseStartup(typeof(TStartupPgProcApi));
+                .UseStartup(typeof(TStartupPgProcApiNoAuth));
 
             // Create instance of test server
             PgProcApiServer = new TestServer(webHostBuilder);
@@ -129,7 +129,7 @@ namespace PaymentGateway.IntegrationTests
         protected virtual void InitializeServicesPaymentGatewayApi(IServiceCollection services)
         {
 
-            var startupAssembly = typeof(TStartupPgApi).GetTypeInfo().Assembly;
+            var startupAssembly = typeof(TStartupPgApiNoAuth).GetTypeInfo().Assembly;
 
             var manager = new ApplicationPartManager
             {
@@ -149,7 +149,7 @@ namespace PaymentGateway.IntegrationTests
         protected virtual void InitializeServicesPaymentProcessorApi(IServiceCollection services)
         {
 
-            var startupAssembly = typeof(TStartupPgProcApi).GetTypeInfo().Assembly;
+            var startupAssembly = typeof(TStartupPgProcApiNoAuth).GetTypeInfo().Assembly;
 
             var manager = new ApplicationPartManager
             {

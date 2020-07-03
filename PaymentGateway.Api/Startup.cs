@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -11,6 +14,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using PaymentGateway.Api.Attributes;
 using PaymentGateway.Api.Domain;
@@ -36,8 +41,8 @@ namespace PaymentGateway.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
+            ConfigureAuth(services);
 
-            
             services.AddSingleton<IMerchantRepository, InMemoryMerchantRepository>();
             services.AddSingleton<IPaymentRepository, InMemoryPaymentRepository>();
             services.AddScoped<IPaymentService, PaymentService>();
@@ -108,6 +113,9 @@ namespace PaymentGateway.Api
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "PaymentGateway Demo V1");
             });
 
+            app.UseAuthentication();
+            app.UseAuthorization();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapHealthChecks("/health");
@@ -134,34 +142,31 @@ namespace PaymentGateway.Api
                 });
         }
 
-        //private void RegisterEventBus(IServiceCollection services)
-        //{
-        //    var subscriptionClientName = Configuration["SubscriptionClientName"];
+        /// <summary>
+        /// this will be overridden during Integration tests
+        /// </summary>
+        /// <param name="services"></param>
+        protected virtual void ConfigureAuth(IServiceCollection services)
+        {
 
+            IdentityModelEventSource.ShowPII = true;
 
-        //    services.AddSingleton<IEventBus, EventBusRabbitMQ>(sp =>
-        //    {
-        //        var rabbitMQPersistentConnection = sp.GetRequiredService<IRabbitMQPersistentConnection>();
-        //        var iLifetimeScope = sp.GetRequiredService<ILifetimeScope>();
-        //        var logger = sp.GetRequiredService<ILogger<EventBusRabbitMQ>>();
-        //        var eventBusSubcriptionsManager = sp.GetRequiredService<IEventBusSubscriptionsManager>();
-
-        //        var retryCount = 5;
-        //        if (!string.IsNullOrEmpty(Configuration["EventBusRetryCount"]))
-        //        {
-        //            retryCount = int.Parse(Configuration["EventBusRetryCount"]);
-        //        }
-
-        //        return new EventBusRabbitMQ(rabbitMQPersistentConnection, logger, iLifetimeScope, eventBusSubcriptionsManager, subscriptionClientName, retryCount);
-        //    });
-
-
-        //    services.AddSingleton<IEventBusSubscriptionsManager, InMemoryEventBusSubscriptionsManager>();
-
-        //    services.AddTransient<ProductPriceChangedIntegrationEventHandler>();
-        //    services.AddTransient<OrderStartedIntegrationEventHandler>();
-        //}
-
+            services.AddAuthentication("Bearer")
+                .AddJwtBearer("Bearer", options =>
+                {
+                    options.BackchannelHttpHandler = new HttpClientHandler()
+                    {
+                        ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true,
+                    };
+                    //var key = new JsonWebKey(File.ReadAllText(@"tempkey.jwk"));
+                    //options.TokenValidationParameters=new TokenValidationParameters()
+                    //{
+                    //    IssuerSigningKey = key
+                    //};
+                    options.Authority = Configuration["Authority"];
+                    options.Audience = "PaymentGateway";
+                });
+        }
 
     }
 }
