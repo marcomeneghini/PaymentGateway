@@ -22,7 +22,6 @@ namespace PaymentGateway.Api.Migrations
             modelBuilder.Entity("PaymentGateway.Api.Domain.Entities.Merchant", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("AccountNumber")

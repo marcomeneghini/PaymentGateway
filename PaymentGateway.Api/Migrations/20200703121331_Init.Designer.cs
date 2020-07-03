@@ -10,7 +10,7 @@ using PaymentGateway.Api.Infrastructure;
 namespace PaymentGateway.Api.Migrations
 {
     [DbContext(typeof(PaymentGatewayDbContext))]
-    [Migration("20200703103616_Init")]
+    [Migration("20200703121331_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,7 +24,6 @@ namespace PaymentGateway.Api.Migrations
             modelBuilder.Entity("PaymentGateway.Api.Domain.Entities.Merchant", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("AccountNumber")

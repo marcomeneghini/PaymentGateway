@@ -23,7 +23,20 @@ namespace PaymentGateway.Api.Infrastructure
 
         public DbSet<PaymentStatus> PaymentStatuses { get; set; }
 
-      
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+
+            //var amazon = EfMerchantRepository.CreateMerchant_Amazon();
+            //var apple = EfMerchantRepository.CreateMerchant_Amazon();
+
+            //modelBuilder.Entity<Merchant>()
+            //    .HasData(amazon);
+            //modelBuilder.Entity<Merchant>()
+            //    .HasData(apple);
+        
+        }
+
         public void LoadMerchants()
         {
             
