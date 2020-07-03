@@ -16,6 +16,7 @@ namespace PaymentGateway.Api.Infrastructure
         {
            // LoadMerchants();
             Database.EnsureCreated();
+          
         }
 
         public DbSet<Merchant> Merchants { get; set; }
