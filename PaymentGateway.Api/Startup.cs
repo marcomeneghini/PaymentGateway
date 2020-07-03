@@ -44,10 +44,11 @@ namespace PaymentGateway.Api
             ConfigureAuth(services);
 
             // Add entity entity framework .
-            services.AddDbContext<PaymentGatewayDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("SqlConnection")));
+            var sqlConnectionString = Configuration.GetConnectionString("SqlConnection");
+            services.AddDbContext<PaymentGatewayDbContext>(options => options.UseSqlServer(sqlConnectionString));
+            services.AddScoped<IMerchantRepository, EfMerchantRepository>();
+            services.AddScoped<IPaymentRepository, EfPaymentRepository>();
 
-            services.AddSingleton<IMerchantRepository, EfMerchantRepository>();
-            services.AddSingleton<IPaymentRepository, EfPaymentRepository>();
             services.AddScoped<IPaymentService, PaymentService>();
             services.AddScoped<ICipherService, AesCipherService>();
             services.AddTransient<IErrorMapper,ErrorMapper>();

@@ -21,6 +21,7 @@ services:
       - EventBrokerUserName=guest
       - EventBrokerPassword=guest
       - Authority=https://company.identityserver/
+      - ConnectionStrings__SqlConnection=Server=sqlserver;Database=PaymentGateway.Api;User Id=sa;Password=CataCl1sma!
     ports:
       - "6000:80"
       - "6001:443"
