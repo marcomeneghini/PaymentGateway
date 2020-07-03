@@ -26,15 +26,15 @@ namespace PaymentGateway.Api.Infrastructure
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+            var amazon = EfMerchantRepository.CreateMerchant_Amazon();
+            var apple = EfMerchantRepository.CreateMerchant_Apple();
 
-            //var amazon = EfMerchantRepository.CreateMerchant_Amazon();
-            //var apple = EfMerchantRepository.CreateMerchant_Amazon();
+            modelBuilder.Entity<Merchant>()
+                .HasData(amazon);
+            modelBuilder.Entity<Merchant>()
+                .HasData(apple);
 
-            //modelBuilder.Entity<Merchant>()
-            //    .HasData(amazon);
-            //modelBuilder.Entity<Merchant>()
-            //    .HasData(apple);
-        
         }
 
         public void LoadMerchants()
