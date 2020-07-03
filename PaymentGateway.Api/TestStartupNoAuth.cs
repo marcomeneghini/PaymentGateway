@@ -4,7 +4,7 @@ using System.Text;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace PaymentGateway.Api.IntegrationTests
+namespace PaymentGateway.Api
 {
    public  class TestStartupNoAuth : Startup
     {

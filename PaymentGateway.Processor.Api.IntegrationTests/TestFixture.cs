@@ -19,7 +19,7 @@ using PaymentGateway.Processor.Api.Domain.Entities;
 
 namespace PaymentGateway.Processor.Api.IntegrationTests
 {
-    public class TestFixture<TStartup, TStartupNoAuth> : IDisposable
+    public class TestFixture<TStartupNoAuth> : IDisposable
     {
         public static string GetProjectPath(string projectRelativePath, Assembly startupAssembly)
         {
@@ -62,8 +62,7 @@ namespace PaymentGateway.Processor.Api.IntegrationTests
         protected virtual void InitializeServices(IServiceCollection services)
         {
 
-
-            var startupAssembly = typeof(TStartup).GetTypeInfo().Assembly;
+            var startupAssembly = typeof(TStartupNoAuth).GetTypeInfo().Assembly;
 
             var manager = new ApplicationPartManager
             {
@@ -86,9 +85,9 @@ namespace PaymentGateway.Processor.Api.IntegrationTests
             var mockBankPaymentProxy = Mock.Of<IBankPaymentProxy>();
             Mock.Get(mockBankPaymentProxy)
                 .Setup(m => m.CreatePaymentAsync(It.IsAny<CardPayment>())).ReturnsAsync(fakeSucceededCardPaymentResponse);
-                    
 
-            var startupAssembly = typeof(TStartup).GetTypeInfo().Assembly;
+
+            var startupAssembly = typeof(TStartupNoAuth).GetTypeInfo().Assembly;
             var contentRoot = GetProjectPath(relativeTargetProjectParentDir, startupAssembly);
 
             var configurationBuilder = new ConfigurationBuilder()
@@ -110,7 +109,7 @@ namespace PaymentGateway.Processor.Api.IntegrationTests
 
             // Add configuration for client
             Client = Server.CreateClient();
-            Client.BaseAddress = new Uri("http://localhost:5001");
+            Client.BaseAddress = new Uri("http://localhost:10000");
             Client.DefaultRequestHeaders.Accept.Clear();
             Client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }

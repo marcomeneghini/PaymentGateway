@@ -17,7 +17,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace PaymentGateway.Api.IntegrationTests
 {
-    public class TestFixture<TStartup,TStartupNoAuth>:IDisposable
+    public class TestFixture<TStartupNoAuth>:IDisposable
     {
         public static string GetProjectPath(string projectRelativePath, Assembly startupAssembly)
         {
@@ -59,7 +59,8 @@ namespace PaymentGateway.Api.IntegrationTests
 
         protected virtual void InitializeServices(IServiceCollection services)
         {
-            var startupAssembly = typeof(TStartup).GetTypeInfo().Assembly;
+            //var startupAssembly = typeof(TStartupNoAuth).BaseType.GetTypeInfo().Assembly;
+            var startupAssembly = typeof(TStartupNoAuth).GetTypeInfo().Assembly;
 
             var manager = new ApplicationPartManager
             {
@@ -79,7 +80,8 @@ namespace PaymentGateway.Api.IntegrationTests
 
         protected TestFixture(string relativeTargetProjectParentDir)
         {
-            var startupAssembly = typeof(TStartup).GetTypeInfo().Assembly;
+            //var startupAssembly = typeof(TStartupNoAuth).BaseType.GetTypeInfo().Assembly;
+            var startupAssembly = typeof(TStartupNoAuth).GetTypeInfo().Assembly;
             var contentRoot = GetProjectPath(relativeTargetProjectParentDir, startupAssembly);
 
             var configurationBuilder = new ConfigurationBuilder()
@@ -98,7 +100,7 @@ namespace PaymentGateway.Api.IntegrationTests
 
             // Add configuration for client
             Client = Server.CreateClient();
-            Client.BaseAddress = new Uri("http://localhost:5001");
+            Client.BaseAddress = new Uri("http://localhost:11011");
             Client.DefaultRequestHeaders.Accept.Clear();
             Client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }

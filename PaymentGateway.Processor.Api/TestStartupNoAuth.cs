@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace PaymentGateway.Processor.Api.IntegrationTests
+namespace PaymentGateway.Processor.Api
 {
    public  class TestStartupNoAuth : Startup
     {

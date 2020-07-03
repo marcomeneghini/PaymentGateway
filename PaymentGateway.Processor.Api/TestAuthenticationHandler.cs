@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace PaymentGateway.Processor.Api.IntegrationTests
+namespace PaymentGateway.Processor.Api
 {
     public class TestAuthenticationHandler : AuthenticationHandler<TestAuthenticationOptions>
     {

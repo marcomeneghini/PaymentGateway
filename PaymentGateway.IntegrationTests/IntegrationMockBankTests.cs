@@ -13,7 +13,7 @@ using PgApi =PaymentGateway.Api ;
 using PgProcessorApi = PaymentGateway.Processor.Api;
 namespace PaymentGateway.IntegrationTests
 {
-    public  class IntegrationMockBankTests : IClassFixture<IntegrationMockBankTestFixture<PgApi.Startup, PgProcessorApi.Startup>>
+    public  class IntegrationMockBankTests : IClassFixture<IntegrationMockBankTestFixture<PgApi.TestStartupNoAuth, PgProcessorApi.TestStartupNoAuth>>
     {
         private HttpClient PgApiClient;
         private HttpClient PgProcApiClient;
@@ -24,7 +24,7 @@ namespace PaymentGateway.IntegrationTests
         private Guid appleInValidMerchantGuid = InMemoryMerchantRepository.CreateMerchant_InvalidApple().Id;
 
 
-        public IntegrationMockBankTests(IntegrationMockBankTestFixture<PgApi.Startup, PgProcessorApi.Startup> fixture)
+        public IntegrationMockBankTests(IntegrationMockBankTestFixture<PgApi.TestStartupNoAuth, PgProcessorApi.TestStartupNoAuth> fixture)
         {
             PgApiClient = fixture.PgApiClient;
             PgProcApiClient = fixture.PgProcApiClient;
