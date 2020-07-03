@@ -122,11 +122,14 @@ to call get the payment status. IT retirns an aggregate set of informations.  OK
 * Add RequestId to the RequestBody  OK
 
 ### Add Authentication
-* add identity server
-* add PG_API as resource
-* add PR_PROC as resource
-* fix tests
+* add identity server		OK
+* add PG_API as resource	OK
+* add PR_PROC as resource	OK
+* fix tests					OK
 ### Add Data Storage
+* PG_API	add DB
+* PG_PROC	add DB
+* BANK		add Db
 
 ## ------final review
 * Add LogEntry for structured log (in sharedlib)
