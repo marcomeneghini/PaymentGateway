@@ -2,7 +2,8 @@ version: '3.4'
 
 
 networks:
-  default:
+  inner_net:
+    driver: bridge
 
 volumes:
     prometheus_data: {}
@@ -13,21 +14,30 @@ services:
   sqlserver:
     image: "mcr.microsoft.com/mssql/server"
     #hostname: 'sqlserver'   
+    networks:
+     - inner_net
 
   rabbitmq:
     image: rabbitmq:3-management-alpine   
+    networks:
+     - inner_net
 
   company.identityserver:
     image: ${DOCKER_REGISTRY-}companyidentityserver
     build:
       context: .
       dockerfile: Company.IdentityServer/Dockerfile   
+    networks:
+      - inner_net
 
   bank.payments.api:
     image: ${DOCKER_REGISTRY-}bankpaymentsapi
     build:
       context: .
       dockerfile: Bank.Payments.Api/Dockerfile    
+    networks:
+      - inner_net
+
   paymentgateway.api:
     image: ${DOCKER_REGISTRY-}paymentgatewayapi
     build:
@@ -39,6 +49,8 @@ services:
       - sqlserver
       - rabbitmq    
       - company.identityserver
+    networks:
+      - inner_net
 
   paymentgateway.processor.api:
     image: ${DOCKER_REGISTRY-}paymentgatewayprocessorapi
@@ -51,7 +63,9 @@ services:
       - sqlserver
       - rabbitmq      
       - company.identityserver
-      
+    networks:
+      - inner_net
+
   client.payments.api:
     image: ${DOCKER_REGISTRY-}clientpaymentsapi
     build:
@@ -59,7 +73,9 @@ services:
       dockerfile: Client.Payments.Api/Dockerfile   
     depends_on:     
       - company.identityserver
-      
+    networks:
+      - inner_net
+
   prometheus:
     image: prom/prometheus
     links:
@@ -68,4 +84,12 @@ services:
     depends_on:
       - paymentgateway.api
       - paymentgateway.processor.api
-   
+    networks:
+      - inner_net
+
+  grafana:
+    image : grafana/grafana
+    depends_on: 
+      - prometheus  
+    networks:
+      - inner_net

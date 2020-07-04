@@ -25,6 +25,7 @@ using PaymentGateway.Api.Middleware;
 using PaymentGateway.Api.Services;
 using PaymentGateway.SharedLib.Encryption;
 using PaymentGateway.SharedLib.EventBroker;
+using Prometheus;
 using RabbitMQ.Client;
 using Serilog;
 using Swashbuckle;
@@ -44,7 +45,7 @@ namespace PaymentGateway.Api
         {
             ConfigureAuth(services);
             
-            services.AddMvcCore().AddMetricsCore();
+            //services.AddMvcCore().AddMetricsCore();
             // Add entity entity framework .
             var sqlConnectionString = Configuration.GetConnectionString("SqlConnection");
             services.AddDbContext<PaymentGatewayDbContext>(options => options.UseSqlServer(sqlConnectionString).EnableSensitiveDataLogging());
@@ -101,6 +102,17 @@ namespace PaymentGateway.Api
        
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
+            // Custom Metrics to count requests for each endpoint and the method
+            var counter = Metrics.CreateCounter("paymentgateway_merchantcardpayment_counter", "Counts requests to the MerchantCardPayment endpoints", new CounterConfiguration
+            {
+                LabelNames = new[] { "method", "endpoint" }
+            });
+            app.Use((context, next) =>
+            {
+                counter.WithLabels(context.Request.Method, context.Request.Path).Inc();
+                return next();
+            });
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -111,7 +123,10 @@ namespace PaymentGateway.Api
             app.UseMiddleware(typeof(ExceptionMiddleware));
             app.UseMiddleware(typeof(RequestIdLoggingMiddleware));
 
-            app.UseMetricsAllEndpoints();
+            // Use the Prometheus middleware
+            app.UseMetricServer();
+            app.UseHttpMetrics();
+
             app.UseRouting();
             app.UseSwagger();
 

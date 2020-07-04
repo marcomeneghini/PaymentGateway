@@ -47,7 +47,7 @@ namespace PaymentGateway.Processor.Api
         {
             return WebHost.CreateDefaultBuilder(args)
                 .UseKestrel()
-                .UseMetrics()
+                //.UseMetrics()
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseIISIntegration()
                 .ConfigureAppConfiguration((hostingContext, config) =>

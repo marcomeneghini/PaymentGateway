@@ -28,6 +28,14 @@ services:
       - "9090:9090"    
     restart: always
 
+  grafana:   
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./grafana/data/:/var/lib/grafana
+      - ./grafana/provisioning/:/etc/grafana/provisioning/
+      - grafana_data:/grafana
+
   paymentgateway.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development

@@ -25,6 +25,7 @@ using PaymentGateway.Processor.Api.Proxies;
 using PaymentGateway.SharedLib.Encryption;
 using PaymentGateway.SharedLib.EventBroker;
 using PaymentGateway.SharedLib.Messages;
+using Prometheus;
 using RabbitMQ.Client;
 using Serilog;
 
@@ -43,7 +44,7 @@ namespace PaymentGateway.Processor.Api
         public void ConfigureServices(IServiceCollection services)
         {
             ConfigureAuth(services);
-            services.AddMvcCore().AddMetricsCore();
+           
             // Add entity entity framework .
             var sqlConnectionString = Configuration.GetConnectionString("SqlConnection");
             services.AddDbContext<PaymentGatewayProcessorDbContext>(options => options.UseSqlServer(sqlConnectionString).EnableSensitiveDataLogging());
@@ -134,7 +135,10 @@ namespace PaymentGateway.Processor.Api
             }
             loggerfactory.AddSerilog();
 
-            
+
+            // Use the Prometheus middleware
+            app.UseMetricServer();
+            app.UseHttpMetrics();
             app.UseRouting();
             app.UseSwagger();
 
