@@ -62,6 +62,7 @@ namespace PaymentGateway.IntegrationTests
             // loop to get the value of the payment status from the PaymentGateway.Processor
             for (int i = 0; i < 3; i++)
             {
+                await Task.Delay(500);
                 try
                 {
                     // Arrange
@@ -76,7 +77,7 @@ namespace PaymentGateway.IntegrationTests
                         paymentStatus = JsonConvert.DeserializeObject<PaymentStatusModel>(stringResponse);
                         if (paymentStatus.Status== PaymentStatusEnum.Scheduled.ToString())
                         {
-                            await Task.Delay(2000);
+                            await Task.Delay(1000);
                         }
                         else
                         {
@@ -100,8 +101,6 @@ namespace PaymentGateway.IntegrationTests
         {
             try
             {
-
-            
                 var janeDoeCard = Helper.GenerateCard_JaneDoe();
                 // Arrange
                 var request = new
@@ -131,6 +130,7 @@ namespace PaymentGateway.IntegrationTests
                 // loop to get the value of the payment status from the PaymentGateway.Processor
                 for (int i = 0; i < 3; i++)
                 {
+                    await Task.Delay(500);
                     try
                     {
                         // Arrange
@@ -145,7 +145,7 @@ namespace PaymentGateway.IntegrationTests
                             paymentStatus = JsonConvert.DeserializeObject<PaymentStatusModel>(stringResponse);
                             if (paymentStatus.Status == PaymentStatusEnum.Scheduled.ToString())
                             {
-                                await Task.Delay(2000);
+                                await Task.Delay(1000);
                             }
                             else
                             {
@@ -202,6 +202,7 @@ namespace PaymentGateway.IntegrationTests
             // loop to get the value of the payment status from the PaymentGateway.Processor
             for (int i = 0; i < 3; i++)
             {
+                await Task.Delay(500);
                 try
                 {
                     // Arrange
@@ -216,7 +217,7 @@ namespace PaymentGateway.IntegrationTests
                         paymentStatus = JsonConvert.DeserializeObject<PaymentStatusModel>(stringResponse);
                         if (paymentStatus.Status == PaymentStatusEnum.Scheduled.ToString())
                         {
-                            await Task.Delay(2000);
+                            await Task.Delay(1000);
                         }
                         else
                         {

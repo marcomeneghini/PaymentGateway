@@ -16,6 +16,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Moq;
 using PaymentGateway.Processor.Api.Domain;
+using RabbitMQ.Client;
 
 namespace PaymentGateway.IntegrationTests
 {
@@ -88,7 +89,7 @@ namespace PaymentGateway.IntegrationTests
 
             // Add configuration for client
             PgApiClient = PgApiServer.CreateClient();
-            PgApiClient.BaseAddress = new Uri("http://localhost:6001");
+            PgApiClient.BaseAddress = new Uri("http://localhost:33000");
             PgApiClient.DefaultRequestHeaders.Accept.Clear();
             PgApiClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
@@ -121,7 +122,7 @@ namespace PaymentGateway.IntegrationTests
 
             // Add configuration for client
             PgProcApiClient = PgProcApiServer.CreateClient();
-            PgProcApiClient.BaseAddress = new Uri("http://localhost:6002");
+            PgProcApiClient.BaseAddress = new Uri("http://localhost:33001");
             PgProcApiClient.DefaultRequestHeaders.Accept.Clear();
             PgProcApiClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
@@ -172,6 +173,35 @@ namespace PaymentGateway.IntegrationTests
             PgProcApiServer.Dispose();
             PgApiClient.Dispose();
             PgProcApiClient.Dispose();
+            // purge the queue
+            RabbitPurgeQueue();
+        }
+
+        private void RabbitPurgeQueue()
+        {
+            try
+            {
+                ConnectionFactory factory = new ConnectionFactory();
+
+                factory.HostName = "localhost";
+                factory.UserName = "guest";
+                factory.Password = "guest";
+
+                using (var connection = factory.CreateConnection())
+                {
+                    using (var channel = connection.CreateModel())
+                    {
+                        channel.QueuePurge("Processor.Api");
+                    }
+
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+           
         }
     }
 }
