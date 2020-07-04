@@ -47,7 +47,15 @@ namespace PaymentGateway.Processor.Api.Messaging
                 RequestId = decryptedMessage.RequestId,
                 PaymentId = decryptedMessage.PaymentRequestId
             };
-            await paymentStatusRepository.AddPaymentStatus(paymentStatus);
+            try
+            {
+                await paymentStatusRepository.AddPaymentStatus(paymentStatus);
+            }
+            catch (Exception e)
+            {
+                _logger.LogWarning($"Probable duplicated Id: {e.Message}");
+            }
+            
             await _writer.WriteAsync(message, cancellationToken);
             
             _logger.LogInformation($"Producer > published message {message.Id} '{message.TopicName}'");
