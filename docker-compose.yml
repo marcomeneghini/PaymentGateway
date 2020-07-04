@@ -4,6 +4,8 @@ version: '3.4'
 networks:
   inner_net:
     driver: bridge
+  outer_net:
+    driver: bridge
 
 volumes:
     prometheus_data: {}
@@ -29,6 +31,7 @@ services:
       dockerfile: Company.IdentityServer/Dockerfile   
     networks:
       - inner_net
+      - outer_net
 
   bank.payments.api:
     image: ${DOCKER_REGISTRY-}bankpaymentsapi
@@ -51,6 +54,7 @@ services:
       - company.identityserver
     networks:
       - inner_net
+      - outer_net
 
   paymentgateway.processor.api:
     image: ${DOCKER_REGISTRY-}paymentgatewayprocessorapi
@@ -65,6 +69,7 @@ services:
       - company.identityserver
     networks:
       - inner_net
+      - outer_net
 
   client.payments.api:
     image: ${DOCKER_REGISTRY-}clientpaymentsapi
@@ -74,22 +79,22 @@ services:
     depends_on:     
       - company.identityserver
     networks:
-      - inner_net
+      - outer_net
 
-  prometheus:
-    image: prom/prometheus
-    links:
-      - paymentgateway.api:paymentgateway.api
-      - paymentgateway.processor.api:paymentgateway.processor.api
-    depends_on:
-      - paymentgateway.api
-      - paymentgateway.processor.api
-    networks:
-      - inner_net
-
-  grafana:
-    image : grafana/grafana
-    depends_on: 
-      - prometheus  
-    networks:
-      - inner_net
+  #prometheus:
+  #  image: prom/prometheus
+  #  links:
+  #    - paymentgateway.api:paymentgateway.api
+  #    - paymentgateway.processor.api:paymentgateway.processor.api
+  #  depends_on:
+  #    - paymentgateway.api
+  #    - paymentgateway.processor.api
+  #  networks:
+  #    - inner_net
+#
+  #grafana:
+  #  image : grafana/grafana
+  #  depends_on: 
+  #    - prometheus  
+  #  networks:
+  #    - inner_net

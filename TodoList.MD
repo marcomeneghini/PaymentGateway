@@ -135,10 +135,10 @@ to call get the payment status. IT retirns an aggregate set of informations.  OK
 PG_API OK
 PG_PROC OK
 
-### Add Prometheuse container
+### Add Prometheuse container		SKIPPED - laptop dying 
 * add container
 * configure to gather info from services
-### Add Grafana 
+### Add Grafana					 SKIPPED - laptop dying 
 * add container
 * connect to prometheus container
 * visualize dashboard
