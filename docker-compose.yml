@@ -1,5 +1,13 @@
 version: '3.4'
 
+
+networks:
+  default:
+
+volumes:
+    prometheus_data: {}
+    grafana_data: {}
+
 services:
 
   sqlserver:
@@ -9,6 +17,15 @@ services:
   rabbitmq:
     image: rabbitmq:3-management-alpine   
 
+  prometheus:
+    image: prom/prometheus
+    links:
+      - paymentgateway.api:paymentgateway.api
+      - paymentgateway.processor.api:paymentgateway.processor.api
+    depends_on:
+      - paymentgateway.api
+      - paymentgateway.processor.api
+   
   company.identityserver:
     image: ${DOCKER_REGISTRY-}companyidentityserver
     build:
@@ -52,5 +69,3 @@ services:
     depends_on:     
       - company.identityserver
 
-networks:
-  default:
