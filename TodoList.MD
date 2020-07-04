@@ -129,10 +129,13 @@ to call get the payment status. IT retirns an aggregate set of informations.  OK
 ### Add Data Storage
 * PG_API	add DB			OK
 * PG_PROC	add DB			OK
-* PG_PROC	fix tests 
-* BANK		add Db ??		dont think so
+* PG_PROC	fix tests		OK
+
+### Add Application Metric (NewRelic)
+
 
 ## ------final review
+* 
 * Add LogEntry for structured log (in sharedlib)
 * PG_API	- Add LogEntry 
 * PG_PROC	- Add LogEntry
