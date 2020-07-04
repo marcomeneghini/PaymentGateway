@@ -136,8 +136,12 @@ PG_API OK
 PG_PROC OK
 
 ### Add Prometheuse container
-
+* add container
+* configure to gather info from services
 ### Add Grafana 
+* add container
+* connect to prometheus container
+* visualize dashboard
 
 ## ------final review
 * 
