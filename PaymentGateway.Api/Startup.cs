@@ -110,7 +110,6 @@ namespace PaymentGateway.Api
             app.UseMiddleware(typeof(ExceptionMiddleware));
             app.UseMiddleware(typeof(RequestIdLoggingMiddleware));
 
-            app.UseRouting();
 
             app.UseRouting();
             app.UseSwagger();

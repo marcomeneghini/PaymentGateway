@@ -9,6 +9,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -42,6 +43,7 @@ namespace PaymentGateway.Processor.Api
         public void ConfigureServices(IServiceCollection services)
         {
             ConfigureAuth(services);
+            services.AddMvcCore().AddMetricsCore();
             // Add entity entity framework .
             var sqlConnectionString = Configuration.GetConnectionString("SqlConnection");
             services.AddDbContext<PaymentGatewayProcessorDbContext>(options => options.UseSqlServer(sqlConnectionString).EnableSensitiveDataLogging());
