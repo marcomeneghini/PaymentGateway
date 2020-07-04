@@ -11,6 +11,22 @@
 * Added sql server as data storage for  paymentgateway.api(PG) and paymentgateway.processor.api(PGP). Used code-first approach and migrations
 * Added Prometheus Metrics endpoint for PG and PGP
 
+## Company.IdentityServer (CI)
+This service provides authentication and authorization to the PG and PGP services. It supports ClientId grant type,
+this means that a client service can authenticate challenging a ClientId and a Secret for an access token.
+CI has a static initializer that creates  built-in ApiResouces (PG and PGP) with 1 scope: "CreatePaymentScope".
+It provides a Client with simulating an ipothetical "amazon" with "amazonId" and "amazonSecret"
+allowed to access the scope "CreatePaymentScope" (basically allowed to process payments)
+This service has the minimum implementation due to merely demonstrare authentication/authorization to PG and PGP
+
+## Client.Payments.Api (CPA)
+To extend the payment gateway exercice with authentication we needed a client that whant to consume our PG and PGP.
+CPA is a service itself so the flow chosen to authenticate to the CI is the  ClientId flow as CPA is able to store securely 
+a ClientId and a Secret, in this case they are in the configuration.  
+CPA exposes 1 main apy that allow its company to process payments through PG, in the Payments controller it is simulated 
+a merchant card paymetn request towards the PG and the a loop where the payment status is requested to the PGP.
+This service has the minimum implementation due to merely demonstrare authentication/authorization to PG and PGP 
+and how to consume PG and PGP
 
 
 ## Test data

@@ -13,7 +13,7 @@ namespace Company.IdentityServer
             new List<IdentityResource>
             {
                 new IdentityResources.OpenId(),
-                new IdentityResources.Profile() // <-- usefull
+                new IdentityResources.Profile() 
             };
         public static IEnumerable<ApiResource> GetApiResources() =>
             new List<ApiResource> {
