@@ -66,7 +66,7 @@ namespace Client.Payments.Api.Infrastructure
 
       
 
-        public async Task<string> GetAccessToken___()
+        public async Task<string> GetAccessToken_afterConfiguringSSL()
         {
             var identityServerAddress = _configuration["IdentityServer"];
            
@@ -92,9 +92,6 @@ namespace Client.Payments.Api.Infrastructure
                 var c = ex;
                 throw;
             }
-
-
-
         }
 
       
