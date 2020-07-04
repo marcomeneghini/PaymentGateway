@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Serilog;
 using System.IO;
 using System.Linq;
+using App.Metrics.AspNetCore;
 
 namespace PaymentGateway.Api
 {
@@ -45,6 +46,7 @@ namespace PaymentGateway.Api
         {
             return WebHost.CreateDefaultBuilder(args)
                 .UseKestrel()
+                .UseMetrics()
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseIISIntegration()
                 .ConfigureAppConfiguration((hostingContext, config) =>
