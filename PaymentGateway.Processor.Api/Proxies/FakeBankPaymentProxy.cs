@@ -5,6 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using PaymentGateway.Processor.Api.Domain;
+using PaymentGateway.Processor.Api.Domain.Entities;
+using PaymentGateway.Processor.Api.Domain.Exceptions;
 
 namespace PaymentGateway.Processor.Api.Proxies
 {
@@ -12,15 +14,15 @@ namespace PaymentGateway.Processor.Api.Proxies
     {
         private readonly IMapper _mapper;
 
-        private ConcurrentDictionary<string, CardPaymentRequest> requests =
-            new ConcurrentDictionary<string, CardPaymentRequest>();
+        private ConcurrentDictionary<string, CardPayment> requests =
+            new ConcurrentDictionary<string, CardPayment>();
 
         public FakeBankPaymentProxy(IMapper mapper)
         {
             _mapper = mapper;
         }
 
-        public async Task<CardPaymentResponse> CreatePaymentAsync(CardPaymentRequest request)
+        public async Task<PaymentResult> CreatePaymentAsync(CardPayment request)
         {
            
             if (requests.ContainsKey(request.RequestId))
@@ -33,7 +35,7 @@ namespace PaymentGateway.Processor.Api.Proxies
                 if (IsAppleBankAccount(request.MerchantAccountNumber, request.MerchantSortCode) ||
                     IsAmazonBankAccount(request.MerchantAccountNumber, request.MerchantSortCode))
                 {
-                    return new CardPaymentResponse() { RequestId = request.RequestId, TransactionId = Guid.NewGuid().ToString(), TransactionStatus = TransactionStatus.Succeeded.ToString() };
+                    return new PaymentResult() { RequestId = request.RequestId, TransactionId = Guid.NewGuid().ToString(), TransactionStatus = TransactionStatus.Succeeded.ToString() };
                 }
             }
             throw new BankPaymentDetailsException("wrong transaction details");

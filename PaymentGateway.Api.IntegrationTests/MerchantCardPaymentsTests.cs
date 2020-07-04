@@ -13,18 +13,16 @@ using Xunit;
 
 namespace PaymentGateway.Api.IntegrationTests
 {
-    public class MerchantCardPaymentsTests: IClassFixture<TestFixture<Startup>>
+    public class MerchantCardPaymentsTests: IClassFixture<TestFixture<TestStartupNoAuth>>
     {
         private HttpClient Client;
 
-        //private Guid unknownMerchantGuid = new Guid("00092C77-3C0E-447C-ABC5-0AF6CF829A22");
-        //private Guid amazonValidMerchantGuid = new Guid("53D92C77-3C0E-447C-ABC5-0AF6CF829A22");
-        //private Guid appleInValidMerchantGuid = new Guid("11112C77-3C0E-447C-ABC5-0AF6CF821111");
+    
         private Guid unknownMerchantGuid = new Guid("00092C77-3C0E-447C-ABC5-0AF6CF829A22");
         private Guid amazonValidMerchantGuid = InMemoryMerchantRepository.CreateMerchant_Amazon().Id;
         private Guid appleInValidMerchantGuid = InMemoryMerchantRepository.CreateMerchant_InvalidApple().Id;
         private string invalidGuid = "sssss00092C77-3C0E-447C-ABC5-0AF6CF829A22";
-        public MerchantCardPaymentsTests(TestFixture<Startup> fixture)
+        public MerchantCardPaymentsTests(TestFixture<TestStartupNoAuth> fixture)
         {
             Client = fixture.Client;
         }
@@ -40,7 +38,7 @@ namespace PaymentGateway.Api.IntegrationTests
                 {
                     MerchantId = amazonValidMerchantGuid.ToString(),
                     RequestId = Guid.NewGuid().ToString(),
-                    CardNumber = "1234 1234 1234 1234",
+                    CardNumber = "1298 1234 1234 1234",
                     CardHolderName = "John Doe",
                     MonthExpiryDate = 1,
                     YearExpiryDate = 2021,
@@ -98,7 +96,7 @@ namespace PaymentGateway.Api.IntegrationTests
                 {
                     MerchantId = unknownMerchantGuid.ToString(),
                     RequestId = Guid.NewGuid().ToString(),
-                    CardNumber = "1234 1234 1234 1234",
+                    CardNumber = "1298 1234 1234 1234",
                     CardHolderName = "John Doe",
                     MonthExpiryDate = 1,
                     YearExpiryDate = 2021,
@@ -122,6 +120,7 @@ namespace PaymentGateway.Api.IntegrationTests
         [Fact]
         public async Task TestCreatePayment_John_ValidAmazon_Conflict409_Async()
         {
+            string requestId = Guid.NewGuid().ToString();
             // Arrange
             var request = new
             {
@@ -129,8 +128,8 @@ namespace PaymentGateway.Api.IntegrationTests
                 Body = new
                 {
                     MerchantId = amazonValidMerchantGuid.ToString(),
-                    RequestId = "request1",
-                    CardNumber = "1234 1234 1234 1234",
+                    RequestId = requestId,
+                    CardNumber = "1298 1234 1234 1234",
                     CardHolderName = "John Doe",
                     MonthExpiryDate = 1,
                     YearExpiryDate = 2021,
@@ -145,7 +144,7 @@ namespace PaymentGateway.Api.IntegrationTests
                 Body = new
                 {
                     MerchantId = amazonValidMerchantGuid.ToString(),
-                    RequestId = "request1",
+                    RequestId = requestId,
                     CardNumber = "1234 1234 1234 1234",
                     CardHolderName = "John Doe",
                     MonthExpiryDate = 1,
@@ -180,7 +179,7 @@ namespace PaymentGateway.Api.IntegrationTests
                 {
                     MerchantId = invalidGuid,
                     RequestId = "request1",
-                    CardNumber = "1234 1234 1234 1234",
+                    CardNumber = "1298 1234 1234 1234",
                     CardHolderName = "John Doe",
                     MonthExpiryDate = 1,
                     YearExpiryDate = 2021,
@@ -196,7 +195,7 @@ namespace PaymentGateway.Api.IntegrationTests
             var stringvalue = await response.Content.ReadAsStringAsync();
 
             // Assert
-            Assert.Equal(HttpStatusCode.UnprocessableEntity, response.StatusCode);
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
             // try to deserialize
             var errorResponse = JsonConvert.DeserializeObject<ValidationResultModel>(stringvalue);
 

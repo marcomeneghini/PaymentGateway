@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Channels;
 using System.Threading.Tasks;
@@ -8,19 +9,23 @@ using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Logging;
 using Microsoft.OpenApi.Models;
 using PaymentGateway.Processor.Api.Domain;
 using PaymentGateway.Processor.Api.Infrastructure;
 using PaymentGateway.Processor.Api.Messaging;
-using PaymentGateway.Processor.Api.Middlewares;
+using PaymentGateway.Processor.Api.Middleware;
 using PaymentGateway.Processor.Api.Proxies;
 using PaymentGateway.SharedLib.Encryption;
 using PaymentGateway.SharedLib.EventBroker;
 using PaymentGateway.SharedLib.Messages;
+using Prometheus;
 using RabbitMQ.Client;
 using Serilog;
 
@@ -38,8 +43,13 @@ namespace PaymentGateway.Processor.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
+            ConfigureAuth(services);
+           
+            // Add entity entity framework .
+            var sqlConnectionString = Configuration.GetConnectionString("SqlConnection");
+            services.AddDbContext<PaymentGatewayProcessorDbContext>(options => options.UseSqlServer(sqlConnectionString).EnableSensitiveDataLogging());
             services.AddHttpClient();
-            services.AddSingleton<IPaymentStatusRepository, InMemoryPaymentStatusRepository>();
+            services.AddScoped<IPaymentStatusRepository, EfPaymentStatusRepository>();
             services.AddSingleton<IRabbitMQPersistentConnection>(sp =>
             {
                 var logger = sp.GetRequiredService<ILogger<DefaultRabbitMQPersistentConnection>>();
@@ -81,28 +91,26 @@ namespace PaymentGateway.Processor.Api
                         new MediaTypeWithQualityHeaderValue("application/json"));
                 }
             );
+
             var channel = Channel.CreateBounded<EncryptedMessage>(100);
             services.AddSingleton(channel);
 
             services.AddSingleton<IEventBrokerSubscriber, RabbitMQEventBrokerSubscriber>();
             services.AddSingleton<ICipherService, AesCipherService>();
             services.AddSingleton<IChannelProducer>(ctx => {
-                //channel = ctx.GetRequiredService<Channel<EncryptedMessage>>();
                 var logger = ctx.GetRequiredService<ILogger<ChannelProducer>>();
-                var paymentRepository = ctx.GetRequiredService<IPaymentStatusRepository>();
                 var cipherService = ctx.GetRequiredService<ICipherService>();
-                return new ChannelProducer(channel.Writer, paymentRepository, cipherService ,logger);
+                return new ChannelProducer(channel.Writer, cipherService ,logger);
             });
 
             services.AddSingleton<IChannelConsumer>(ctx => {
                 //var innerChannelChannel = ctx.GetRequiredService<Channel<EncryptedMessage>>();
                 var logger = ctx.GetRequiredService<ILogger<ChannelConsumer>>();
-                var paymentRepository = ctx.GetRequiredService<IPaymentStatusRepository>();
                 var bankPaymentProxy = ctx.GetRequiredService<IBankPaymentProxy>();
                 var cipherService = ctx.GetRequiredService<ICipherService>();
                 var mapperService = ctx.GetRequiredService<IMapper>();
 
-                return new ChannelConsumer(channel.Reader, logger, paymentRepository, bankPaymentProxy, cipherService, mapperService);
+                return new ChannelConsumer(channel.Reader, logger, bankPaymentProxy, cipherService, mapperService);
             });
 
             services.AddHostedService<EventBrokerBackgroundWorker>();
@@ -127,8 +135,10 @@ namespace PaymentGateway.Processor.Api
             }
             loggerfactory.AddSerilog();
 
-           
-          
+
+            // Use the Prometheus middleware
+            app.UseMetricServer();
+            app.UseHttpMetrics();
             app.UseRouting();
             app.UseSwagger();
 
@@ -137,11 +147,36 @@ namespace PaymentGateway.Processor.Api
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "PaymentGateway Processor Demo V1");
             });
 
+            app.UseAuthentication();
+            app.UseAuthorization();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapHealthChecks("/health");
                 endpoints.MapDefaultControllerRoute();
             });
+        }
+
+        protected virtual void ConfigureAuth(IServiceCollection services)
+        {
+
+            IdentityModelEventSource.ShowPII = true;
+
+            services.AddAuthentication("Bearer")
+                .AddJwtBearer("Bearer", options =>
+                {
+                    options.BackchannelHttpHandler = new HttpClientHandler()
+                    {
+                        ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true,
+                    };
+                    //var key = new JsonWebKey(File.ReadAllText(@"tempkey.jwk"));
+                    //options.TokenValidationParameters=new TokenValidationParameters()
+                    //{
+                    //    IssuerSigningKey = key
+                    //};
+                    options.Authority = Configuration["Authority"];
+                    options.Audience = "Processor";
+                });
         }
     }
 }

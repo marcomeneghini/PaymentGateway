@@ -67,6 +67,8 @@ namespace PaymentGateway.SharedLib.EventBroker
 
             lock (sync_root)
             {
+                #region Connect to RabbitMQ retrying with Polly
+
                 var policy = RetryPolicy.Handle<SocketException>()
                     .Or<BrokerUnreachableException>()
                     .WaitAndRetry(_retryCount, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)), (ex, time) =>
@@ -74,12 +76,19 @@ namespace PaymentGateway.SharedLib.EventBroker
                         _logger.LogWarning(ex, "RabbitMQ Client could not connect after {TimeOut}s ({ExceptionMessage})", $"{time.TotalSeconds:n1}", ex.Message);
                     }
                 );
-
                 policy.Execute(() =>
                 {
-                    _connection = _connectionFactory
-                          .CreateConnection();
+                    try
+                    {
+                        _connection = _connectionFactory.CreateConnection();
+                    }
+                    catch (Exception e)
+                    {
+                       _logger.LogWarning($"RabbitMQ connection. Error Message:{e.Message}");
+                    }
+                   
                 });
+                #endregion
 
                 if (IsConnected)
                 {
@@ -94,7 +103,6 @@ namespace PaymentGateway.SharedLib.EventBroker
                 else
                 {
                     _logger.LogCritical("FATAL ERROR: RabbitMQ connections could not be created and opened");
-
                     return false;
                 }
             }

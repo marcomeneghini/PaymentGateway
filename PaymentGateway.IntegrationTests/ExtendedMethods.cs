@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using PaymentGateway.Processor.Api.Domain;
+using PaymentGateway.Processor.Api.Domain.Entities;
 
 namespace PaymentGateway.IntegrationTests
 {
     public static class ExtendedMethods
     {
-        public static Card GetCard(this CardPaymentRequest cardPaymentRequest)
+        public static Card GetCard(this CardPayment cardPaymentRequest)
         {
             return new Card()
                 {
@@ -20,7 +20,7 @@ namespace PaymentGateway.IntegrationTests
             };
         }
 
-        public static BankAccount GetBankAccount(this CardPaymentRequest cardPaymentRequest)
+        public static BankAccount GetBankAccount(this CardPayment cardPaymentRequest)
         {
             return new BankAccount()
             {

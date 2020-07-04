@@ -16,10 +16,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Moq;
 using PaymentGateway.Processor.Api.Domain;
+using RabbitMQ.Client;
 
 namespace PaymentGateway.IntegrationTests
 {
-    public class IntegrationMockBankTestFixture<TStartupPgApi, TStartupPgProcApi> : IDisposable
+    public class IntegrationMockBankTestFixture<TStartupPgApiNoAuth, TStartupPgProcApiNoAuth> : IDisposable
     {
 
         public static string GetProjectPath(string projectRelativePath, Assembly startupAssembly)
@@ -69,7 +70,7 @@ namespace PaymentGateway.IntegrationTests
 
         private void InitializePaymentGatewayApiTestServer(string relativeTargetProjectParentDir)
         {
-            var startupAssembly = typeof(TStartupPgApi).GetTypeInfo().Assembly;
+            var startupAssembly = typeof(TStartupPgApiNoAuth).GetTypeInfo().Assembly;
             var contentRoot = GetProjectPath(relativeTargetProjectParentDir, startupAssembly);
 
             var configurationBuilder = new ConfigurationBuilder()
@@ -81,14 +82,14 @@ namespace PaymentGateway.IntegrationTests
                 .ConfigureServices(InitializeServicesPaymentGatewayApi)
                 .UseConfiguration(configurationBuilder.Build())
                 .UseEnvironment("Development")
-                .UseStartup(typeof(TStartupPgApi));
+                .UseStartup(typeof(TStartupPgApiNoAuth));
 
             // Create instance of test server
             PgApiServer = new TestServer(webHostBuilder);
 
             // Add configuration for client
             PgApiClient = PgApiServer.CreateClient();
-            PgApiClient.BaseAddress = new Uri("http://localhost:6001");
+            PgApiClient.BaseAddress = new Uri("http://localhost:33000");
             PgApiClient.DefaultRequestHeaders.Accept.Clear();
             PgApiClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
@@ -98,7 +99,7 @@ namespace PaymentGateway.IntegrationTests
             //var fakeSucceededCardPaymentResponse = Helper.CreateFake_Succeeded_CardPaymentResponse();
             var IBankPaymentProxy = Helper.CreateBankPaymentProxyMock();
            
-            var startupAssembly = typeof(TStartupPgProcApi).GetTypeInfo().Assembly;
+            var startupAssembly = typeof(TStartupPgProcApiNoAuth).GetTypeInfo().Assembly;
             var contentRoot = GetProjectPath(relativeTargetProjectParentDir, startupAssembly);
 
             var configurationBuilder = new ConfigurationBuilder()
@@ -114,14 +115,14 @@ namespace PaymentGateway.IntegrationTests
                 })
                 .UseConfiguration(configurationBuilder.Build())
                 .UseEnvironment("Development")
-                .UseStartup(typeof(TStartupPgProcApi));
+                .UseStartup(typeof(TStartupPgProcApiNoAuth));
 
             // Create instance of test server
             PgProcApiServer = new TestServer(webHostBuilder);
 
             // Add configuration for client
             PgProcApiClient = PgProcApiServer.CreateClient();
-            PgProcApiClient.BaseAddress = new Uri("http://localhost:6002");
+            PgProcApiClient.BaseAddress = new Uri("http://localhost:33001");
             PgProcApiClient.DefaultRequestHeaders.Accept.Clear();
             PgProcApiClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
@@ -129,7 +130,7 @@ namespace PaymentGateway.IntegrationTests
         protected virtual void InitializeServicesPaymentGatewayApi(IServiceCollection services)
         {
 
-            var startupAssembly = typeof(TStartupPgApi).GetTypeInfo().Assembly;
+            var startupAssembly = typeof(TStartupPgApiNoAuth).GetTypeInfo().Assembly;
 
             var manager = new ApplicationPartManager
             {
@@ -149,7 +150,7 @@ namespace PaymentGateway.IntegrationTests
         protected virtual void InitializeServicesPaymentProcessorApi(IServiceCollection services)
         {
 
-            var startupAssembly = typeof(TStartupPgProcApi).GetTypeInfo().Assembly;
+            var startupAssembly = typeof(TStartupPgProcApiNoAuth).GetTypeInfo().Assembly;
 
             var manager = new ApplicationPartManager
             {
@@ -172,6 +173,35 @@ namespace PaymentGateway.IntegrationTests
             PgProcApiServer.Dispose();
             PgApiClient.Dispose();
             PgProcApiClient.Dispose();
+            // purge the queue
+            RabbitPurgeQueue();
+        }
+
+        private void RabbitPurgeQueue()
+        {
+            try
+            {
+                ConnectionFactory factory = new ConnectionFactory();
+
+                factory.HostName = "localhost";
+                factory.UserName = "guest";
+                factory.Password = "guest";
+
+                using (var connection = factory.CreateConnection())
+                {
+                    using (var channel = connection.CreateModel())
+                    {
+                        channel.QueuePurge("Processor.Api");
+                    }
+
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+           
         }
     }
 }

@@ -1,24 +1,31 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using PaymentGateway.Api.Attributes;
 using PaymentGateway.Api.Domain;
 using PaymentGateway.Api.Infrastructure;
-using PaymentGateway.Api.Middlewares;
+using PaymentGateway.Api.Middleware;
 using PaymentGateway.Api.Services;
 using PaymentGateway.SharedLib.Encryption;
 using PaymentGateway.SharedLib.EventBroker;
+using Prometheus;
 using RabbitMQ.Client;
 using Serilog;
 using Swashbuckle;
@@ -36,12 +43,18 @@ namespace PaymentGateway.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
-
+            ConfigureAuth(services);
             
-            services.AddSingleton<IMerchantRepository, InMemoryMerchantRepository>();
-            services.AddSingleton<IPaymentRepository, InMemoryPaymentRepository>();
+            //services.AddMvcCore().AddMetricsCore();
+            // Add entity entity framework .
+            var sqlConnectionString = Configuration.GetConnectionString("SqlConnection");
+            services.AddDbContext<PaymentGatewayDbContext>(options => options.UseSqlServer(sqlConnectionString).EnableSensitiveDataLogging());
+            services.AddScoped<IMerchantRepository, EfMerchantRepository>();
+            services.AddScoped<IPaymentRepository, EfPaymentRepository>();
+
             services.AddScoped<IPaymentService, PaymentService>();
             services.AddScoped<ICipherService, AesCipherService>();
+            services.AddTransient<IErrorMapper,ErrorMapper>();
             services.AddControllers();
 
 
@@ -87,17 +100,32 @@ namespace PaymentGateway.Api
         }
 
        
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerfactory)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
+            // Custom Metrics to count requests for each endpoint and the method
+            var counter = Metrics.CreateCounter("paymentgateway_merchantcardpayment_counter", "Counts requests to the MerchantCardPayment endpoints", new CounterConfiguration
+            {
+                LabelNames = new[] { "method", "endpoint" }
+            });
+            app.Use((context, next) =>
+            {
+                counter.WithLabels(context.Request.Method, context.Request.Path).Inc();
+                return next();
+            });
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
 
-            loggerfactory.AddSerilog();
+            loggerFactory.AddSerilog();
 
             app.UseMiddleware(typeof(ExceptionMiddleware));
             app.UseMiddleware(typeof(RequestIdLoggingMiddleware));
+
+            // Use the Prometheus middleware
+            app.UseMetricServer();
+            app.UseHttpMetrics();
 
             app.UseRouting();
             app.UseSwagger();
@@ -106,6 +134,9 @@ namespace PaymentGateway.Api
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "PaymentGateway Demo V1");
             });
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
@@ -133,34 +164,31 @@ namespace PaymentGateway.Api
                 });
         }
 
-        //private void RegisterEventBus(IServiceCollection services)
-        //{
-        //    var subscriptionClientName = Configuration["SubscriptionClientName"];
+        /// <summary>
+        /// this will be overridden during Integration tests
+        /// </summary>
+        /// <param name="services"></param>
+        protected virtual void ConfigureAuth(IServiceCollection services)
+        {
 
+            IdentityModelEventSource.ShowPII = true;
 
-        //    services.AddSingleton<IEventBus, EventBusRabbitMQ>(sp =>
-        //    {
-        //        var rabbitMQPersistentConnection = sp.GetRequiredService<IRabbitMQPersistentConnection>();
-        //        var iLifetimeScope = sp.GetRequiredService<ILifetimeScope>();
-        //        var logger = sp.GetRequiredService<ILogger<EventBusRabbitMQ>>();
-        //        var eventBusSubcriptionsManager = sp.GetRequiredService<IEventBusSubscriptionsManager>();
-
-        //        var retryCount = 5;
-        //        if (!string.IsNullOrEmpty(Configuration["EventBusRetryCount"]))
-        //        {
-        //            retryCount = int.Parse(Configuration["EventBusRetryCount"]);
-        //        }
-
-        //        return new EventBusRabbitMQ(rabbitMQPersistentConnection, logger, iLifetimeScope, eventBusSubcriptionsManager, subscriptionClientName, retryCount);
-        //    });
-
-
-        //    services.AddSingleton<IEventBusSubscriptionsManager, InMemoryEventBusSubscriptionsManager>();
-
-        //    services.AddTransient<ProductPriceChangedIntegrationEventHandler>();
-        //    services.AddTransient<OrderStartedIntegrationEventHandler>();
-        //}
-
+            services.AddAuthentication("Bearer")
+                .AddJwtBearer("Bearer", options =>
+                {
+                    options.BackchannelHttpHandler = new HttpClientHandler()
+                    {
+                        ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true,
+                    };
+                    //var key = new JsonWebKey(File.ReadAllText(@"tempkey.jwk"));
+                    //options.TokenValidationParameters=new TokenValidationParameters()
+                    //{
+                    //    IssuerSigningKey = key
+                    //};
+                    options.Authority = Configuration["Authority"];
+                    options.Audience = "PaymentGateway";
+                });
+        }
 
     }
 }

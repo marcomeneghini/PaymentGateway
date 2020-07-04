@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using PaymentGateway.Api.Domain.Entities;
 
 namespace PaymentGateway.Api.Domain.Exceptions
 {

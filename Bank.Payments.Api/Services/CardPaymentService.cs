@@ -42,9 +42,10 @@ namespace Bank.Payments.Api.Services
             
             try
             {
-                // TODO:perform the transaction
+                // here the bank performs the transaction
                 currentPaymentStatus.TransactionId = Guid.NewGuid().ToString();
                 // transaction ok
+
                 currentPaymentStatus.Status = PaymentStatusEnum.Completed;
                 _paymentRepository.UpdatePaymentStatus(currentPaymentStatus);
             }

@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using PaymentGateway.Processor.Api.Domain.Entities;
 
 namespace PaymentGateway.Processor.Api.Domain
 {
     public interface IBankPaymentProxy
     {
-        Task<CardPaymentResponse> CreatePaymentAsync(CardPaymentRequest request);
+        Task<PaymentResult> CreatePaymentAsync(CardPayment request);
     }
 }

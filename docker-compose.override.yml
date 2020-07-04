@@ -1,10 +1,41 @@
 version: '3.4'
 
 services:
+  sqlserver:
+    environment:
+      - SA_PASSWORD=CataCl1sma!
+      - ACCEPT_EULA=Y
+    ports:
+      - "11433:1433"   
+    volumes:  
+      - ./data/mssql:/var/opt/mssql3 
+
   rabbitmq:
     ports:
       - "15672:15672"
       - "5672:5672" 
+
+#  prometheus: 
+#    volumes:
+#      - ./prometheus/:/etc/prometheus/
+#      - prometheus_data:/prometheus
+#    command:
+#      - '--config.file=/etc/prometheus/prometheus.yml'
+#      - '--storage.tsdb.path=/prometheus'
+#      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+#      - '--web.console.templates=/usr/share/prometheus/consoles'
+#    ports:
+#      - "9090:9090"    
+#    restart: always
+
+#  grafana:   
+#    ports:
+#      - "3000:3000"
+#    volumes:
+#      - ./grafana/data/:/var/lib/grafana
+#      - ./grafana/provisioning/:/etc/grafana/provisioning/
+#      - grafana_data:/grafana
+
   paymentgateway.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
@@ -12,6 +43,8 @@ services:
       - EventBrokerConnection=rabbitmq
       - EventBrokerUserName=guest
       - EventBrokerPassword=guest
+      - Authority=https://company.identityserver/
+      - ConnectionStrings__SqlConnection=Server=mysqlserver;Database=PaymentGateway.Api;User Id=sa;Password=CataCl1sma!
     ports:
       - "6000:80"
       - "6001:443"
@@ -26,7 +59,9 @@ services:
       - EventBrokerConnection=rabbitmq
       - EventBrokerUserName=guest
       - EventBrokerPassword=guest
-      - BankPaymentsAddress=http://bank.payments.api
+      - BankPaymentsAddress=http://bank.payments.api/
+      - Authority=https://company.identityserver/
+      - ConnectionStrings__SqlConnection=Server=mysqlserver;Database=PaymentGateway.Processor.Api;User Id=sa;Password=CataCl1sma!
     ports:
       - "7000:80"
       - "7001:443"
@@ -44,3 +79,32 @@ services:
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+
+  client.payments.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - PaymentGatewayAddress=http://paymentgateway.api/
+      - PaymentGatewayProcessorAddress=http://paymentgateway.processor.api/
+      - MerchantId=53D92C77-3C0E-447C-ABC5-0AF6CF829A22
+      - ClientId=amazonId
+      - ClientSecret=amazonSecret
+      - IdentityServer=https://company.identityserver/
+    ports:
+      - "8000:80"
+      - "8001:443"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+
+  company.identityserver:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+    ports:
+      - "9000:80"
+      - "9001:443"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+
