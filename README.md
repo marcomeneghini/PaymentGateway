@@ -43,6 +43,10 @@ error present in the CI  has been used.
 A sql server container has been added to the orchestrator to allow data to be persisted. The service uses EF Core with 
 code first approach to save Merchants and PaymentsStatuses. A seed migration has been added to have some built in merchants
 for testing purposes.
+### Prometheus Metrics
+An endpoint that exposes Prometheus compliant metrics has been added at
+* https://localhost:6001/metrics
+when the container is running
 
 ## PaymentGateway.Processor.Api (PGP)
 In the startup has been creates a virtual method that configures the authentication with the bearer token(AddJwtBearer). 
@@ -51,6 +55,10 @@ error present in the CI  has been used.
 ### Data Storage
 A sql server container has been added to the orchestrator to allow data to be persisted. The service uses EF Core with 
 code first approach to save PaymentsStatuses. 
+### Prometheus Metrics
+An endpoint that exposes Prometheus compliant metrics has been added at
+* https://localhost:7001/metrics
+when the container is running
 
 ## Integration Tests
 As authentication has been introduces with this release, the pre-existing tests now use the TestStartupNoAuth:Startup class 
