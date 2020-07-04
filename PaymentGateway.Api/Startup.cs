@@ -43,6 +43,7 @@ namespace PaymentGateway.Api
         public void ConfigureServices(IServiceCollection services)
         {
             ConfigureAuth(services);
+            
             services.AddMvcCore().AddMetricsCore();
             // Add entity entity framework .
             var sqlConnectionString = Configuration.GetConnectionString("SqlConnection");
@@ -110,7 +111,7 @@ namespace PaymentGateway.Api
             app.UseMiddleware(typeof(ExceptionMiddleware));
             app.UseMiddleware(typeof(RequestIdLoggingMiddleware));
 
-
+            app.UseMetricsAllEndpoints();
             app.UseRouting();
             app.UseSwagger();
 

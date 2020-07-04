@@ -1,5 +1,13 @@
 version: '3.4'
 
+
+networks:
+  default:
+
+volumes:
+    prometheus_data: {}
+    grafana_data: {}
+
 services:
 
   sqlserver:
@@ -40,8 +48,8 @@ services:
     links:
       - "sqlserver:mysqlserver"
     depends_on:     
-      - rabbitmq
       - sqlserver
+      - rabbitmq      
       - company.identityserver
       
   client.payments.api:
@@ -51,6 +59,13 @@ services:
       dockerfile: Client.Payments.Api/Dockerfile   
     depends_on:     
       - company.identityserver
-
-networks:
-  default:
+      
+  prometheus:
+    image: prom/prometheus
+    links:
+      - paymentgateway.api:paymentgateway.api
+      - paymentgateway.processor.api:paymentgateway.processor.api
+    depends_on:
+      - paymentgateway.api
+      - paymentgateway.processor.api
+   
