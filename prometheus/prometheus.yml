@@ -31,36 +31,20 @@ scrape_configs:
   - job_name: 'prometheus'
 
     # Override the global default and scrape targets from this job every 5 seconds.
-    scrape_interval: 5s
+    scrape_interval: 10s
 
     static_configs:
          - targets: ['localhost:9090']
 
 
-  - job_name: 'paymentgateway.api'
-
-    # Override the global default and scrape targets from this job every 5 seconds.
-    scrape_interval: 5s
-
-  #  dns_sd_configs:
-  #  - names:
-  #    - 'tasks.paymentgateway.api'
-  #    type: 'A'
-  #    port: 6001
-
+  - job_name: 'paymentgateway.api'   
+    scrape_interval: 10s
+    scheme: https
     static_configs:
-          - targets: ['https://localhost:6001']
+     - targets: ['localhost:6001']
 
-  - job_name: 'paymentgateway.processor.api'
-
-    # Override the global default and scrape targets from this job every 5 seconds.
-    scrape_interval: 5s
-
-   # dns_sd_configs:
-    #- names:
-     # - 'tasks.paymentgateway.processor.api'
-     # type: 'A'
-      #port: 7001
-    
+  - job_name: 'paymentgateway.processor.api'  
+    scrape_interval: 10s     
+    scheme: https
     static_configs:
-          - targets: ['https://localhost:7001']
+     - targets: ['localhost:7001']

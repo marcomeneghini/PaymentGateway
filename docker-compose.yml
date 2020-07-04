@@ -17,15 +17,6 @@ services:
   rabbitmq:
     image: rabbitmq:3-management-alpine   
 
-  prometheus:
-    image: prom/prometheus
-    links:
-      - paymentgateway.api:paymentgateway.api
-      - paymentgateway.processor.api:paymentgateway.processor.api
-    depends_on:
-      - paymentgateway.api
-      - paymentgateway.processor.api
-   
   company.identityserver:
     image: ${DOCKER_REGISTRY-}companyidentityserver
     build:
@@ -57,8 +48,8 @@ services:
     links:
       - "sqlserver:mysqlserver"
     depends_on:     
-      - rabbitmq
       - sqlserver
+      - rabbitmq      
       - company.identityserver
       
   client.payments.api:
@@ -68,4 +59,13 @@ services:
       dockerfile: Client.Payments.Api/Dockerfile   
     depends_on:     
       - company.identityserver
-
+      
+  prometheus:
+    image: prom/prometheus
+    links:
+      - paymentgateway.api:paymentgateway.api
+      - paymentgateway.processor.api:paymentgateway.processor.api
+    depends_on:
+      - paymentgateway.api
+      - paymentgateway.processor.api
+   
