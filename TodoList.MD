@@ -132,7 +132,12 @@ to call get the payment status. IT retirns an aggregate set of informations.  OK
 * PG_PROC	fix tests		OK
 
 ### Add Application Metric 
+PG_API OK
+PG_PROC OK
 
+### Add Prometheuse container
+
+### Add Grafana 
 
 ## ------final review
 * 
