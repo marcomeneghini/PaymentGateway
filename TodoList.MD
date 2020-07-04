@@ -131,7 +131,7 @@ to call get the payment status. IT retirns an aggregate set of informations.  OK
 * PG_PROC	add DB			OK
 * PG_PROC	fix tests		OK
 
-### Add Application Metric (NewRelic)
+### Add Application Metric 
 
 
 ## ------final review
