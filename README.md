@@ -7,9 +7,10 @@
 * added complete model  validation on PG  (cardnumber,cardholdername, month, year, cvv)
 * Improved folder structure (Domain/Entities etc.)
 ### New features
-* Added a client api service that simulates being "amazon" merchant and conduming the payment gateway. 
+* Added a client api service that simulates being "amazon" merchant and consuming the payment gateway. 
 * Added authentication/authorization using Identity Server 4 with ClientId GrantType. 
-* Added sql server as data storage for  paymentgateway.api(PG) and paymentgateway.processor.api(PGP). Used code-first approach and migrations
+* Added sql server as data storage for  paymentgateway.api(PG) and paymentgateway.processor.api(PGP). 
+Used code-first approach and migrations
 * Added Prometheus Metrics endpoint for PG and PGP
 
 ## Company.IdentityServer (CI)
@@ -58,7 +59,45 @@ to initialize the TestServer. This allows test to bypas security.
 The TestStartupNoAuth has been created in the correspondent service to be tested as it is used to get the 
 service directory itself. It also allow the debugger to step into the service code.
 
-## Test data
+## Test data CI
+it is possible to test the whole solution running it with VS2019 and docker-compose configuration and sent to the CI a 
+card payment request.
+```json
+{       
+    "RequestId":"{always-different-every-call}",
+    "CardNumber":"1298 2222 2222 2222",
+    "CardHolderName":"Jane Doe",
+    "MonthExpiryDate":2,
+    "YearExpiryDate":2022,
+    "Currency":"GBP",
+    "CVV":"222",
+    "Amount":10
+}
+```
+the available cards detail for testin purpose are:
+* John Doe
+```json
+{
+    "CardNumber":"1298 1111 1111 1111",
+    "CardHolderName":"John Doe",
+    "MonthExpiryDate":1,
+    "YearExpiryDate":1,
+    "CVV":"111"
+}
+```
+* Jane Doe 
+```json
+{
+    "CardNumber":"1298 2222 2222 2222",
+    "CardHolderName":"Jane Doe",
+    "MonthExpiryDate":2,
+    "YearExpiryDate":2, 
+    "CVV":"222"
+}
+Every different card detail will be declined from teh platform
+
+
+## Test data PG and PGP (not authenticated version)
 at the moment the system allows the client to request card paymente between Card and Merchant. Valid card details are:
 * John Doe
 ```json
