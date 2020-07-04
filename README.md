@@ -1,17 +1,24 @@
 # PaymentGateway
+## Beta 2 version
+### Bug fixed from previous version
+* on validation exception now return 400 BadRequest instead of 422 Unprocessable Entity
+* removed pitfall  "exception as flow control" in  paymentgateway.api(PG) and paymentgateway.processor.api(PGP)
+* improved separation on concerns
+* added complete model  validation on PG  (cardnumber,cardholdername, month, year, cvv)
+### New features
+* Added a client api service that simulates being "amazon" merchant and conduming the payment gateway. 
+* Added authentication/authorization using Identity Server 4 with ClientId GrantType. 
+* Added sql server as data storage for  paymentgateway.api(PG) and paymentgateway.processor.api(PGP). Used code-first approach and migrations
+* Added Prometheus Metrics endpoint for PG and PGP
 
-Next Steps:
-* Database support for PaymentGateway.Api and PaymentGateway.Processor.Api
-* BFF(Backend For FrontEnd) gateway to give the client a single entry point
-* IdentiServer - Identity server 4, Client Credential Flow (the client will keep the Secret an the ClientId)
-* NotificationProcessor - A service that notify asyncronously the api client reding from a NEW QUEUE in Rabbit MQ (PaymentsToNotify) populated by the PaymentGateway.Processor background worker. This service MUST access data about the merchant endpoint URI
+
 
 ## Test data
 at the moment the system allows the client to request card paymente between Card and Merchant. Valid card details are:
 * John Doe
 ```json
 {
-    "CardNumber":"1111 1111 1111 1111",
+    "CardNumber":"1298 1111 1111 1111",
     "CardHolderName":"John Doe",
     "MonthExpiryDate":1,
     "YearExpiryDate":1,
@@ -23,7 +30,7 @@ at the moment the system allows the client to request card paymente between Card
 * Jane Doe 
 ```json
 {
-    "CardNumber":"2222 2222 2222 2222",
+    "CardNumber":"1298 2222 2222 2222",
     "CardHolderName":"Jane Doe",
     "MonthExpiryDate":2,
     "YearExpiryDate":2, 
@@ -42,7 +49,7 @@ with this body:
 {
     "MerchantId":"53D92C77-3C0E-447C-ABC5-0AF6CF829A22",
     "RequestId":"differenteverycall",
-    "CardNumber":"1111 1111 1111 1111",
+    "CardNumber":"1298 1111 1111 1111",
     "CardHolderName":"John Doe",
     "MonthExpiryDate":1,
     "YearExpiryDate":1,
@@ -59,7 +66,7 @@ with the Apple's one or change the card details with the Jane's ones. You will r
     "paymentRequestId": "908a22f4-70cc-4f5b-972b-dd265dd0c8f5"
 }
 ```
-this emasn the payment has been processed correctly and the reference to retrieve the status is paymentRequestId 
+this means the payment has been processed correctly and the reference to retrieve the status is paymentRequestId 
 ### Get the result
 To retrieve the result of the transaction (it will be processed asyncronously), with Postaman in anoter tab perform a GET to the following url:
 
