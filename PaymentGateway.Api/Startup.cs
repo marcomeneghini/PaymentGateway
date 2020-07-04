@@ -43,8 +43,6 @@ namespace PaymentGateway.Api
         {
             ConfigureAuth(services);
 
-
-          
             // Add entity entity framework .
             var sqlConnectionString = Configuration.GetConnectionString("SqlConnection");
             services.AddDbContext<PaymentGatewayDbContext>(options => options.UseSqlServer(sqlConnectionString).EnableSensitiveDataLogging());

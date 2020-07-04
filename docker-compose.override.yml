@@ -38,6 +38,7 @@ services:
       - EventBrokerPassword=guest
       - BankPaymentsAddress=http://bank.payments.api/
       - Authority=https://company.identityserver/
+      - ConnectionStrings__SqlConnection=Server=mysqlserver;Database=PaymentGateway.Processor.Api;User Id=sa;Password=CataCl1sma!
     ports:
       - "7000:80"
       - "7001:443"

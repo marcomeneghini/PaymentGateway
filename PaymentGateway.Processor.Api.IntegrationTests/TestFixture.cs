@@ -16,6 +16,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Moq;
 using PaymentGateway.Processor.Api.Domain;
 using PaymentGateway.Processor.Api.Domain.Entities;
+using PaymentGateway.Processor.Api.Infrastructure;
 
 namespace PaymentGateway.Processor.Api.IntegrationTests
 {
@@ -99,6 +100,8 @@ namespace PaymentGateway.Processor.Api.IntegrationTests
                 .ConfigureTestServices(services => {
                     services.RemoveAll<IBankPaymentProxy>();
                     services.TryAddTransient(sp => mockBankPaymentProxy);
+                    services.RemoveAll<IPaymentStatusRepository>();
+                    services.TryAddScoped<IPaymentStatusRepository,InMemoryPaymentStatusRepository>();
                 })
                 .UseConfiguration(configurationBuilder.Build())
                 .UseEnvironment("Development")

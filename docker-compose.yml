@@ -37,8 +37,12 @@ services:
     build:
       context: .
       dockerfile: PaymentGateway.Processor.Api/Dockerfile   
+    links:
+      - "sqlserver:mysqlserver"
     depends_on:     
       - rabbitmq
+      - sqlserver
+      - company.identityserver
       
   client.payments.api:
     image: ${DOCKER_REGISTRY-}clientpaymentsapi

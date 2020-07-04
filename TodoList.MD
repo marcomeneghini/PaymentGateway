@@ -127,9 +127,10 @@ to call get the payment status. IT retirns an aggregate set of informations.  OK
 * add PR_PROC as resource	OK
 * fix tests					OK
 ### Add Data Storage
-* PG_API	add DB
-* PG_PROC	add DB
-* BANK		add Db
+* PG_API	add DB			OK
+* PG_PROC	add DB			OK
+* PG_PROC	fix tests 
+* BANK		add Db ??		dont think so
 
 ## ------final review
 * Add LogEntry for structured log (in sharedlib)

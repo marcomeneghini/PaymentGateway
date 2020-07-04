@@ -120,6 +120,7 @@ namespace PaymentGateway.Api.IntegrationTests
         [Fact]
         public async Task TestCreatePayment_John_ValidAmazon_Conflict409_Async()
         {
+            string requestId = Guid.NewGuid().ToString();
             // Arrange
             var request = new
             {
@@ -127,7 +128,7 @@ namespace PaymentGateway.Api.IntegrationTests
                 Body = new
                 {
                     MerchantId = amazonValidMerchantGuid.ToString(),
-                    RequestId = "request1",
+                    RequestId = requestId,
                     CardNumber = "1298 1234 1234 1234",
                     CardHolderName = "John Doe",
                     MonthExpiryDate = 1,
@@ -143,7 +144,7 @@ namespace PaymentGateway.Api.IntegrationTests
                 Body = new
                 {
                     MerchantId = amazonValidMerchantGuid.ToString(),
-                    RequestId = "request1",
+                    RequestId = requestId,
                     CardNumber = "1234 1234 1234 1234",
                     CardHolderName = "John Doe",
                     MonthExpiryDate = 1,

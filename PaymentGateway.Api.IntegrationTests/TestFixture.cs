@@ -11,9 +11,12 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.ViewComponents;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Moq;
+using PaymentGateway.SharedLib.EventBroker;
 
 namespace PaymentGateway.Api.IntegrationTests
 {
@@ -80,6 +83,8 @@ namespace PaymentGateway.Api.IntegrationTests
 
         protected TestFixture(string relativeTargetProjectParentDir)
         {
+            // must inject mocj IEventBrokerPublisher
+            var mockEventBrokerPublisher = new Mock<IEventBrokerPublisher>();
             //var startupAssembly = typeof(TStartupNoAuth).BaseType.GetTypeInfo().Assembly;
             var startupAssembly = typeof(TStartupNoAuth).GetTypeInfo().Assembly;
             var contentRoot = GetProjectPath(relativeTargetProjectParentDir, startupAssembly);
@@ -91,6 +96,10 @@ namespace PaymentGateway.Api.IntegrationTests
             var webHostBuilder = new WebHostBuilder()
                 .UseContentRoot(contentRoot)
                 .ConfigureServices(InitializeServices)
+                .ConfigureTestServices(services => {
+                    services.RemoveAll<IEventBrokerPublisher>();
+                    services.TryAddSingleton(sp=> mockEventBrokerPublisher.Object);
+                })
                 .UseConfiguration(configurationBuilder.Build())
                 .UseEnvironment("Development")
                 .UseStartup(typeof(TStartupNoAuth));
