@@ -81,16 +81,16 @@ services:
     networks:
       - outer_net
 
-  #prometheus:
-  #  image: prom/prometheus
-  #  links:
-  #    - paymentgateway.api:paymentgateway.api
-  #    - paymentgateway.processor.api:paymentgateway.processor.api
-  #  depends_on:
-  #    - paymentgateway.api
-  #    - paymentgateway.processor.api
-  #  networks:
-  #    - inner_net
+  prometheus:
+    image: prom/prometheus
+    links:
+      - paymentgateway.api:paymentgateway.api
+      - paymentgateway.processor.api:paymentgateway.processor.api
+    depends_on:
+      - paymentgateway.api
+      - paymentgateway.processor.api
+    networks:
+      - inner_net
 #
   #grafana:
   #  image : grafana/grafana

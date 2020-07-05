@@ -45,8 +45,6 @@ namespace PaymentGateway.Api
         {
             ConfigureAuth(services);
             
-            //services.AddMvcCore().AddMetricsCore();
-            // Add entity entity framework .
             var sqlConnectionString = Configuration.GetConnectionString("SqlConnection");
             services.AddDbContext<PaymentGatewayDbContext>(options => options.UseSqlServer(sqlConnectionString).EnableSensitiveDataLogging());
             services.AddScoped<IMerchantRepository, EfMerchantRepository>();
@@ -173,18 +171,17 @@ namespace PaymentGateway.Api
 
             IdentityModelEventSource.ShowPII = true;
 
-            services.AddAuthentication("Bearer")
-                .AddJwtBearer("Bearer", options =>
+            services.AddAuthentication(cfg =>
+                {
+                    cfg.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    cfg.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer( options =>
                 {
                     options.BackchannelHttpHandler = new HttpClientHandler()
                     {
                         ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true,
                     };
-                    //var key = new JsonWebKey(File.ReadAllText(@"tempkey.jwk"));
-                    //options.TokenValidationParameters=new TokenValidationParameters()
-                    //{
-                    //    IssuerSigningKey = key
-                    //};
                     options.Authority = Configuration["Authority"];
                     options.Audience = "PaymentGateway";
                 });

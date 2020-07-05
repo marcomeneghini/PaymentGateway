@@ -65,9 +65,7 @@ namespace PaymentGateway.SharedLib.EventBroker
 
             _channel.QueueBind(_queue.QueueName, exchangeName, routingKey, null);
 
-           
-
-            //TODO: VERIFY this code
+            
             _channel.CallbackException += (sender, ea) =>
             {
                 _logger.LogWarning($"RabbitMQ channel/model exception: {ea.Exception}");

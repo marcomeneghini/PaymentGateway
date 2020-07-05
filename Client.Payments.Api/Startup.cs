@@ -11,6 +11,7 @@ using Client.Payments.Api.Infrastructure;
 using Client.Payments.Api.Infrastructure.PaymentGateway;
 using Client.Payments.Api.Infrastructure.PaymentGatewayProcessor;
 using Client.Payments.Api.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -20,6 +21,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
 
@@ -39,44 +41,31 @@ namespace Client.Payments.Api
         {
 
             
-            services.AddAuthentication("Bearer")
-                .AddJwtBearer("Bearer", options =>
+            services.AddAuthentication(cfg =>
                 {
-                    options.BackchannelHttpHandler = new HttpClientHandler()
-                    {
-                        ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true,
-                    };
+                    cfg.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    cfg.DefaultChallengeScheme    = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer( options =>
+                {
+
                     options.Authority =  Configuration["IdentityServer"];
                     options.Audience = "amazonId";
-                    //config.RequireHttpsMetadata = false;
+                   
                 });
-            services.AddHttpClient();
+            // create a named HttpClient that bypasses that allows untrusted certificates
+            services.AddHttpClient("HttpClientWithSSLUntrusted")
+                .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+            {
+                ClientCertificateOptions = ClientCertificateOption.Manual,
+                ServerCertificateCustomValidationCallback =
+                    (httpRequestMessage, cert, cetChain, policyErrors) => true
+            });
+          
             services.AddTransient<ITokenProvider, TokenProvider>();
-
             services.AddTransient<IPaymentGatewayProcessorProxy, PaymentGatewayProcessorProxy>();
-            //client =>
-            //    {
-            //        var paymentGatewayProcessorAddress = Configuration["PaymentGatewayProcessorAddress"];
-            //        client.BaseAddress = new Uri(paymentGatewayProcessorAddress);
-
-            //        client.DefaultRequestHeaders.Accept.Clear();
-
-            //        client.DefaultRequestHeaders.Accept.Add(
-            //            new MediaTypeWithQualityHeaderValue("application/json"));
-            //    }
-            //);
             services.AddTransient<IPaymentGatewayProxy,PaymentGatewayProxy>();
-            //client =>
-            //    {
-            //        var paymentGatewayAddress = Configuration["PaymentGatewayAddress"];
-            //        client.BaseAddress = new Uri(paymentGatewayAddress);
-
-            //        client.DefaultRequestHeaders.Accept.Clear();
-
-            //        client.DefaultRequestHeaders.Accept.Add(
-            //            new MediaTypeWithQualityHeaderValue("application/json"));
-            //    }
-            //);
+          
 
             services.AddTransient<IPaymentService, PaymentService>();
             services.AddControllers();
@@ -102,18 +91,7 @@ namespace Client.Payments.Api
             app.UseMiddleware(typeof(ExceptionMiddleware));
             app.UseRouting();
 
-            var forwardOptions = new ForwardedHeadersOptions
-            {
-                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto,
-                RequireHeaderSymmetry = false
-            };
-
-            forwardOptions.KnownNetworks.Clear();
-            forwardOptions.KnownProxies.Clear();
-
-            // ref: https://github.com/aspnet/Docs/issues/2384
-            app.UseForwardedHeaders(forwardOptions);
-
+           
             app.UseAuthentication();
             app.UseAuthorization();
 
