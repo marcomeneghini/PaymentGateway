@@ -13,6 +13,7 @@
 Used code-first approach and migrations
 * Added Prometheus Metrics endpoint exposed in PG , PGP, CI and CPA
 * Added Prometheus container that collects data from PG, PGP, CI and CPA
+- **tried to add Grafana container but the hardware resulted totally not capable to handle another container **
 
 ## Company.IdentityServer (CI)
 This service provides authentication and authorization to the PG and PGP services. It supports ClientId grant type,
