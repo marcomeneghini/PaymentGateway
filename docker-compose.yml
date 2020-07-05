@@ -15,12 +15,17 @@ services:
 
   sqlserver:
     image: "mcr.microsoft.com/mssql/server"
+    #build:
+    #  context: .
+    #  dockerfile: data/mssql/Dockerfile
     #hostname: 'sqlserver'   
     networks:
      - inner_net
 
   rabbitmq:
     image: rabbitmq:3-management-alpine   
+    depends_on:     
+     - sqlserver
     networks:
      - inner_net
 
