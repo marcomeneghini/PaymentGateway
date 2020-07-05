@@ -64,14 +64,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "data", "data", "{4374395C-D
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "mssql", "mssql", "{AE7A3799-F2CD-417A-B259-80FD50D65945}"
 	ProjectSection(SolutionItems) = preProject
-		data\mssql\Dockerfile = data\mssql\Dockerfile
-		data\mssql\entrypoint.sh = data\mssql\entrypoint.sh
-		data\mssql\setup.sql = data\mssql\setup.sql
+		data\mssql\__entrypoint.sh = data\mssql\__entrypoint.sh
+		data\mssql\__setup.sql = data\mssql\__setup.sql
+		data\mssql\Dockerfile__ = data\mssql\Dockerfile__
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Grafana", "Grafana", "{4B705A79-825D-4142-BD32-F9F5E7946043}"
 	ProjectSection(SolutionItems) = preProject
 		grafana\config.monitoring = grafana\config.monitoring
+		grafana\provisioning\dashboards\dashboard.yml = grafana\provisioning\dashboards\dashboard.yml
 		grafana\provisioning\datasources\datasource.yml = grafana\provisioning\datasources\datasource.yml
 	EndProjectSection
 EndProject
