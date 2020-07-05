@@ -26,7 +26,7 @@ allowed to access the scope "CreatePaymentScope" (basically allowed to process p
 To extend the payment gateway exercice with authentication we needed a client that whant to consume our PG and PGP.
 CPA is a service itself so the flow chosen to authenticate to the CI is the  ClientId flow as CPA is able to store securely 
 a ClientId and a Secret, in this case they are in the configuration.  
-CPA exposes 1 main apy that allow its company to process payments through PG, in the Payments controller it is simulated 
+CPA exposes 1 main api that allow its company to process payments through PG, in the Payments controller it is simulated 
 a merchant card paymetn request towards the PG and the a loop where the payment status is requested to the PGP.
 To retrieve the access token has been implementes a TokenProvider that is injected into the 2 proxies (PG proxy and PGP proxy),
 in this way the authentication and the functionality are decoupled. 
