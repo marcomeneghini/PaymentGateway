@@ -6,6 +6,7 @@ using System.Net.Http.Headers;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -162,8 +163,12 @@ namespace PaymentGateway.Processor.Api
 
             IdentityModelEventSource.ShowPII = true;
 
-            services.AddAuthentication("Bearer")
-                .AddJwtBearer("Bearer", options =>
+            services.AddAuthentication(cfg =>
+                {
+                    cfg.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    cfg.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer( options =>
                 {
                     options.BackchannelHttpHandler = new HttpClientHandler()
                     {

@@ -32,8 +32,21 @@ in this way the authentication and the functionality are decoupled.
 * This service has the minimum implementation due to merely demonstrare authentication/authorization to PG and PGP 
 and how to consume PG and PGP
 ### Token Provider
-As the solition is running in linux containers with docker-compose, the dev certificate to sign the https traffic has not set up 
-in the clients at the moment. Therefore has been used an "hack" in the GetAccessToken function that skips the certificate validation error.
+As the solution is running in linux containers with docker-compose, the dev certificate to sign the https traffic has not set up 
+in the clients at the moment. Therefore has been used an "hack" in the GetAccessToken function that skips the certificate validation error,
+the function uses a named HttpClient "HttpClientWithSSLUntrusted" declared in the Startup.
+```
+ // create a named HttpClient that bypasses that allows untrusted certificates
+services.AddHttpClient("HttpClientWithSSLUntrusted")
+    .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+{
+    ClientCertificateOptions = ClientCertificateOption.Manual,
+    ServerCertificateCustomValidationCallback =
+        (httpRequestMessage, cert, cetChain, policyErrors) => true
+});
+```
+This allows the communication with the CI.
+* Before going to production it is mandatory to request cartificate to a CA.
 
 ## PaymentGateway.Api (PG)
 In the startup has been creates a virtual method that configures the authentication with the bearer token(AddJwtBearer). 

@@ -35,9 +35,6 @@ namespace Client.Payments.Api.Infrastructure.PaymentGatewayProcessor
 
         public async Task<PaymentStatusResponse> GetPaymentStatusAsync(Guid paymentRequestId)
         {
-            HttpResponseMessage httpResponse;
-
-
             //--------------------------
             var accessToken = await _tokenProvider.GetAccessToken();
             var client = _httpClientFactory.CreateClient();
@@ -51,7 +48,7 @@ namespace Client.Payments.Api.Infrastructure.PaymentGatewayProcessor
             client.SetBearerToken(accessToken);
             //--------------------------
 
-            httpResponse = await client.GetAsync(
+            var httpResponse = await client.GetAsync(
                 $"api/paymentstatuses?paymentId={paymentRequestId}");
 
             if (httpResponse.StatusCode == HttpStatusCode.OK)

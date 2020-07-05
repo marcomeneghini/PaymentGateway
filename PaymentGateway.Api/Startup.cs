@@ -171,8 +171,12 @@ namespace PaymentGateway.Api
 
             IdentityModelEventSource.ShowPII = true;
 
-            services.AddAuthentication("Bearer")
-                .AddJwtBearer("Bearer", options =>
+            services.AddAuthentication(cfg =>
+                {
+                    cfg.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    cfg.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer( options =>
                 {
                     options.BackchannelHttpHandler = new HttpClientHandler()
                     {
