@@ -55,7 +55,7 @@ error present in the CI  has been used.
 ### Data Storage
 A sql server container has been added to the orchestrator to allow data to be persisted. The service uses EF Core with 
 code first approach to save Merchants and PaymentsStatuses. A seed migration has been added to have some built in merchants
-for testing purposes.
+for testing purposes. The service creates a database called "PaymentGateway.Api"
 ### Prometheus Metrics
 An endpoint that exposes Prometheus compliant metrics has been added at
 * https://localhost:6001/metrics
@@ -67,7 +67,7 @@ This allows to override the function itself during integration tests. The same h
 error present in the CI  has been used.
 ### Data Storage
 A sql server container has been added to the orchestrator to allow data to be persisted. The service uses EF Core with 
-code first approach to save PaymentsStatuses. 
+code first approach to save PaymentsStatuses.   The service creates a database called "PaymentGateway.Processor.Api"
 ### Prometheus Metrics
 An endpoint that exposes Prometheus compliant metrics has been added at
 * https://localhost:7001/metrics
@@ -83,6 +83,9 @@ service directory itself. It also allow the debugger to step into the service co
 ## Test data CI
 it is possible to test the whole solution running it with VS2019 and docker-compose configuration and sent to the CI a 
 card payment request.
+Run the solution with docker-compose as statup, open Postaman performa POST to this url 
+http://localhost:8000/api/Payments
+- Body:
 ```json
 {       
     "RequestId":"{always-different-every-call}",
@@ -115,8 +118,9 @@ the available cards detail for testin purpose are:
     "YearExpiryDate":2, 
     "CVV":"222"
 }
-Every different card detail will be declined from teh platform
+```
 
+Every different card detail will be declined from teh platform
 
 ## Test data PG and PGP (not authenticated version)
 at the moment the system allows the client to request card paymente between Card and Merchant. Valid card details are:
