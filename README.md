@@ -1,10 +1,15 @@
 # PaymentGateway
+this project is meant to demostrate how a payment gateway can be implemented using a message broker with choreographed events. In this specific architecture services are totally decoupled and part of a flow without a central logic unit (like in the orchestration pattern). The flow starts with a service that works as entry point/trigger, in our case the PaymentGateway.Api called by the client to initiate a payment request. This kind of architecture can be complex to implement and monitor, on the other end is perfect in scenarios where performances are paramount as every step can be optimized and scaled out separately through the adoption of a specific technology stack or using multiple instances.
 
 Next Steps:
-* Database support for PaymentGateway.Api and PaymentGateway.Processor.Api
-* BFF(Backend For FrontEnd) gateway to give the client a single entry point
-* IdentiServer - Identity server 4, Client Credential Flow (the client will keep the Secret an the ClientId)
-* NotificationProcessor - A service that notify asyncronously the api client reding from a NEW QUEUE in Rabbit MQ (PaymentsToNotify) populated by the PaymentGateway.Processor background worker. This service MUST access data about the merchant endpoint URI
+* Database support for PaymentGateway.Api and PaymentGateway.Processor.Api, consequent seed injected in the testfixture for different test cases.
+* IdentiServer - Identity server 4, Client Credential Flow (the client will keep the Secret an the ClientId).
+* NotificationProcessor - A service that notify asyncronously the api client reding from a NEW QUEUE in RabbitMQ (PaymentsToNotify) populated by the PaymentGateway.Processor background worker. This service MUST access data about the merchant endpoint URI
+
+Improvements:
+* BFF(Backend For FrontEnd) gateway to give the client a single entry point.
+* System Healthcheck is a condition to accept a payment request. A definition of "System Healty" is required (Example, at least 1 Processor in healty status, with an average processing time below 3 seconds)
+* Structured log and log aggregation (example: aggregate via RequestId etc) (Splunk)
 
 ## Test data
 at the moment the system allows the client to request card paymente between Card and Merchant. Valid card details are:
@@ -78,5 +83,6 @@ This call will return a 200 with this body:
 ```
 The paymetn completed successfully and the client has the "transactionId" from the bank to reconciliate the payments 
 
-# Tests, mocks
-The every service has its own unittest and integration test. The solution has also a Bank.Payments.Api that runs with docker-compose. This project has been added as plus and to test the BankPaymentsProxy in the PaymentGateways.Processor Background worker (PGPB)  when run and debug the solution with F5. The integration tests that involve the PGPB use a mockup class created with Moq that has the same inner logic (same cards and bank accounts allowed to perform transactions.
+# Connecting the Bank services, development and testing strategy
+To implement the MyBankPaymentsProxy, a simulator is added to the solution and to docker-compose (Bank.Payments.Api). During the integration tests a mockup proxy is injected to guarantee end to end (E2E) flow test. This setup allows testing different test cases injecting different mockups and at the same time being compliant with the remote service specs.
+
