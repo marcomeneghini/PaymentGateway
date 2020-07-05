@@ -80,7 +80,7 @@ to initialize the TestServer. This allows test to bypas security.
 The TestStartupNoAuth has been created in the correspondent service to be tested as it is used to get the 
 service directory itself. It also allow the debugger to step into the service code.
 
-## Test data CI
+## Test data CPA
 it is possible to test the whole solution running it with VS2019 and docker-compose configuration and sent to the CI a 
 card payment request.
 Run the solution with docker-compose as statup, open Postaman performa POST to this url 
