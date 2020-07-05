@@ -60,6 +60,21 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "prometheus", "prometheus", 
 		prometheus\prometheus.yml = prometheus\prometheus.yml
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "data", "data", "{4374395C-D52C-480D-8E28-A805DF612152}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "mssql", "mssql", "{AE7A3799-F2CD-417A-B259-80FD50D65945}"
+	ProjectSection(SolutionItems) = preProject
+		data\mssql\Dockerfile = data\mssql\Dockerfile
+		data\mssql\entrypoint.sh = data\mssql\entrypoint.sh
+		data\mssql\setup.sql = data\mssql\setup.sql
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Grafana", "Grafana", "{4B705A79-825D-4142-BD32-F9F5E7946043}"
+	ProjectSection(SolutionItems) = preProject
+		grafana\config.monitoring = grafana\config.monitoring
+		grafana\provisioning\datasources\datasource.yml = grafana\provisioning\datasources\datasource.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -147,6 +162,8 @@ Global
 		{BE67A518-64F8-429F-8569-DFCBF1E928FB} = {5213103B-56FF-4572-9468-AA089B136C48}
 		{151B301B-C744-47DA-9418-9CCEA5C4792C} = {5213103B-56FF-4572-9468-AA089B136C48}
 		{32F38DB9-97DA-47CD-8960-67918D42EFA7} = {45949F53-98CD-47A4-AEC5-467F12F89314}
+		{AE7A3799-F2CD-417A-B259-80FD50D65945} = {4374395C-D52C-480D-8E28-A805DF612152}
+		{4B705A79-825D-4142-BD32-F9F5E7946043} = {45949F53-98CD-47A4-AEC5-467F12F89314}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7DF4DFF7-D702-42E5-8200-E316FD246094}

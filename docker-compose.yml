@@ -77,6 +77,8 @@ services:
       context: .
       dockerfile: Client.Payments.Api/Dockerfile   
     depends_on:     
+      - paymentgateway.api
+      - paymentgateway.processor.api
       - company.identityserver
     networks:
       - outer_net
@@ -92,10 +94,10 @@ services:
     networks:
       - inner_net
       - outer_net #added to gather metrics from the client
-#
-  #grafana:
-  #  image : grafana/grafana
-  #  depends_on: 
-  #    - prometheus  
-  #  networks:
-  #    - inner_net
+
+  grafana:
+    image : grafana/grafana
+    depends_on: 
+      - prometheus  
+    networks:
+      - inner_net
