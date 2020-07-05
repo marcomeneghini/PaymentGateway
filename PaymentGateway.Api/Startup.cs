@@ -101,7 +101,7 @@ namespace PaymentGateway.Api
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
             // Custom Metrics to count requests for each endpoint and the method
-            var counter = Metrics.CreateCounter("paymentgateway_merchantcardpayment_counter", "Counts requests to the MerchantCardPayment endpoints", new CounterConfiguration
+            var counter = Metrics.CreateCounter("paymentgateway_api_counter", "Counts requests to the MerchantCardPayment endpoints", new CounterConfiguration
             {
                 LabelNames = new[] { "method", "endpoint" }
             });

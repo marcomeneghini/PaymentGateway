@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using Prometheus;
 using JsonWebKey = IdentityServer4.Models.JsonWebKey;
 
 namespace Company.IdentityServer
@@ -45,6 +46,9 @@ namespace Company.IdentityServer
             {
                 app.UseDeveloperExceptionPage();
             }
+            // Use the Prometheus middleware
+            app.UseMetricServer();
+            app.UseHttpMetrics();
 
             app.UseRouting();
             app.UseIdentityServer();

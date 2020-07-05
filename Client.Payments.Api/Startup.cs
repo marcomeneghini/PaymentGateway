@@ -23,6 +23,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Prometheus;
 using Serilog;
 
 namespace Client.Payments.Api
@@ -86,12 +87,18 @@ namespace Client.Payments.Api
             {
                 app.UseDeveloperExceptionPage();
             }
+            // Use the Prometheus middleware
+            app.UseMetricServer();
+            app.UseHttpMetrics();
 
             loggerFactory.AddSerilog();
             app.UseMiddleware(typeof(ExceptionMiddleware));
             app.UseRouting();
 
-           
+            // Use the Prometheus middleware
+            app.UseMetricServer();
+            app.UseHttpMetrics();
+
             app.UseAuthentication();
             app.UseAuthorization();
 

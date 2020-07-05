@@ -129,6 +129,17 @@ namespace PaymentGateway.Processor.Api
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerfactory)
         {
+
+            // Custom Metrics to count requests for each endpoint and the method
+            var counter = Metrics.CreateCounter("paymentgateway_processor_counter", "Counts requests to the processor endpoints", new CounterConfiguration
+            {
+                LabelNames = new[] { "method", "endpoint" }
+            });
+            app.Use((context, next) =>
+            {
+                counter.WithLabels(context.Request.Method, context.Request.Path).Inc();
+                return next();
+            });
             app.UseMiddleware(typeof(ExceptionMiddleware));
             if (env.IsDevelopment())
             {
