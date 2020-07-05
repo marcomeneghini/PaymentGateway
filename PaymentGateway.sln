@@ -71,9 +71,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "mssql", "mssql", "{AE7A3799
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Grafana", "Grafana", "{4B705A79-825D-4142-BD32-F9F5E7946043}"
 	ProjectSection(SolutionItems) = preProject
-		grafana\config.monitoring = grafana\config.monitoring
-		grafana\provisioning\dashboards\dashboard.yml = grafana\provisioning\dashboards\dashboard.yml
-		grafana\provisioning\datasources\datasource.yml = grafana\provisioning\datasources\datasource.yml
+		grafana\__config.monitoring = grafana\__config.monitoring
+		grafana\provisioning\dashboards\__dashboard.yml = grafana\provisioning\dashboards\__dashboard.yml
+		grafana\provisioning\datasources\__datasource.yml = grafana\provisioning\datasources\__datasource.yml
 	EndProjectSection
 EndProject
 Global
