@@ -11,7 +11,8 @@
 * Added authentication/authorization using Identity Server 4 with ClientId GrantType. 
 * Added sql server as data storage for  paymentgateway.api(PG) and paymentgateway.processor.api(PGP). 
 Used code-first approach and migrations
-* Added Prometheus Metrics endpoint for PG and PGP
+* Added Prometheus Metrics endpoint exposed in PG , PGP, CI and CPA
+* Added Prometheus container that collects data from PG, PGP, CI and CPA
 
 ## Company.IdentityServer (CI)
 This service provides authentication and authorization to the PG and PGP services. It supports ClientId grant type,
@@ -72,6 +73,9 @@ code first approach to save PaymentsStatuses.   The service creates a database c
 An endpoint that exposes Prometheus compliant metrics has been added at
 * https://localhost:7001/metrics
 when the container is running
+
+## Prometheus 
+A container with prometheus has been added to the solution that exposes port 9090. So to access prometheus data address http://localhost:9090
 
 ## Integration Tests
 As authentication has been introduces with this release, the pre-existing tests now use the TestStartupNoAuth:Startup class 
