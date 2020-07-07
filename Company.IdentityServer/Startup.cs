@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using Prometheus;
 using JsonWebKey = IdentityServer4.Models.JsonWebKey;
 
 namespace Company.IdentityServer
@@ -23,30 +24,20 @@ namespace Company.IdentityServer
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            // services.AddHealthChecks();
 
-            //services.AddIdentityServer(options =>
-            //    {
-            //        options.IssuerUri = "https://company.identityserver/";
-            //    })
-           
 
             services.AddIdentityServer(options =>
                 {
-                    //options.IssuerUri = "http://identityservice";
                     options.Events.RaiseErrorEvents = true;
                     options.Events.RaiseInformationEvents = true;
                     options.Events.RaiseFailureEvents = true;
                     options.Events.RaiseSuccessEvents = true;
                 })
                 .AddInMemoryApiResources(StaticInitializer.GetApiResources()) // list of resources/services available 
-                //.AddInMemoryIdentityResources(StaticInitializer.GetIdentityResources())
+                
                 .AddInMemoryClients(StaticInitializer.GetClients()) // list of the allowed clients
                 .AddInMemoryApiScopes(StaticInitializer.GetApiScopes())
                 .AddDeveloperSigningCredential(); // dev certificate
-
-          
-
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -55,6 +46,9 @@ namespace Company.IdentityServer
             {
                 app.UseDeveloperExceptionPage();
             }
+            // Use the Prometheus middleware
+            app.UseMetricServer();
+            app.UseHttpMetrics();
 
             app.UseRouting();
             app.UseIdentityServer();

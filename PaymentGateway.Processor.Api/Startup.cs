@@ -6,6 +6,7 @@ using System.Net.Http.Headers;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -128,6 +129,17 @@ namespace PaymentGateway.Processor.Api
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerfactory)
         {
+
+            // Custom Metrics to count requests for each endpoint and the method
+            var counter = Metrics.CreateCounter("paymentgateway_processor_counter", "Counts requests to the processor endpoints", new CounterConfiguration
+            {
+                LabelNames = new[] { "method", "endpoint" }
+            });
+            app.Use((context, next) =>
+            {
+                counter.WithLabels(context.Request.Method, context.Request.Path).Inc();
+                return next();
+            });
             app.UseMiddleware(typeof(ExceptionMiddleware));
             if (env.IsDevelopment())
             {
@@ -162,8 +174,12 @@ namespace PaymentGateway.Processor.Api
 
             IdentityModelEventSource.ShowPII = true;
 
-            services.AddAuthentication("Bearer")
-                .AddJwtBearer("Bearer", options =>
+            services.AddAuthentication(cfg =>
+                {
+                    cfg.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    cfg.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer( options =>
                 {
                     options.BackchannelHttpHandler = new HttpClientHandler()
                     {

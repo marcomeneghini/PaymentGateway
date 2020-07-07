@@ -34,9 +34,6 @@ namespace Client.Payments.Api.Infrastructure.PaymentGateway
         }
         public async Task<PaymentResponse> CreatePaymentAsync(Payment payment)
         {
-            
-
-            HttpResponseMessage httpResponse;
             var paymentRequestDto = _mapper.Map<CreatePaymentRequestDto>(payment);
 
             //--------------------------
@@ -53,7 +50,7 @@ namespace Client.Payments.Api.Infrastructure.PaymentGateway
             //--------------------------
 
 
-            httpResponse = await client.PostAsJsonAsync(
+            var httpResponse = await client.PostAsJsonAsync(
                 "api/merchantcardpayments", paymentRequestDto);
 
             if (httpResponse.StatusCode == HttpStatusCode.OK)

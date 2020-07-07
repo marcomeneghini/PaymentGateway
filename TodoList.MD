@@ -143,7 +143,7 @@ PG_PROC OK
 * connect to prometheus container
 * visualize dashboard
 
-## ------final review
+## ------final review skipped (no time)
 * 
 * Add LogEntry for structured log (in sharedlib)
 * PG_API	- Add LogEntry 
