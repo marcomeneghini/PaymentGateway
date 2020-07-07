@@ -27,7 +27,7 @@ services:
     image: ${DOCKER_REGISTRY-}companyidentityserver
     build:
       context: .
-      dockerfile: src/Company.IdentityServer/Dockerfile   
+      dockerfile: Company.IdentityServer/Dockerfile   
     networks:
       - inner_net
       - outer_net
@@ -36,7 +36,7 @@ services:
     image: ${DOCKER_REGISTRY-}bankpaymentsapi
     build:
       context: .
-      dockerfile: src/Bank.Payments.Api/Dockerfile    
+      dockerfile: Bank.Payments.Api/Dockerfile    
     networks:
       - inner_net
 
@@ -44,7 +44,7 @@ services:
     image: ${DOCKER_REGISTRY-}paymentgatewayapi
     build:
       context: .
-      dockerfile: src/PaymentGateway.Api/Dockerfile    
+      dockerfile: PaymentGateway.Api/Dockerfile    
     links:
       - "sqlserver:mysqlserver"
     depends_on:     
@@ -59,7 +59,7 @@ services:
     image: ${DOCKER_REGISTRY-}paymentgatewayprocessorapi
     build:
       context: .
-      dockerfile: src/PaymentGateway.Processor.Api/Dockerfile   
+      dockerfile: PaymentGateway.Processor.Api/Dockerfile   
     links:
       - "sqlserver:mysqlserver"
     depends_on:     
@@ -74,7 +74,7 @@ services:
     image: ${DOCKER_REGISTRY-}clientpaymentsapi
     build:
       context: .
-      dockerfile: src/Client.Payments.Api/Dockerfile   
+      dockerfile: Client.Payments.Api/Dockerfile   
     depends_on:     
       - company.identityserver
     networks:

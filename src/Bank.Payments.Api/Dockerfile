@@ -7,10 +7,10 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
-COPY ["Bank.Payments.Api/Bank.Payments.Api.csproj", "Bank.Payments.Api/"]
-RUN dotnet restore "Bank.Payments.Api/Bank.Payments.Api.csproj"
+COPY ["src/Bank.Payments.Api/Bank.Payments.Api.csproj", "src/Bank.Payments.Api/"]
+RUN dotnet restore "src/Bank.Payments.Api/Bank.Payments.Api.csproj"
 COPY . .
-WORKDIR "/src/Bank.Payments.Api"
+WORKDIR "/src/src/Bank.Payments.Api"
 RUN dotnet build "Bank.Payments.Api.csproj" -c Release -o /app/build
 
 FROM build AS publish

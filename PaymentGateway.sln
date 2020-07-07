@@ -17,8 +17,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{86E98E00-6
 		TodoList.MD = TodoList.MD
 	EndProjectSection
 EndProject
-Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{AF56FFED-F10A-4DDB-9A19-2E00CE0D1C81}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{45746657-E255-4CD8-B69C-3A7D4C762A1A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{EF80E958-B25C-4C9D-8E43-13F1E913C2B4}"
@@ -60,16 +58,20 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaymentGateway.Processor.Ap
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaymentGateway.IntegrationTests", "tests\PaymentGateway.IntegrationTests\PaymentGateway.IntegrationTests.csproj", "{B9264884-D05F-4CB2-9538-C14D3E00C17D}"
 EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{865A93D1-88D9-4170-A2F1-64A2E259D413}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NewFolder1", "NewFolder1", "{FF322F49-A084-46DE-A883-31E3E2E0DD32}"
+	ProjectSection(SolutionItems) = preProject
+		src\docker\docker-compose.override.yml = src\docker\docker-compose.override.yml
+		src\docker\docker-compose.yml = src\docker\docker-compose.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{AF56FFED-F10A-4DDB-9A19-2E00CE0D1C81}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AF56FFED-F10A-4DDB-9A19-2E00CE0D1C81}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AF56FFED-F10A-4DDB-9A19-2E00CE0D1C81}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AF56FFED-F10A-4DDB-9A19-2E00CE0D1C81}.Release|Any CPU.Build.0 = Release|Any CPU
 		{50151914-459F-4DFD-BB8E-F0F0589AC9B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{50151914-459F-4DFD-BB8E-F0F0589AC9B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{50151914-459F-4DFD-BB8E-F0F0589AC9B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -122,6 +124,10 @@ Global
 		{B9264884-D05F-4CB2-9538-C14D3E00C17D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B9264884-D05F-4CB2-9538-C14D3E00C17D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B9264884-D05F-4CB2-9538-C14D3E00C17D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{865A93D1-88D9-4170-A2F1-64A2E259D413}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{865A93D1-88D9-4170-A2F1-64A2E259D413}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{865A93D1-88D9-4170-A2F1-64A2E259D413}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{865A93D1-88D9-4170-A2F1-64A2E259D413}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

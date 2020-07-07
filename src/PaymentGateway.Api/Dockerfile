@@ -7,10 +7,11 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
-COPY ["PaymentGateway.Api/PaymentGateway.Api.csproj", "PaymentGateway.Api/"]
-RUN dotnet restore "PaymentGateway.Api/PaymentGateway.Api.csproj"
+COPY ["src/PaymentGateway.Api/PaymentGateway.Api.csproj", "src/PaymentGateway.Api/"]
+COPY ["src/PaymentGateway.SharedLib/PaymentGateway.SharedLib.csproj", "src/PaymentGateway.SharedLib/"]
+RUN dotnet restore "src/PaymentGateway.Api/PaymentGateway.Api.csproj"
 COPY . .
-WORKDIR "/src/PaymentGateway.Api"
+WORKDIR "/src/src/PaymentGateway.Api"
 RUN dotnet build "PaymentGateway.Api.csproj" -c Release -o /app/build
 
 FROM build AS publish
