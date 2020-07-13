@@ -15,7 +15,7 @@ Used code-first approach and migrations
 * Added Prometheus container that collects data from PG, PGP, CI and CPA
 ### Future Improvements
 * Add a Web API Gateway between the Client and the PG/PGP to offer clients a single entry point where to request a payment and get its status
-* Add a "circuit braker" between PGP and the Bank Api
+* Add a "circuit breaker" between PGP and the Bank Api
 ## Company.IdentityServer (CI)
 This service provides authentication and authorization to the PG and PGP services. It supports ClientId grant type,
 this means that a client service can authenticate challenging a ClientId and a Secret for an access token.
